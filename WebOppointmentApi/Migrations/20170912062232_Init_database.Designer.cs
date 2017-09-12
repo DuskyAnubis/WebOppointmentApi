@@ -11,8 +11,8 @@ using WebOppointmentApi.Data;
 namespace WebOppointmentApi.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20170911083248_Init_Database")]
-    partial class Init_Database
+    [Migration("20170912062232_Init_database")]
+    partial class Init_database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -138,13 +138,11 @@ namespace WebOppointmentApi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AccessTypeCode");
-
-                    b.Property<string>("AccessTypeName");
-
                     b.Property<string>("Address");
 
                     b.Property<DateTime>("Birth");
+
+                    b.Property<string>("CardNo");
 
                     b.Property<string>("CardTypeCode");
 
@@ -154,15 +152,17 @@ namespace WebOppointmentApi.Migrations
 
                     b.Property<string>("DoctorTime");
 
-                    b.Property<string>("FromTypeCode");
-
-                    b.Property<string>("FromTypeName");
+                    b.Property<string>("FromType");
 
                     b.Property<string>("GenderCode");
 
                     b.Property<string>("GenderName");
 
                     b.Property<string>("IDCard");
+
+                    b.Property<string>("MedicalInsuranceCode");
+
+                    b.Property<string>("MedicalInsuranceName");
 
                     b.Property<string>("MedicalTypeCode");
 
@@ -185,6 +185,10 @@ namespace WebOppointmentApi.Migrations
                     b.Property<string>("RegisteredStateCode");
 
                     b.Property<string>("RegisteredStateName");
+
+                    b.Property<string>("RegisteredTypeCode");
+
+                    b.Property<string>("RegisteredTypeName");
 
                     b.Property<int>("SchedulingId");
 
@@ -245,10 +249,6 @@ namespace WebOppointmentApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AccessTypeCode");
-
-                    b.Property<string>("AccessTypeName");
 
                     b.Property<string>("Address");
 

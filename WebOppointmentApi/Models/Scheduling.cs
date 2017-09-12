@@ -8,8 +8,6 @@ namespace WebOppointmentApi.Models
     public class Scheduling
     {
         public int Id { get; set; }
-        public string AccessTypeCode { get; set; }
-        public string AccessTypeName { get; set; }
         public string SchedulingTypeCode { get; set; }
         public string SchedulingTypeName { get; set; }
         public string EndTreatCode { get; set; }

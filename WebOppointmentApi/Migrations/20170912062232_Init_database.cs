@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebOppointmentApi.Migrations
 {
-    public partial class Init_Database : Migration
+    public partial class Init_database : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -183,8 +183,6 @@ namespace WebOppointmentApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccessTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccessTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndTreatCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -229,19 +227,19 @@ namespace WebOppointmentApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AccessTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AccessTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Birth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CardNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CardTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CardTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DoctorDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DoctorTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FromTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FromTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FromType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GenderCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GenderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IDCard = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MedicalInsuranceCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MedicalInsuranceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MedicalTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MedicalTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -253,6 +251,8 @@ namespace WebOppointmentApi.Migrations
                     RegisteredDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RegisteredStateCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegisteredStateName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegisteredTypeCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegisteredTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SchedulingId = table.Column<int>(type: "int", nullable: false),
                     SourceId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),

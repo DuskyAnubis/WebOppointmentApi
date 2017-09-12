@@ -8,12 +8,12 @@ namespace WebOppointmentApi.Models
     public class Registered
     {
         public int Id { get; set; }
-        public string AccessTypeCode { get; set; }
-        public string AccessTypeName { get; set; }
         public string OrganazitionId { get; set; }
         public string UserId { get; set; }
         public int SchedulingId { get; set; }
         public int SourceId { get; set; }
+        public string RegisteredTypeCode { get; set; }
+        public string RegisteredTypeName { get; set; }
         public string OrderId { get; set; }
         public int Price { get; set; }
         public int TreatPrice { get; set; }
@@ -29,10 +29,12 @@ namespace WebOppointmentApi.Models
         public string GenderName { get; set; }
         public string Address { get; set; }
         public DateTime Birth { get; set; }
-        public string FromTypeCode { get; set; }
-        public string FromTypeName { get; set; }
+        public string FromType { get; set; }
+        public string MedicalInsuranceCode { get; set; }
+        public string MedicalInsuranceName { get; set; }
         public string CardTypeCode { get; set; }
         public string CardTypeName { get; set; }
+        public string CardNo { get; set; }
         public string MedicalTypeCode { get; set; }
         public string MedicalTypeName { get; set; }
         public string RegisteredStateCode { get; set; }
