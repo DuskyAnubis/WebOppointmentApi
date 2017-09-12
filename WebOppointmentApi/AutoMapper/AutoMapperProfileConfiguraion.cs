@@ -19,7 +19,7 @@ namespace WebOppointmentApi.AutoMapper
 
         protected AutoMapperProfileConfiguraion(string profileName) : base(profileName)
         {
-
+            CreateMap<User, UserOutput>();
         }
     }
 }

@@ -23,13 +23,13 @@ namespace WebOppointmentApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Hospital>().HasQueryFilter(m => m.Status == "删除");
-            modelBuilder.Entity<Organazition>().HasQueryFilter(m => m.Status == "删除");
-            modelBuilder.Entity<User>().HasQueryFilter(m => m.Status == "删除");
-            modelBuilder.Entity<Permission>().HasQueryFilter(m => m.Status == "删除");
-            modelBuilder.Entity<Role>().HasQueryFilter(m => m.Status == "删除");
-            modelBuilder.Entity<Scheduling>().HasQueryFilter(m => m.Status == "删除");
-            modelBuilder.Entity<Registered>().HasQueryFilter(m => m.Status == "删除");
+            modelBuilder.Entity<Hospital>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<Organazition>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<User>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<Permission>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<Role>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<Scheduling>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<Registered>().HasQueryFilter(m => m.Status != "删除");
         }
     }
 }
