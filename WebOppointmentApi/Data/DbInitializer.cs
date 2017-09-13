@@ -110,7 +110,7 @@ namespace WebOppointmentApi.Data
             //var roles = new List<Role>
             //{
             //    new Role{ Code="admin", Name="系统管理员",Description="拥有系统所有权限",Status="正常"},
-            //    new Role{ Code="hospital", Name="医院管理员",Description="管理医院部门人员排班等",Status="正常"},
+            //    new Role{ Code="data", Name="数据管理员",Description="管理医院部门人员排班等",Status="正常"},
             //    new Role{ Code="user", Name="普通用户",Description="系统默认权限",Status="正常"}
             //};
             //roles.ForEach(role => context.Add(role));
