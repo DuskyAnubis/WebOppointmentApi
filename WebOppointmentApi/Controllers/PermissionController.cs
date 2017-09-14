@@ -53,12 +53,8 @@ namespace WebOppointmentApi.Controllers
             var totalCount = await query.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalCount / Per_Page);
 
-            var paginationHeader = new
-            {
-                TotalCount = totalCount,
-                TotalPages = totalPages
-            };
-            HttpContext.Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+            HttpContext.Response.Headers.Add("X-TotalCount", JsonConvert.SerializeObject(totalCount));
+            HttpContext.Response.Headers.Add("X-TotalPage", JsonConvert.SerializeObject(totalPages));
 
             List<Permission> permissions = await query.Skip(pageIndex * Per_Page).Take(Per_Page).ToListAsync();
             List<PermissionOutput> list = mapper.Map<List<PermissionOutput>>(permissions);
@@ -91,12 +87,8 @@ namespace WebOppointmentApi.Controllers
             var totalCount = await query.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalCount / Per_Page);
 
-            var paginationHeader = new
-            {
-                TotalCount = totalCount,
-                TotalPages = totalPages
-            };
-            HttpContext.Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+            HttpContext.Response.Headers.Add("X-TotalCount", JsonConvert.SerializeObject(totalCount));
+            HttpContext.Response.Headers.Add("X-TotalPage", JsonConvert.SerializeObject(totalPages));
 
             List<Permission> permissions = await query.Skip(pageIndex * Per_Page).Take(Per_Page).ToListAsync();
             List<PermissionOutput> list = mapper.Map<List<PermissionOutput>>(permissions);

@@ -119,8 +119,8 @@ namespace WebOppointmentApi.Data
             //var permissions = new List<Permission>
             //{
             //    new Permission{Name="预约诊疗平台",Code="System", Parent=0,Path="",Property="目录",Description="系统功能根目录",Icon="",Order=1,Status="正常" },
-            //    new Permission{Name="系统设置",Code="SystemSetting",Parent=1,Path="",Property="目录",Description="系统设置",Icon="",Order=2,Status="正常" },
-            //    new Permission{Name="挂号平台",Code="BaseSetting",Parent=1,Path="",Property="目录",Description="挂号平台",Icon="",Order=1,Status="正常" },
+            //    new Permission{Name="系统设置",Code="SystemSetting",Parent=1,Path="",Property="目录",Description="系统设置",Icon="el-icon-menu",Order=2,Status="正常" },
+            //    new Permission{Name="挂号平台",Code="BaseSetting",Parent=1,Path="",Property="目录",Description="挂号平台",Icon="el-icon-menu",Order=1,Status="正常" },
             //    new Permission{Name="数据字典",Code="DictionaryManager",Parent=2,Path="",Property="菜单",Description="数据字典",Icon="",Order=1,Status="正常" },
             //    new Permission{Name="医院信息",Code="HospitalInfo",Parent=2,Path="",Property="菜单",Description="医院信息",Icon="",Order=2,Status="正常" },
             //    new Permission{Name="部门管理",Code="OrganazitionManager",Parent=2,Path="",Property="菜单",Description="部门管理",Icon="",Order=3,Status="正常" },
@@ -140,7 +140,8 @@ namespace WebOppointmentApi.Data
             //    new RolePermission{ RoleId=1,PermissionId=6},
             //    new RolePermission{ RoleId=1,PermissionId=7},
             //    new RolePermission{ RoleId=1,PermissionId=8},
-            //    new RolePermission{ RoleId=1,PermissionId=9}
+            //    new RolePermission{ RoleId=1,PermissionId=9},
+            //    new RolePermission{ RoleId=1,PermissionId=10 }
             //};
             //rolePermissions.ForEach(rolePermission => context.Add(rolePermission));
             //context.SaveChanges();

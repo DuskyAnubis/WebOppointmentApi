@@ -54,12 +54,8 @@ namespace WebOppointmentApi.Controllers
             var totalCount = query.Count();
             var totalPages = (int)Math.Ceiling((double)totalCount / Per_Page);
 
-            var paginationHeader = new
-            {
-                TotalCount = totalCount,
-                TotalPages = totalPages
-            };
-            HttpContext.Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+            HttpContext.Response.Headers.Add("X-TotalCount", JsonConvert.SerializeObject(totalCount));
+            HttpContext.Response.Headers.Add("X-TotalPage", JsonConvert.SerializeObject(totalPages));
 
             query = query.Skip(pageIndex * Per_Page).Take(Per_Page);
 
