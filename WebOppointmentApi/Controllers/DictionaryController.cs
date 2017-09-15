@@ -197,7 +197,7 @@ namespace WebOppointmentApi.Controllers
             {
                 return NotFound(Json(new { Error = "该字典不存在" }));
             }
-           
+
             dbContext.Dictionaries.Remove(dictionary);
             await dbContext.SaveChangesAsync();
 
@@ -225,6 +225,29 @@ namespace WebOppointmentApi.Controllers
             await dbContext.SaveChangesAsync();
 
             return new NoContentResult();
+        }
+        #endregion
+
+        #region 提供选项
+        /// <summary>
+        /// 字典选项
+        /// </summary>
+        /// <param name="typeCode"></param>
+        /// <returns></returns>
+        [HttpGet("WithSelect")]
+        [ProducesResponseType(typeof(List<DictionaryOutput>), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IEnumerable<DictionarySelectOutput>> GetDictionarySelect(string typeCode)
+        {
+            IQueryable<Dictionary> query = dbContext.Dictionaries.AsQueryable<Dictionary>();
+
+            query = query.Where(q => string.IsNullOrEmpty(typeCode) || q.TypeCode == typeCode);
+            query = query.OrderBy(q => q.Code);
+
+            List<Dictionary> dictionaries = await query.ToListAsync();
+            List<DictionarySelectOutput> list = mapper.Map<List<DictionarySelectOutput>>(dictionaries);
+
+            return list;
         }
         #endregion
     }

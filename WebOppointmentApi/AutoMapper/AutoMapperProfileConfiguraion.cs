@@ -43,6 +43,7 @@ namespace WebOppointmentApi.AutoMapper
             CreateMap<Dictionary, DictionaryOutput>();
             CreateMap<DictionaryCreateInput, Dictionary>();
             CreateMap<Dictionary, DictonaryUpdateInput>();
+            CreateMap<Dictionary, DictionarySelectOutput>();
 
             CreateMap<Hospital, HosptialOutput>();
             CreateMap<HosptialCreateInput, Hospital>();

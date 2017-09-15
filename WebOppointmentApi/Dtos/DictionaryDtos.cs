@@ -13,6 +13,12 @@ namespace WebOppointmentApi.Dtos
         public string RemarkValue { get; set; }
     }
 
+    public class DictionarySelectOutput
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
+
     public class DictionaryQueryInput : IPageAndSortInputDto
     {
         public DictionaryQueryInput()
