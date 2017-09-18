@@ -28,10 +28,10 @@ namespace WebOppointmentApi.AutoMapper
             CreateMap<RoleCreateInput, Role>();
             CreateMap<Role, RoleUpdateInput>();
 
-            CreateMap<Organazition, OrgOutput>();
-            CreateMap<OrgCreateInput, Organazition>();
-            CreateMap<Organazition, OrgUpdateInput>();
-            CreateMap<Organazition, OrgTreeOutput>();
+            CreateMap<Orgnazition, OrgOutput>();
+            CreateMap<OrgCreateInput, Orgnazition>();
+            CreateMap<Orgnazition, OrgUpdateInput>();
+            CreateMap<Orgnazition, OrgTreeOutput>();
 
             CreateMap<Permission, PermissionOutput>();
             CreateMap<PermissionCreateInput, Permission>();

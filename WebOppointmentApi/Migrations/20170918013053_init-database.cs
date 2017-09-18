@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WebOppointmentApi.Migrations
 {
-    public partial class Init_database : Migration
+    public partial class initdatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,7 @@ namespace WebOppointmentApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organazitions",
+                name: "Orgnazitions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -69,7 +69,7 @@ namespace WebOppointmentApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organazitions", x => x.Id);
+                    table.PrimaryKey("PK_Orgnazitions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,9 +164,9 @@ namespace WebOppointmentApi.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Organazitions_OrganazitionId",
+                        name: "FK_Users_Orgnazitions_OrganazitionId",
                         column: x => x.OrganazitionId,
-                        principalTable: "Organazitions",
+                        principalTable: "Orgnazitions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -358,7 +358,7 @@ namespace WebOppointmentApi.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Organazitions");
+                name: "Orgnazitions");
 
             migrationBuilder.DropTable(
                 name: "Roles");

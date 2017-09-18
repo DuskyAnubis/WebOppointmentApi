@@ -12,7 +12,7 @@ namespace WebOppointmentApi.Data
 
         public DbSet<Dictionary> Dictionaries { get; set; }
         public DbSet<Hospital> Hospitals { get; set; }
-        public DbSet<Organazition> Organazitions { get; set; }
+        public DbSet<Orgnazition> Orgnazitions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -24,7 +24,7 @@ namespace WebOppointmentApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Hospital>().HasQueryFilter(m => m.Status != "删除");
-            modelBuilder.Entity<Organazition>().HasQueryFilter(m => m.Status != "删除");
+            modelBuilder.Entity<Orgnazition>().HasQueryFilter(m => m.Status != "删除");
             modelBuilder.Entity<User>().HasQueryFilter(m => m.Status != "删除");
             modelBuilder.Entity<Permission>().HasQueryFilter(m => m.Status != "删除");
             modelBuilder.Entity<Role>().HasQueryFilter(m => m.Status != "删除");

@@ -18,14 +18,14 @@ using WebOppointmentApi.Models;
 namespace WebOppointmentApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/Hosptial")]
+    [Route("api/v1/Hospital")]
     //[Authorize]
-    public class HosptialController : Controller
+    public class HospitalController : Controller
     {
         private readonly ApiContext dbContext;
         private readonly IMapper mapper;
 
-        public HosptialController(ApiContext dbContext, IMapper mapper)
+        public HospitalController(ApiContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;

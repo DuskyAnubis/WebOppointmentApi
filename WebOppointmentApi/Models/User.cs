@@ -27,7 +27,7 @@ namespace WebOppointmentApi.Models
         public string PicUrl { get; set; }
         public string Status { get; set; }
 
-        public Organazition Organazition { get; set; }
+        public Orgnazition Organazition { get; set; }
         public Role Role { get; set; }
     }
 }

@@ -112,7 +112,7 @@ namespace WebOppointmentApi.Controllers
             {
                 return BadRequest(Json(new { Error = "用户名已存在" }));
             }
-            if (await dbContext.Organazitions.CountAsync(o => o.Id == input.OrganazitionId) == 0)
+            if (await dbContext.Orgnazitions.CountAsync(o => o.Id == input.OrganazitionId) == 0)
             {
                 return BadRequest(Json(new { Error = "不存在该部门" }));
             }
@@ -152,7 +152,7 @@ namespace WebOppointmentApi.Controllers
             {
                 return NotFound(Json(new { Error = "该用户不存在" }));
             }
-            if (await dbContext.Organazitions.CountAsync(o => o.Id == input.OrganazitionId) == 0)
+            if (await dbContext.Orgnazitions.CountAsync(o => o.Id == input.OrganazitionId) == 0)
             {
                 return BadRequest(Json(new { Error = "不存在该部门" }));
             }
@@ -201,7 +201,7 @@ namespace WebOppointmentApi.Controllers
                 return new ValidationFailedResult(ModelState);
             }
 
-            if (await dbContext.Organazitions.CountAsync(o => o.Id == input.OrganazitionId) == 0)
+            if (await dbContext.Orgnazitions.CountAsync(o => o.Id == input.OrganazitionId) == 0)
             {
                 return BadRequest(Json(new { Error = "不存在该部门" }));
             }

@@ -20,12 +20,12 @@ namespace WebOppointmentApi.Controllers
     [Produces("application/json")]
     [Route("api/v1/Orgs")]
     //[Authorize]
-    public class OrganazitionController : Controller
+    public class OrgnazitionController : Controller
     {
         private readonly ApiContext dbContext;
         private readonly IMapper mapper;
 
-        public OrganazitionController(ApiContext dbContext, IMapper mapper)
+        public OrgnazitionController(ApiContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
@@ -46,7 +46,7 @@ namespace WebOppointmentApi.Controllers
             int Per_Page = input.Per_Page;
             string sortBy = input.SortBy;
 
-            IQueryable<Organazition> query = dbContext.Organazitions.AsQueryable<Organazition>();
+            IQueryable<Orgnazition> query = dbContext.Orgnazitions.AsQueryable<Orgnazition>();
 
             query = query.Where(q => string.IsNullOrEmpty(input.Name) || q.Name.Contains(input.Name));
             query = query.Where(q => string.IsNullOrEmpty(input.OrgTypeCode) || q.OrgTypeCode == input.OrgTypeCode);
@@ -60,7 +60,7 @@ namespace WebOppointmentApi.Controllers
 
             query = query.Skip(pageIndex * Per_Page).Take(Per_Page);
 
-            List<Organazition> orgs = await query.ToListAsync();
+            List<Orgnazition> orgs = await query.ToListAsync();
             List<OrgOutput> list = mapper.Map<List<OrgOutput>>(orgs);
 
             return list;
@@ -81,7 +81,7 @@ namespace WebOppointmentApi.Controllers
             int Per_Page = input.Per_Page;
             string sortBy = input.SortBy;
 
-            IQueryable<Organazition> query = dbContext.Organazitions.AsQueryable<Organazition>();
+            IQueryable<Orgnazition> query = dbContext.Orgnazitions.AsQueryable<Orgnazition>();
 
             query = query.Where(q => q.Parent == orgId);
             query = query.Where(q => string.IsNullOrEmpty(input.Name) || q.Name.Contains(input.Name));
@@ -96,7 +96,7 @@ namespace WebOppointmentApi.Controllers
 
             query = query.Skip(pageIndex * Per_Page).Take(Per_Page);
 
-            List<Organazition> orgs = await query.ToListAsync();
+            List<Orgnazition> orgs = await query.ToListAsync();
             List<OrgOutput> list = mapper.Map<List<OrgOutput>>(orgs);
 
             return list;
@@ -113,7 +113,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> GetOrg([FromRoute]int id)
         {
-            Organazition org = await dbContext.Organazitions.FirstOrDefaultAsync(o => o.Id == id);
+            Orgnazition org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == id);
             if (org == null)
             {
                 return NotFound(Json(new { Error = "该部门不存在" }));
@@ -136,9 +136,9 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> CreateOrg([FromBody]OrgCreateInput input)
         {
-            Organazition org = mapper.Map<Organazition>(input);
+            Orgnazition org = mapper.Map<Orgnazition>(input);
 
-            dbContext.Organazitions.Add(org);
+            dbContext.Orgnazitions.Add(org);
             await dbContext.SaveChangesAsync();
 
             return CreatedAtRoute("GetOrg", new { id = org.Id }, mapper.Map<OrgOutput>(org));
@@ -164,7 +164,7 @@ namespace WebOppointmentApi.Controllers
                 return BadRequest(Json(new { Error = "请求参数错误" }));
             }
 
-            var org = await dbContext.Organazitions.FirstOrDefaultAsync(o => o.Id == id);
+            var org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == id);
             if (org == null)
             {
                 return NotFound(Json(new { Error = "该部门不存在" }));
@@ -195,7 +195,7 @@ namespace WebOppointmentApi.Controllers
                 return BadRequest(Json(new { Error = "请求参数错误" }));
             }
 
-            var org = await dbContext.Organazitions.FirstOrDefaultAsync(o => o.Id == id);
+            var org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == id);
             if (org == null)
             {
                 return NotFound(Json(new { Error = "该部门不存在" }));
@@ -228,13 +228,13 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> DeleteOrg([FromRoute]int id)
         {
-            var org = await dbContext.Organazitions.FirstOrDefaultAsync(o => o.Id == id);
+            var org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == id);
             if (org == null)
             {
                 return NotFound(Json(new { Error = "该部门不存在" }));
             }
 
-            int childCount = dbContext.Organazitions.Count(o => o.Parent == id);
+            int childCount = dbContext.Orgnazitions.Count(o => o.Parent == id);
             int userCount = dbContext.Users.Count(u => u.OrganazitionId == id);
             if (childCount != 0 || userCount != 0)
             {
@@ -242,7 +242,7 @@ namespace WebOppointmentApi.Controllers
             }
 
             org.Status = "删除";
-            dbContext.Organazitions.Update(org);
+            dbContext.Orgnazitions.Update(org);
             await dbContext.SaveChangesAsync();
 
             return new NoContentResult();
@@ -260,13 +260,13 @@ namespace WebOppointmentApi.Controllers
         {
             for (int i = 0; i < ids.Length; i++)
             {
-                var org = await dbContext.Organazitions.FirstOrDefaultAsync(o => o.Id == ids[i]);
-                int childCount = dbContext.Organazitions.Count(o => o.Parent == ids[i]);
+                var org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == ids[i]);
+                int childCount = dbContext.Orgnazitions.Count(o => o.Parent == ids[i]);
                 int userCount = dbContext.Users.Count(u => u.OrganazitionId == ids[i]);
                 if (org != null && childCount == 0 && userCount == 0)
                 {
                     org.Status = "删除";
-                    dbContext.Organazitions.Update(org);
+                    dbContext.Orgnazitions.Update(org);
                 }
             }
             await dbContext.SaveChangesAsync();
@@ -288,7 +288,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public IActionResult GetOrgTree([FromRoute]int id)
         {
-            var org = dbContext.Organazitions.FirstOrDefault(o => o.Id == id);
+            var org = dbContext.Orgnazitions.FirstOrDefault(o => o.Id == id);
             if (org == null)
             {
                 return NotFound(Json(new { Error = "该部门不存在" }));
@@ -301,7 +301,7 @@ namespace WebOppointmentApi.Controllers
 
         private void GenerateTree(int parentId, ref OrgTreeOutput orgTreeOutput)
         {
-            var list = dbContext.Organazitions.Where(o => o.Parent == parentId).ToList();
+            var list = dbContext.Orgnazitions.Where(o => o.Parent == parentId).ToList();
             List<OrgTreeOutput> childList = new List<OrgTreeOutput>();
             foreach (var item in list)
             {

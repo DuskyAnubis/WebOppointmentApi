@@ -70,7 +70,7 @@ namespace WebOppointmentApi.Migrations
                     b.ToTable("Hospitals");
                 });
 
-            modelBuilder.Entity("WebOppointmentApi.Models.Organazition", b =>
+            modelBuilder.Entity("WebOppointmentApi.Models.Orgnazition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -101,7 +101,7 @@ namespace WebOppointmentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organazitions");
+                    b.ToTable("Orgnazitions");
                 });
 
             modelBuilder.Entity("WebOppointmentApi.Models.Permission", b =>
@@ -421,7 +421,7 @@ namespace WebOppointmentApi.Migrations
 
             modelBuilder.Entity("WebOppointmentApi.Models.User", b =>
                 {
-                    b.HasOne("WebOppointmentApi.Models.Organazition", "Organazition")
+                    b.HasOne("WebOppointmentApi.Models.Orgnazition", "Organazition")
                         .WithMany("Users")
                         .HasForeignKey("OrganazitionId")
                         .OnDelete(DeleteBehavior.Cascade);

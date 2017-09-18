@@ -2,7 +2,7 @@
 
 namespace WebOppointmentApi.Models
 {
-    public class Organazition
+    public class Orgnazition
     {
         public int Id { get; set; }
         public string Code { get; set; }

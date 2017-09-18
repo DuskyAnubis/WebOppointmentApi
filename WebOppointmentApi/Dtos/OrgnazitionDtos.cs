@@ -72,5 +72,10 @@ namespace WebOppointmentApi.Dtos
         public string Name { get; set; }
 
         public List<OrgTreeOutput> Children { get; set; }
+
+        public bool ShouldSerializeChildren()
+        {
+            return Children.Count > 0;
+        }
     }
 }
