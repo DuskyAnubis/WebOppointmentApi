@@ -63,6 +63,11 @@ namespace WebOppointmentApi.Dtos
         public string Name { get; set; }
 
         public List<PermissionTreeOutput> Children { get; set; }
+
+        public bool ShouldSerializeChildren()
+        {
+            return Children.Count > 0;
+        }
     }
 
     public class PermissionMenuOutput
@@ -77,5 +82,10 @@ namespace WebOppointmentApi.Dtos
         public string PermissionStatus { get; set; }
 
         public List<PermissionMenuOutput> Children { get; set; }
+
+        public bool ShouldSerializeChildren()
+        {
+            return Children.Count > 0;
+        }
     }
 }
