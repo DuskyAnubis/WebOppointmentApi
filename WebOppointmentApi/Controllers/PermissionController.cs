@@ -290,6 +290,41 @@ namespace WebOppointmentApi.Controllers
         }
 
         /// <summary>
+        /// 设置角色权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <param name="permIds"></param>
+        /// <returns></returns>
+        [HttpPut("~/api/v1/Roles/{roleId}/Permissions")]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SetRolePermissions([FromRoute]int roleId,[FromBody]int[] permIds)
+        {
+            var role = await dbContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
+            if (role == null)
+            {
+                return NotFound(Json(new { Error = "该角色不存在" }));
+            }
+            var deleteList = await dbContext.RolePermissions.Where(r => r.RoleId == roleId).ToListAsync();
+            dbContext.RolePermissions.RemoveRange(deleteList);
+
+            for (int i = 0; i < permIds.Length; i++)
+            {
+                var permission = await dbContext.Permissions.FirstOrDefaultAsync(o => o.Id == permIds[i]);
+                if (permission != null)
+                {
+                    var rolePermission = new RolePermission { RoleId = roleId, PermissionId = permIds[i] };
+                    dbContext.RolePermissions.Add(rolePermission);
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+
+        /// <summary>
         /// 角色-权限菜单
         /// </summary>
         /// <param name="roleId"></param>
