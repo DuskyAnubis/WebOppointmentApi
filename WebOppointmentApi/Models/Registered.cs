@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebOppointmentApi.Models
 {
     public class Registered
     {
         public int Id { get; set; }
-        public string OrganazitionId { get; set; }
-        public string UserId { get; set; }
         public int SchedulingId { get; set; }
-        public int SourceId { get; set; }
         public string RegisteredTypeCode { get; set; }
         public string RegisteredTypeName { get; set; }
         public string OrderId { get; set; }
-        public int Price { get; set; }
-        public int TreatPrice { get; set; }
-        public int PlusPrice { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public DateTime DoctorDate { get; set; }

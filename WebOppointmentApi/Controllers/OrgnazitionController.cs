@@ -299,6 +299,32 @@ namespace WebOppointmentApi.Controllers
             return Ok(orgTreeOut);
         }
 
+        /// <summary>
+        /// 获得树形菜单
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="orgTypeCode"></param>
+        /// <returns></returns>
+        [HttpGet("{parentId}/{orgTypeCode}/WithTree/Orgs")]
+        [ProducesResponseType(typeof(List<OrgTreeOutput>), 200)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(void), 500)]
+        public IActionResult GetOrgTree([FromRoute]int parentId,[FromRoute]string orgTypeCode)
+        {
+            var list = dbContext.Orgnazitions.Where(o => o.Parent == parentId && o.OrgTypeCode.Equals(orgTypeCode)).ToList();
+            List<OrgTreeOutput> treeList = new List<OrgTreeOutput>();
+
+            foreach (var item in list)
+            {
+                var orgTreeOut = mapper.Map<OrgTreeOutput>(item);
+                GenerateTree(orgTreeOut.Id, ref orgTreeOut);
+                treeList.Add(orgTreeOut);
+            }
+
+            return Ok(treeList);
+        }
+
+
         private void GenerateTree(int parentId, ref OrgTreeOutput orgTreeOutput)
         {
             var list = dbContext.Orgnazitions.Where(o => o.Parent == parentId).ToList();
@@ -311,6 +337,7 @@ namespace WebOppointmentApi.Controllers
             }
             orgTreeOutput.Children = childList;
         }
+
 
         #endregion
     }

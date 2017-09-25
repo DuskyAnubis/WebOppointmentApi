@@ -370,6 +370,28 @@ namespace WebOppointmentApi.Controllers
 
             return list;
         }
+
+        /// <summary>
+        /// 部门-用户选项
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="userTypeCode"></param>
+        /// <returns></returns>
+        [HttpGet("/api/v1/Orgs/{orgId}/{userTypeCode}/Users")]
+        [ProducesResponseType(typeof(List<UserSelectOutput>), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IEnumerable<UserSelectOutput>> GetOrgUserSelect([FromRoute]int orgId, [FromRoute]string userTypeCode)
+        {
+            IQueryable<User> query = dbContext.Users.AsQueryable<User>();
+
+            query = query.Where(q => q.OrganazitionId == orgId);
+            query = query.Where(q => q.UserTypeCode.Equals(userTypeCode));
+
+            List<User> users = await query.ToListAsync();
+            List<UserSelectOutput> list = mapper.Map<List<UserSelectOutput>>(users);
+
+            return list;
+        }
         #endregion
     }
 }

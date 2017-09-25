@@ -28,6 +28,13 @@ namespace WebOppointmentApi.Dtos
         public string Status { get; set; }
     }
 
+    public class UserSelectOutput
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
+
     public class UserQueryInput : IPageAndSortInputDto
     {
         public string Name { get; set; }

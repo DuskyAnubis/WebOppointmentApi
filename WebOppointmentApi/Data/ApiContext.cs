@@ -18,7 +18,6 @@ namespace WebOppointmentApi.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Scheduling> Schedulings { get; set; }
-        public DbSet<Source> Source { get; set; }
         public DbSet<Registered> Registereds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

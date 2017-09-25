@@ -32,7 +32,7 @@ namespace WebOppointmentApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(option=>option.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss");
 
             //添加DbContext的注入
             services.AddDbContextPool<ApiContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ApiConnection"), b => b.UseRowNumberForPaging()));
