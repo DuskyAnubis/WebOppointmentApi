@@ -137,7 +137,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateScheduling([FromRoute]int id,[FromBody]SchedulingUpdateInput input)
+        public async Task<IActionResult> UpdateScheduling([FromRoute]int id, [FromBody]SchedulingUpdateInput input)
         {
             if (input.Id != id)
             {
@@ -167,7 +167,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> PatchScheduling([FromRoute]int id,[FromBody]JsonPatchDocument<SchedulingUpdateInput> patchDoc)
+        public async Task<IActionResult> PatchScheduling([FromRoute]int id, [FromBody]JsonPatchDocument<SchedulingUpdateInput> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -242,6 +242,80 @@ namespace WebOppointmentApi.Controllers
 
             return new NoContentResult();
         }
+        #endregion
+
+        #region 停诊与复诊
+        /// <summary>
+        ///  停诊
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("WithEndTreat/{id}")]
+        [ValidateModel]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> EndTreatScheduling([FromRoute]int id, [FromBody]SchedulingEndTreatInput input)
+        {
+            if (input.Id != id)
+            {
+                return BadRequest(Json(new { Error = "请求参数错误" }));
+            }
+            var scheduling = await dbContext.Schedulings.FirstOrDefaultAsync(s => s.Id == id);
+            if (scheduling == null)
+            {
+                return NotFound(Json(new { Error = "该排班不存在" }));
+            }
+
+            scheduling.EndTreatCode = "1";
+            scheduling.EndTreatName = "已停诊";
+            scheduling.EndTreatDate = DateTime.Now;
+            scheduling.EndTreatReason = input.EndTreatReason;
+
+            dbContext.Schedulings.Update(scheduling);
+            await dbContext.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+
+        /// <summary>
+        ///  复诊
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPut("WithRecoveryTreat/{id}")]
+        [ValidateModel]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> RecoveryTreatScheduling([FromRoute]int id, [FromBody]SchedulingRecoveryTreatInput input)
+        {
+            if (input.Id != id)
+            {
+                return BadRequest(Json(new { Error = "请求参数错误" }));
+            }
+            var scheduling = await dbContext.Schedulings.FirstOrDefaultAsync(s => s.Id == id);
+            if (scheduling == null)
+            {
+                return NotFound(Json(new { Error = "该排班不存在" }));
+            }
+
+            scheduling.EndTreatCode = "0";
+            scheduling.EndTreatName = "未停诊";
+            scheduling.RecoveryTreatDate = DateTime.Now;
+
+            dbContext.Schedulings.Update(scheduling);
+            await dbContext.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+
         #endregion
     }
 }

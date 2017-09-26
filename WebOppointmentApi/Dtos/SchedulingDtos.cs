@@ -29,7 +29,7 @@ namespace WebOppointmentApi.Dtos
         public int TotalCount { get; set; }
         public string PeriodTypeCode { get; set; }
         public string PeriodTypeName { get; set; }
-        public string StarTime { get; set; }
+        public string StartTime { get; set; }
         public string EndTime { get; set; }
         public int Price { get; set; }
         public int TreatPrice { get; set; }
@@ -71,7 +71,7 @@ namespace WebOppointmentApi.Dtos
         public string PeriodTypeCode { get; set; }
         public string PeriodTypeName { get; set; }
         [Required(ErrorMessage = "请选择开始时间")]
-        public string StarTime { get; set; }
+        public string StartTime { get; set; }
         [Required(ErrorMessage = "请选择结束时间")]
         public string EndTime { get; set; }
         public int Price { get; set; }
@@ -105,7 +105,7 @@ namespace WebOppointmentApi.Dtos
         public string PeriodTypeCode { get; set; }
         public string PeriodTypeName { get; set; }
         [Required(ErrorMessage = "请选择开始时间")]
-        public string StarTime { get; set; }
+        public string StartTime { get; set; }
         [Required(ErrorMessage = "请选择结束时间")]
         public string EndTime { get; set; }
         public int Price { get; set; }
@@ -113,5 +113,25 @@ namespace WebOppointmentApi.Dtos
         public int PlusPrice { get; set; }
         public string Address { get; set; }
         public string Status { get; set; }
+    }
+
+    public class SchedulingEndTreatInput
+    {
+        [Required(ErrorMessage = "Id不能为空")]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "请输入停诊原因")]
+        public string EndTreatReason { get; set; }
+        public int IsSms { get; set; }
+        public string SmsDate { get; set; }
+        public string SmsTime { get; set; }
+    }
+
+    public class SchedulingRecoveryTreatInput
+    {
+        [Required(ErrorMessage = "Id不能为空")]
+        public int Id { get; set; }
+        public int IsSms { get; set; }
+        public string SmsDate { get; set; }
+        public string SmsTime { get; set; }
     }
 }

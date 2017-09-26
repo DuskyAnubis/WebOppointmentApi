@@ -89,6 +89,29 @@ namespace WebOppointmentApi.Controllers
         }
 
         /// <summary>
+        /// 获得字典信息
+        /// </summary>
+        /// <param name="typeCode"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpGet("{typeCode}/{code}/Dictionary")]
+        [ProducesResponseType(typeof(DictionaryOutput), 200)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> GetDictionary([FromRoute]string typeCode, [FromRoute]string code)
+        {
+            Dictionary dictionary = await dbContext.Dictionaries.FirstOrDefaultAsync(d => d.TypeCode.Equals(typeCode) && d.Code.Equals(code));
+            if (dictionary == null)
+            {
+                return NotFound(Json(new { Error = "该字典不存在" }));
+            }
+
+            DictionaryOutput dictionaryOutput = mapper.Map<DictionaryOutput>(dictionary);
+
+            return new ObjectResult(dictionaryOutput);
+        }
+
+        /// <summary>
         /// 创建字典
         /// </summary>
         /// <param name="input"></param>

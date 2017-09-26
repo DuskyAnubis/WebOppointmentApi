@@ -19,7 +19,7 @@ namespace WebOppointmentApi.Models
         public int TotalCount { get; set; }
         public string PeriodTypeCode { get; set; }
         public string PeriodTypeName { get; set; }
-        public string StarTime { get; set; }
+        public string StartTime { get; set; }
         public string EndTime { get; set; }
         public int Price { get; set; }
         public int TreatPrice { get; set; }
