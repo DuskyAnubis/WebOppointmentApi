@@ -11,9 +11,10 @@ using WebOppointmentApi.Data;
 namespace WebOppointmentApi.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    partial class ApiContextModelSnapshot : ModelSnapshot
+    [Migration("20170927005741_updatedb02")]
+    partial class updatedb02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,10 +261,6 @@ namespace WebOppointmentApi.Migrations
                     b.Property<int>("Price");
 
                     b.Property<DateTime?>("RecoveryTreatDate");
-
-                    b.Property<int>("RemainCount")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasComputedColumnSql("[MaxCount] - select * from Registereds where SchedulingId = [id]");
 
                     b.Property<DateTime?>("SchedulingDate");
 

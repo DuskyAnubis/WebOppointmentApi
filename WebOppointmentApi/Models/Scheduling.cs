@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WebOppointmentApi.Models
 {
@@ -28,5 +29,6 @@ namespace WebOppointmentApi.Models
         public string Status { get; set; }
 
         public User User { get; set; }
+        public ICollection<Registered> Registereds { get; set; }
     }
 }

@@ -57,9 +57,23 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(output => output.UserRankCode, option => option.MapFrom(s => s.User.UserRankCode))
                 .ForMember(output => output.UserRankName, option => option.MapFrom(s => s.User.UserRankName))
                 .ForMember(output => output.RegisteredRankCode, option => option.MapFrom(s => s.User.RegisteredRankCode))
-                .ForMember(output => output.RegisteredRankName, option => option.MapFrom(s => s.User.RegisteredRankName));
+                .ForMember(output => output.RegisteredRankName, option => option.MapFrom(s => s.User.RegisteredRankName))
+                .ForMember(output => output.RemainCount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Count));
             CreateMap<SchedulingCreateInput, Scheduling>();
             CreateMap<Scheduling, SchedulingUpdateInput>();
+
+            CreateMap<Registered, RegisteredOutput>()
+                .ForMember(output => output.OrganazitionId, option => option.MapFrom(r => r.Scheduling.User.OrganazitionId))
+                .ForMember(output => output.OrganazitionCode, option => option.MapFrom(r => r.Scheduling.User.Organazition.Code))
+                .ForMember(output => output.OrganazitionName, option => option.MapFrom(r => r.Scheduling.User.Organazition.Name))
+                .ForMember(output => output.UserId, option => option.MapFrom(r => r.Scheduling.User.Id))
+                .ForMember(output => output.UserCode, option => option.MapFrom(r => r.Scheduling.User.Code))
+                .ForMember(output => output.UserName, option => option.MapFrom(r => r.Scheduling.User.Name))
+                .ForMember(output => output.Price, option => option.MapFrom(r => r.Scheduling.Price))
+                .ForMember(output => output.TreatPrice, option => option.MapFrom(r => r.Scheduling.TreatPrice))
+                .ForMember(output => output.PlusPrice, option => option.MapFrom(r => r.Scheduling.PlusPrice));
+            CreateMap<RegisteredCreateInput, Registered>();
+            CreateMap<Registered, RegisteredUpdateInput>();
         }
     }
 }

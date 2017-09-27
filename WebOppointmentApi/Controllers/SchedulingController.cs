@@ -38,7 +38,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(List<OrgOutput>), 200)]
+        [ProducesResponseType(typeof(List<SchedulingOutput>), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IEnumerable<SchedulingOutput>> GetSchedulings(SchedulingQueryInput input)
         {
@@ -49,6 +49,7 @@ namespace WebOppointmentApi.Controllers
             IQueryable<Scheduling> query = dbContext.Schedulings
                 .Include(q => q.User)
                 .Include(q => q.User.Organazition)
+                .Include(q => q.Registereds)
                 .AsQueryable<Scheduling>();
 
             query = query.Where(q => input.OrganazitionId == 0 || q.User.OrganazitionId == input.OrganazitionId);
@@ -77,7 +78,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}", Name = "GetScheduling")]
-        [ProducesResponseType(typeof(UserOutput), 200)]
+        [ProducesResponseType(typeof(SchedulingOutput), 200)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> GetScheduling([FromRoute]int id)
@@ -85,6 +86,7 @@ namespace WebOppointmentApi.Controllers
             Scheduling scheduling = await dbContext.Schedulings
               .Include(q => q.User)
               .Include(q => q.User.Organazition)
+              .Include(q => q.Registereds)
               .FirstOrDefaultAsync(s => s.Id == id);
 
             if (scheduling == null)
@@ -274,6 +276,7 @@ namespace WebOppointmentApi.Controllers
             scheduling.EndTreatName = "已停诊";
             scheduling.EndTreatDate = DateTime.Now;
             scheduling.EndTreatReason = input.EndTreatReason;
+            scheduling.Status = "正常";
 
             dbContext.Schedulings.Update(scheduling);
             await dbContext.SaveChangesAsync();
@@ -309,6 +312,7 @@ namespace WebOppointmentApi.Controllers
             scheduling.EndTreatCode = "0";
             scheduling.EndTreatName = "未停诊";
             scheduling.RecoveryTreatDate = DateTime.Now;
+            scheduling.Status = "正常";
 
             dbContext.Schedulings.Update(scheduling);
             await dbContext.SaveChangesAsync();

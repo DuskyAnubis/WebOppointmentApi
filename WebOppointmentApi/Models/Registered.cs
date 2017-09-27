@@ -11,15 +11,15 @@ namespace WebOppointmentApi.Models
         public string OrderId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
-        public DateTime DoctorDate { get; set; }
+        public DateTime? DoctorDate { get; set; }
         public string DoctorTime { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public DateTime RegisteredDate { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public DateTime? RegisteredDate { get; set; }
         public string IDCard { get; set; }
         public string GenderCode { get; set; }
         public string GenderName { get; set; }
         public string Address { get; set; }
-        public DateTime Birth { get; set; }
+        public string Birth { get; set; }
         public string FromType { get; set; }
         public string MedicalInsuranceCode { get; set; }
         public string MedicalInsuranceName { get; set; }

@@ -20,13 +20,14 @@ namespace WebOppointmentApi.Dtos
         public string UserRankName { get; set; }
         public string RegisteredRankCode { get; set; }
         public string RegisteredRankName { get; set; }
-        public DateTime SurgeryDate { get; set; }
-        public DateTime SchedulingDate { get; set; }
-        public DateTime EndTreatDate { get; set; }
-        public DateTime RecoveryTreatDate { get; set; }
+        public DateTime? SurgeryDate { get; set; }
+        public DateTime? SchedulingDate { get; set; }
+        public DateTime? EndTreatDate { get; set; }
+        public DateTime? RecoveryTreatDate { get; set; }
         public string EndTreatReason { get; set; }
         public int MaxCount { get; set; }
         public int TotalCount { get; set; }
+        public int RemainCount { get; set; } //剩余可预约数
         public string PeriodTypeCode { get; set; }
         public string PeriodTypeName { get; set; }
         public string StartTime { get; set; }
