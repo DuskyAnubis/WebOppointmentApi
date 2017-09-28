@@ -66,6 +66,7 @@ namespace WebOppointmentApi.Dtos
         [Required(ErrorMessage = "请选择预约时间")]
         public string DoctorTime { get; set; }
         public DateTime? RegisteredDate { get; set; }
+        [Required(ErrorMessage = "请选择挂号类别")]
         public string RegisteredTypeCode { get; set; }
         public string RegisteredTypeName { get; set; }
         [Required(ErrorMessage = "请输入患者姓名")]
@@ -74,7 +75,7 @@ namespace WebOppointmentApi.Dtos
         public string Phone { get; set; }
         [Required(ErrorMessage = "请输入患者身份证号")]
         public string IDCard { get; set; }
-        [Required(ErrorMessage = "请输入患者性别")]
+        [Required(ErrorMessage = "请选择患者性别")]
         public string GenderCode { get; set; }
         public string GenderName { get; set; }
         [Required(ErrorMessage = "请输入患者地址")]
@@ -83,14 +84,18 @@ namespace WebOppointmentApi.Dtos
         public string Birth { get; set; }
         [Required(ErrorMessage = "请输入患者来源")]
         public string FromType { get; set; }
-        [Required(ErrorMessage = "请输入患者医保类型")]
+        [Required(ErrorMessage = "请选择患者医保类型")]
         public string MedicalInsuranceCode { get; set; }
         public string MedicalInsuranceName { get; set; }
+        [Required(ErrorMessage = "请选择患者卡类型")]
         public string CardTypeCode { get; set; }
         public string CardTypeName { get; set; }
+        [Required(ErrorMessage = "请输入患者卡号")]
         public string CardNo { get; set; }
+        [Required(ErrorMessage = "请选择患者类别")]
         public string MedicalTypeCode { get; set; }
         public string MedicalTypeName { get; set; }
+        [Required(ErrorMessage = "请选择挂号状态")]
         public string RegisteredStateCode { get; set; }
         public string RegisteredStateName { get; set; }
         public string Status { get; set; }

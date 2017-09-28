@@ -21,7 +21,7 @@ namespace WebOppointmentApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1/Users")]
-    //[Authorize]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly ApiContext dbContext;

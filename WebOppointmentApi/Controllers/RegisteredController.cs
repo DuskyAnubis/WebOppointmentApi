@@ -56,7 +56,7 @@ namespace WebOppointmentApi.Controllers
             query = query.Where(q => input.UserId == 0 || q.Scheduling.UserId == input.UserId);
             query = query.Where(q => !input.DoctorDate.HasValue || q.DoctorDate.Equals(input.DoctorDate));
             query = query.Where(q => string.IsNullOrEmpty(input.Name) || q.Name.Contains(input.Name));
-            query = query.Where(q => string.IsNullOrEmpty(input.OrderId) || q.Name.Equals(input.OrderId));
+            query = query.Where(q => string.IsNullOrEmpty(input.OrderId) || q.OrderId.Equals(input.OrderId));
             query = query.Where(q => string.IsNullOrEmpty(input.RegisteredStateCode) || q.RegisteredStateCode.Equals(input.RegisteredStateCode));
             query = query.OrderBy(sortBy);
 
@@ -132,7 +132,7 @@ namespace WebOppointmentApi.Controllers
 
             var registered = mapper.Map<Registered>(input);
             registered.TransactionDate = DateTime.Now;
-            registered.OrderId = "op" + DateTime.Now.ToString("yyyyMMddhhmmss");
+            registered.OrderId = "OPRE" + DateTime.Now.ToString("yyyyMMddhhmmss");
 
             dbContext.Registereds.Add(registered);
             await dbContext.SaveChangesAsync();
@@ -261,6 +261,11 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region 取消预约
+        /// <summary>
+        /// 取消预约
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut("WithCancel/{id}")]
         [ValidateModel]
         [ProducesResponseType(typeof(void), 204)]
@@ -285,7 +290,12 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
-        #region 爽约
+        #region 爽约、
+        /// <summary>
+        /// 爽约
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut("WithBreakPromise/{id}")]
         [ValidateModel]
         [ProducesResponseType(typeof(void), 204)]
@@ -310,6 +320,11 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region 取号
+        /// <summary>
+        /// 取号
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut("WithTake/{id}")]
         [ValidateModel]
         [ProducesResponseType(typeof(void), 204)]

@@ -19,7 +19,7 @@ namespace WebOppointmentApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1/Hospital")]
-    //[Authorize]
+    [Authorize]
     public class HospitalController : Controller
     {
         private readonly ApiContext dbContext;
