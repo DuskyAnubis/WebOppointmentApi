@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace WebOppointmentApi.Common
@@ -15,6 +16,47 @@ namespace WebOppointmentApi.Common
                 sb.Append(data[i].ToString("X2"));
             }
             return sb.ToString();
+        }
+
+        public static string Base64Encode(string input)
+        {
+            string encode = string.Empty;
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+            try
+            {
+                encode = Convert.ToBase64String(bytes);
+            }
+            catch
+            {
+                encode = input;
+            }
+            return encode;
+        }
+
+        public static string Base64Decode(string input)
+        {
+            string decode = string.Empty;
+            byte[] bytes = Convert.FromBase64String(input);
+            try
+            {
+                decode = Encoding.UTF8.GetString(bytes);
+            }
+            catch
+            {
+
+                decode = input;
+            }
+            return decode;
+        }
+
+        public static string UrlEncode(string input)
+        {
+            return System.Web.HttpUtility.UrlEncode(input,Encoding.UTF8);
+        }
+
+        public static string UrlDecode(string input)
+        {
+            return System.Web.HttpUtility.UrlDecode(input, Encoding.UTF8);
         }
     }
 }

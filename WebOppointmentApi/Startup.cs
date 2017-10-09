@@ -28,6 +28,7 @@ namespace WebOppointmentApi
 
         public IConfiguration Configuration { get; }
         private JWTTokenOptions tokenOptions;
+        private OppointmentApiOptions apiOptions;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -119,6 +120,16 @@ namespace WebOppointmentApi
             });
 
             //鉴权规则设置
+
+            //平台Api调用相关
+            apiOptions = new OppointmentApiOptions()
+            {
+                BaseUri = Configuration.GetSection("OppointmentApi")["BaseUri"].ToString(),
+                Version = Configuration.GetSection("OppointmentApi")["Version"].ToString(),
+                FromType = Configuration.GetSection("OppointmentApi")["FromType"].ToString(),
+                SecretKey = Configuration.GetSection("OppointmentApi")["SecretKey"].ToString()
+            };
+            services.AddSingleton<OppointmentApiOptions>(apiOptions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
