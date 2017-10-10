@@ -74,6 +74,17 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(output => output.PlusPrice, option => option.MapFrom(r => r.Scheduling.PlusPrice));
             CreateMap<RegisteredCreateInput, Registered>();
             CreateMap<Registered, RegisteredUpdateInput>();
+
+            CreateMap<Hospital, SynchronizingHospitalInput>()
+                .ForMember(input => input.Atype, option => option.MapFrom(h => Convert.ToInt32(h.AccessTypeCode)))
+                .ForMember(input => input.Addr, option => option.MapFrom(h => h.Address));
+
+            CreateMap<Orgnazition, SynchronizingDept>()
+                .ForMember(input => input.Pid, option => option.MapFrom(o => o.Parent.ToString()))
+                .ForMember(input => input.Pname, option => option.UseValue(""))
+                .ForMember(input => input.Addr, option => option.MapFrom(o => o.Address))
+                .ForMember(input => input.Kword, option => option.MapFrom(o => o.KeyWord));
+
         }
     }
 }

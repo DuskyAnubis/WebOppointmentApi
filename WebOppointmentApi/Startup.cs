@@ -124,6 +124,7 @@ namespace WebOppointmentApi
             //平台Api调用相关
             apiOptions = new OppointmentApiOptions()
             {
+                HospitalId = Configuration.GetSection("OppointmentApi")["HospitalId"].ToString(),
                 BaseUri = Configuration.GetSection("OppointmentApi")["BaseUri"].ToString(),
                 Version = Configuration.GetSection("OppointmentApi")["Version"].ToString(),
                 FromType = Configuration.GetSection("OppointmentApi")["FromType"].ToString(),
