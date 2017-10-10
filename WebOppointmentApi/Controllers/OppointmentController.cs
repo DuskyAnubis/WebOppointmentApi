@@ -52,6 +52,8 @@ namespace WebOppointmentApi.Controllers
         }
 
         #region 平台提供接口
+
+        #region 同步医院信息
         /// <summary>
         /// 同步医院信息
         /// </summary>
@@ -79,7 +81,9 @@ namespace WebOppointmentApi.Controllers
 
             return new ObjectResult(input);
         }
+        #endregion
 
+        #region 同步科室信息
         /// <summary>
         /// 同步科室信息
         /// </summary>
@@ -87,6 +91,7 @@ namespace WebOppointmentApi.Controllers
         /// <returns></returns>
         [HttpPost("SynchronizingDept")]
         //[Authorize]
+        [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
@@ -97,7 +102,7 @@ namespace WebOppointmentApi.Controllers
             var header = GetOppointmentApiHeader();
             if (param.Opcode == 10)
             {
-                var orgs = await dbContext.Orgnazitions.ToListAsync();
+                var orgs = await dbContext.Orgnazitions.Where(q => q.OrgTypeCode.Equals("01")).ToListAsync();
                 if (orgs == null || orgs.Count == 0)
                 {
                     return NotFound(Json(new { Error = "同步失败，科室信息不存在" }));
@@ -122,7 +127,7 @@ namespace WebOppointmentApi.Controllers
                 var orgs = new List<Orgnazition>();
                 foreach (var id in ids)
                 {
-                    var org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == id);
+                    var org = await dbContext.Orgnazitions.FirstOrDefaultAsync(o => o.Id == id && o.OrgTypeCode.Equals("01"));
                     if (org != null)
                     {
                         orgs.Add(org);
@@ -143,6 +148,155 @@ namespace WebOppointmentApi.Controllers
                 return new ObjectResult(input);
             }
         }
+        #endregion
+
+        #region 同步医生信息
+        /// <summary>
+        /// 同步医生信息
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingDoctor")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingDoctor([FromBody]SynchronizingDoctorParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            if (param.Opcode == 10)
+            {
+                var users = await dbContext.Users.Include(u => u.Organazition).Where(q => param.OrgId == 0 || q.OrganazitionId == param.OrgId).Where(q => q.UserTypeCode.Equals("01")).ToListAsync();
+                if (users == null || users.Count == 0)
+                {
+                    return NotFound(Json(new { Error = "同步失败，医生信息不存在" }));
+                }
+                var doctors = mapper.Map<List<SynchronizingDoctor>>(users);
+                var doctorsInput = new SynchronizingDoctorInput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Opcode = param.Opcode,
+                    Doctors = doctors
+                };
+                var input = new { head = header, body = doctorsInput };
+                return new ObjectResult(input);
+            }
+            else
+            {
+                if (param.Ids.Length == 0)
+                {
+                    return BadRequest(Json(new { Error = "请求参数错误" }));
+                }
+                int[] ids = param.Ids;
+                var users = new List<User>();
+                foreach (var id in ids)
+                {
+                    var user = await dbContext.Users.Include(u => u.Organazition).FirstOrDefaultAsync(u => u.Id == id && u.UserTypeCode.Equals("01"));
+                    if (user != null)
+                    {
+                        users.Add(user);
+                    }
+                }
+                if (users.Count == 0)
+                {
+                    return NotFound(Json(new { Error = "同步失败，医生信息不存在" }));
+                }
+                var doctors = mapper.Map<List<SynchronizingDoctor>>(users);
+                var doctorsInput = new SynchronizingDoctorInput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Opcode = param.Opcode,
+                    Doctors = doctors
+                };
+                var input = new { head = header, body = doctorsInput };
+                return new ObjectResult(input);
+            }
+        }
+        #endregion
+
+        #region 同步排班信息
+        /// <summary>
+        /// 同步排班信息
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingWork")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingWork([FromBody]SynchronizingWorkParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            if (param.Opcode == 10)
+            {
+                var schedulings = await dbContext.Schedulings
+                    .Include(s => s.User)
+                    .Include(s => s.User.Organazition)
+                    .Include(s => s.Registereds)
+                    .Where(q => q.User.OrganazitionId == param.OrgId)
+                    .Where(q => q.SurgeryDate >= Convert.ToDateTime(param.Date))
+                    .ToListAsync();
+                if (schedulings == null || schedulings.Count == 0)
+                {
+                    return NotFound(Json(new { Error = "同步失败，排班信息不存在" }));
+                }
+                var wroks = mapper.Map<List<SynchronizingWork>>(schedulings);
+                var wroksInput = new SynchronizingWorkInput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Opcode = param.Opcode,
+                    Atype = 0,
+                    Deptid = param.OrgId,
+                    Works = wroks
+                };
+                var input = new { head = header, body = wroksInput };
+                return new ObjectResult(input);
+            }
+            else
+            {
+                if (param.Ids.Length == 0)
+                {
+                    return BadRequest(Json(new { Error = "请求参数错误" }));
+                }
+                int[] ids = param.Ids;
+                var schedulings = new List<Scheduling>();
+                foreach (var id in ids)
+                {
+                    var scheduling = await dbContext.Schedulings
+                        .Include(s => s.User)
+                        .Include(s => s.User.Organazition)
+                        .Include(s => s.Registereds)
+                        .FirstOrDefaultAsync(s => s.Id == id && s.User.OrganazitionId == param.OrgId);
+                    if (scheduling != null)
+                    {
+                        schedulings.Add(scheduling);
+                    }
+                }
+                if (schedulings.Count == 0)
+                {
+                    return NotFound(Json(new { Error = "同步失败，该排班信息不存在" }));
+                }
+                var wroks = mapper.Map<List<SynchronizingWork>>(schedulings);
+                var doctorsInput = new SynchronizingWorkInput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Opcode = param.Opcode,
+                    Atype = 0,
+                    Deptid = param.OrgId,
+                    Works = wroks
+                };
+                var input = new { head = header, body = doctorsInput };
+                return new ObjectResult(input);
+            }
+        }
+        #endregion
 
         #endregion
 
