@@ -57,7 +57,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("SynchronizingHospital")]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
@@ -87,7 +87,6 @@ namespace WebOppointmentApi.Controllers
         /// <returns></returns>
         [HttpPost("SynchronizingDept")]
         //[Authorize]
-        [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
