@@ -298,6 +298,41 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+
+        #region 同步预约执行情况
+        /// <summary>
+        /// 同步预约执行情况
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingOrders")]
+        //[Authorize]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingOrders([FromBody]SynchronizingOrderParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            var registereds = await dbContext.Registereds.Where(r => r.DoctorDate == Convert.ToDateTime(param.Date)).ToListAsync();
+
+            if (registereds == null || registereds.Count == 0)
+            {
+                return NotFound(Json(new { Error = "同步失败，预约信息不存在" }));
+            }
+
+            var orders = mapper.Map<List<SynchronizingOrder>>(registereds);
+            var ordersInput = new SynchronizingOrderInput
+            {
+                Hospid = apiOptions.HospitalId,
+                Orders = orders
+            };
+            var input = new { head = header, body = orders };
+
+            return new ObjectResult(input);
+        }
+        #endregion
+
         #endregion
 
         #region HIS提供接口

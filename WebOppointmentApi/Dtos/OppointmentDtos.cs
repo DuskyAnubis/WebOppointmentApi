@@ -71,7 +71,6 @@ namespace WebOppointmentApi.Dtos
     }
     #endregion
 
-
     #region 同步医生信息
     public class SynchronizingDoctorParam
     {
@@ -163,6 +162,31 @@ namespace WebOppointmentApi.Dtos
         public bool ShouldSerializeWorks()
         {
             return Works.Count > 0;
+        }
+    }
+    #endregion
+
+    #region 同步预约执行情况
+    public class SynchronizingOrderParam
+    {
+        public string Date { get; set; }
+    }
+
+    public class SynchronizingOrder
+    {
+        public string Oid { get; set; }
+        public int State { get; set; }
+    }
+
+    public class SynchronizingOrderInput
+    {
+        public string Hospid { get; set; }
+
+        public List<SynchronizingOrder> Orders { get; set; }
+
+        public bool ShouldSerializeOrders()
+        {
+            return Orders.Count > 0;
         }
     }
     #endregion
