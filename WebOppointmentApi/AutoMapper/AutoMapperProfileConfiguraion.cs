@@ -116,7 +116,7 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(input => input.Wrank, option => option.MapFrom(s => s.User.RegisteredRankName))
                 .ForMember(input => input.Addr, option => option.MapFrom(s => s.Address));
 
-            CreateMap<Registered, SynchronizingOrder>()
+            CreateMap<Registered, SynchronizingStateOrder>()
                 .ForMember(input => input.Oid, option => option.MapFrom(r => r.OrderId))
                 .ForMember(input => input.State, option => option.MapFrom(r => Convert.ToInt32(r.RegisteredStateCode)));
         }

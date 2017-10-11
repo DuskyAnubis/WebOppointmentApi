@@ -167,26 +167,62 @@ namespace WebOppointmentApi.Dtos
     #endregion
 
     #region 同步预约执行情况
-    public class SynchronizingOrderParam
+    public class SynchronizingOrderStateParam
     {
+        [Required(ErrorMessage = "请输入就诊日期")]
         public string Date { get; set; }
     }
 
-    public class SynchronizingOrder
+    public class SynchronizingStateOrder
     {
         public string Oid { get; set; }
         public int State { get; set; }
     }
 
-    public class SynchronizingOrderInput
+    public class SynchronizingOrderStateInput
     {
         public string Hospid { get; set; }
 
-        public List<SynchronizingOrder> Orders { get; set; }
+        public List<SynchronizingStateOrder> Orders { get; set; }
 
         public bool ShouldSerializeOrders()
         {
             return Orders.Count > 0;
+        }
+    }
+    #endregion
+
+    #region 同步停诊情况
+    public class SynchronizingsStopParam
+    {
+        [Required(ErrorMessage = "Id不能为空")]
+        public int Id { get; set; }
+        public int EndTreat { get; set; }
+        public string EndTreatReason { get; set; }
+        public int IsSms { get; set; }
+        public string SmsDate { get; set; }
+        public string SmsTime { get; set; }
+    }
+
+    public class SynchronizingsStop
+    {
+        public int Endtreat { get; set; }
+        public string Deptid { get; set; }
+        public string Workid { get; set; }
+        public int Issms { get; set; }
+        public string Time { get; set; }
+        public string Reason { get; set; }
+    }
+
+    public class SynchronizingsStopInput
+    {
+        public string Hospid { get; set; }
+
+        public List<SynchronizingsStop> Values { get; set; }
+
+        public bool ShouldSerializeValues()
+        {
+            return Values.Count > 0;
         }
     }
     #endregion

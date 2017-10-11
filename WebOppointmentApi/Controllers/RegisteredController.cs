@@ -290,7 +290,7 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
-        #region 爽约、
+        #region 爽约
         /// <summary>
         /// 爽约
         /// </summary>
