@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using WebOppointmentApi.Common;
 
 namespace WebOppointmentApi.Dtos
 {
@@ -218,6 +218,68 @@ namespace WebOppointmentApi.Dtos
         public bool ShouldSerializeValues()
         {
             return Values.Count > 0;
+        }
+    }
+    #endregion
+
+    #region 同步医院预约挂号
+    public class SynchronizingsOrderParam
+    {
+        [Required(ErrorMessage = "Id不能为空")]
+        public int Id { get; set; }
+    }
+
+    public class SynchronizingsOrder
+    {
+        public int Atype { get; set; }
+        public int Otype { get; set; }
+        public string Hospid { get; set; }
+        public string Hospname { get; set; }
+        public string Deptid { get; set; }
+        public string Deptname { get; set; }
+        public string Docid { get; set; }
+        public string Docname { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+        public string Workid { get; set; }
+        public string Sourceid { get; set; }
+        public int Acount { get; set; }
+        public string Orderid { get; set; }
+        public string Phone { get; set; }
+        public string Card { get; set; }
+        public string Name { get; set; }
+        public string Addr { get; set; }
+        public string Birth { get; set; }
+        public int Ptype { get; set; }
+        public string Rtype { get; set; }
+        public string Fromtype { get; set; }
+        public string Cid { get; set; }
+        public int Ctype { get; set; }
+    }
+    #endregion
+
+    #region 同步实际取号量
+    public class SynchronizingsMedParam
+    {
+        [Required(ErrorMessage = "请输入出诊日期")]
+        public string Date { get; set; }
+    }
+
+    public class SynchronizingsMed
+    {
+        public string Workid { get; set; }
+        public int Acount { get; set; }
+    }
+
+    public class SynchronizingsMedInput
+    {
+        public string Hospid { get; set; }
+
+        public List<SynchronizingsMed> Works { get; set; }
+
+        public bool ShouldSerializeWorks()
+        {
+            return Works.Count > 0;
         }
     }
     #endregion

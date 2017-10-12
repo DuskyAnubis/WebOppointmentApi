@@ -304,7 +304,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        [HttpPost("SynchronizingOrders")]
+        [HttpPost("SynchronizingOrderStates")]
         //[Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
@@ -312,7 +312,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> SynchronizingOrders([FromBody]SynchronizingOrderStateParam param)
+        public async Task<IActionResult> SynchronizingOrderStates([FromBody]SynchronizingOrderStateParam param)
         {
             var header = GetOppointmentApiHeader();
             var registereds = await dbContext.Registereds.Where(r => r.DoctorDate == Convert.ToDateTime(param.Date)).ToListAsync();
@@ -381,7 +381,7 @@ namespace WebOppointmentApi.Controllers
         }
 
         /// <summary>
-        /// 同步全部未同步停/复诊信息
+        /// 同步所有未同步停/复诊信息
         /// </summary>
         /// <returns></returns>
         [HttpPost("SynchronizingStops")]
@@ -413,6 +413,124 @@ namespace WebOppointmentApi.Controllers
                 Values = stops
             };
             var input = new { head = header, body = stopsInput };
+
+            return new ObjectResult(input);
+        }
+        #endregion
+
+        #region 同步医院预约挂号
+        /// <summary>
+        /// 同步医院预约挂号
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingOrder")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingOrder([FromBody]SynchronizingsOrderParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            var registered = await dbContext.Registereds
+                .Include(r => r.Scheduling)
+                .Include(r => r.Scheduling.User)
+                .Include(r => r.Scheduling.User.Organazition)
+                .Include(r => r.Scheduling.Registereds)
+                .FirstOrDefaultAsync(r => r.Id == param.Id && r.Status.Equals("正常"));
+
+            if (registered == null)
+            {
+                return NotFound(Json(new { Error = "同步失败，不存在或已同步该信息" }));
+            }
+
+            var order = mapper.Map<SynchronizingsOrder>(registered);
+            order.Hospid = apiOptions.HospitalId;
+            order.Hospname = apiOptions.HospitalName;
+
+            var input = new { head = header, body = order };
+
+            return new ObjectResult(input);
+        }
+
+        /// <summary>
+        /// 同步所有未同步的医院预约挂号
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("SynchronizingOrders")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingOrders()
+        {
+            var header = GetOppointmentApiHeader();
+            var registereds = await dbContext.Registereds
+                .Include(r => r.Scheduling)
+                .Include(r => r.Scheduling.User)
+                .Include(r => r.Scheduling.User.Organazition)
+                .Include(r => r.Scheduling.Registereds)
+                .Where(r => r.Status.Equals("正常")).ToListAsync();
+
+            if (registereds == null || registereds.Count == 0)
+            {
+                return NotFound(Json(new { Error = "同步失败，不存在未同步的医院预约挂号信息" }));
+            }
+
+            var orders = mapper.Map<List<SynchronizingsOrder>>(registereds);
+            foreach (var order in orders)
+            {
+                order.Hospid = apiOptions.HospitalId;
+                order.Hospname = apiOptions.HospitalName;
+            }
+
+            var input = new { head = header, body = orders };
+
+            return new ObjectResult(input);
+        }
+        #endregion
+
+        #region 同步医院实际取号量
+        /// <summary>
+        /// 同步医院实际取号量
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingMed")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingMed([FromBody]SynchronizingsMedParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            var schedulings = await dbContext.Schedulings
+                .Include(s => s.Registereds)
+                .Where(s => s.SurgeryDate == Convert.ToDateTime(param.Date))
+                .ToListAsync();
+
+            if (schedulings == null || schedulings.Count == 0)
+            {
+                return NotFound(Json(new { Error = "同步失败，排班信息不存在" }));
+            }
+
+            var meds = mapper.Map<List<SynchronizingsMed>>(schedulings);
+
+            var medsInput = new SynchronizingsMedInput
+            {
+                Hospid = apiOptions.HospitalId,
+                Works = meds
+            };
+            var input = new { head = header, body = medsInput };
 
             return new ObjectResult(input);
         }

@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebOppointmentApi.Models;
 using WebOppointmentApi.Dtos;
 using WebOppointmentApi.Common;
@@ -58,7 +56,7 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(output => output.UserRankName, option => option.MapFrom(s => s.User.UserRankName))
                 .ForMember(output => output.RegisteredRankCode, option => option.MapFrom(s => s.User.RegisteredRankCode))
                 .ForMember(output => output.RegisteredRankName, option => option.MapFrom(s => s.User.RegisteredRankName))
-                .ForMember(output => output.RemainCount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Count));
+                .ForMember(output => output.RemainCount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Where(r => r.RegisteredStateCode != "3").ToList().Count));
             CreateMap<SchedulingCreateInput, Scheduling>();
             CreateMap<Scheduling, SchedulingUpdateInput>();
 
@@ -127,6 +125,36 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(input => input.Issms, option => option.MapFrom(s => s.IsSms))
                 .ForMember(input => input.Time, option => option.MapFrom(s => s.SmsDate))
                 .ForMember(input => input.Reason, option => option.MapFrom(s => s.EndTreatReason));
+
+            CreateMap<Registered, SynchronizingsOrder>()
+                .ForMember(input => input.Atype, option => option.UseValue(0))
+                .ForMember(input => input.Otype, option => option.MapFrom(r => r.RegisteredStateCode == "3" ? 2 : 1))
+                .ForMember(input => input.Hospid, option => option.Ignore())
+                .ForMember(input => input.Hospname, option => option.Ignore())
+                .ForMember(input => input.Deptid, option => option.MapFrom(r => r.Scheduling.User.Organazition.Id.ToString()))
+                .ForMember(input => input.Deptname, option => option.MapFrom(r => r.Scheduling.User.Organazition.Name))
+                .ForMember(input => input.Docid, option => option.MapFrom(r => r.Scheduling.User.Id.ToString()))
+                .ForMember(input => input.Docname, option => option.MapFrom(r => r.Scheduling.User.Name))
+                .ForMember(input => input.Date, option => option.MapFrom(r => Convert.ToDateTime(r.DoctorDate).ToString("yyyy-MM-dd")))
+                .ForMember(input => input.Time, option => option.MapFrom(r => r.DoctorTime))
+                .ForMember(input => input.Workid, option => option.MapFrom(r => r.SchedulingId.ToString()))
+                .ForMember(input => input.Sourceid, option => option.UseValue(""))
+                .ForMember(input => input.Acount, option => option.MapFrom(r => r.Scheduling.MaxCount - r.Scheduling.Registereds.Where(re => re.RegisteredStateCode != "3").ToList().Count))
+                .ForMember(input => input.Orderid, option => option.MapFrom(r => r.OrderId))
+                .ForMember(input => input.Phone, option => option.MapFrom(r => r.Phone))
+                .ForMember(input => input.Card, option => option.MapFrom(r => r.IDCard))
+                .ForMember(input => input.Name, option => option.MapFrom(r => r.Name))
+                .ForMember(input => input.Addr, option => option.MapFrom(r => r.Address))
+                .ForMember(input => input.Birth, option => option.MapFrom(r => r.Birth))
+                .ForMember(input => input.Ptype, option => option.MapFrom(r => Convert.ToInt32(r.MedicalInsuranceCode)))
+                .ForMember(input => input.Rtype, option => option.MapFrom(r => r.RegisteredTypeCode))
+                .ForMember(input => input.Fromtype, option => option.MapFrom(r => r.FromType))
+                .ForMember(input => input.Cid, option => option.MapFrom(r => r.CardNo))
+                .ForMember(input => input.Ctype, option => option.MapFrom(r => Convert.ToInt32(r.CardTypeCode)));
+
+            CreateMap<Scheduling, SynchronizingsMed>()
+                .ForMember(input => input.Workid, option => option.MapFrom(s => s.Id))
+                .ForMember(input => input.Acount, option => option.MapFrom(s => s.Registereds.Where(r => r.RegisteredStateCode == "1").ToList().Count));
         }
     }
 }

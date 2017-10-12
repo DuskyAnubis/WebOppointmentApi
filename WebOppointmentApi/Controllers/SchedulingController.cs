@@ -51,7 +51,6 @@ namespace WebOppointmentApi.Controllers
                 .Include(q => q.User.Organazition)
                 .Include(q => q.Registereds)
                 .AsQueryable<Scheduling>();
-
             query = query.Where(q => input.OrganazitionId == 0 || q.User.OrganazitionId == input.OrganazitionId);
             query = query.Where(q => input.UserId == 0 || q.UserId == input.UserId);
             query = query.Where(q => !input.SurgeryDate.HasValue || q.SurgeryDate.Equals(input.SurgeryDate));
