@@ -79,6 +79,8 @@ namespace WebOppointmentApi.Dtos
         public int TreatPrice { get; set; }
         public int PlusPrice { get; set; }
         public string Address { get; set; }
+        public int IsSms { get; set; }
+        public string SmsDate { get; set; }
         public string Status { get; set; }
     }
 
@@ -113,6 +115,8 @@ namespace WebOppointmentApi.Dtos
         public int TreatPrice { get; set; }
         public int PlusPrice { get; set; }
         public string Address { get; set; }
+        public int IsSms { get; set; }
+        public string SmsDate { get; set; }
         public string Status { get; set; }
     }
 

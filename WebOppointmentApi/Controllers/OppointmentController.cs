@@ -328,7 +328,91 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Orders = orders
             };
-            var input = new { head = header, body = orders };
+            var input = new { head = header, body = ordersInput };
+
+            return new ObjectResult(input);
+        }
+        #endregion
+
+        #region 同步停诊状况
+        /// <summary>
+        /// 同步停/复诊情况
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingStop")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingStop([FromBody]SynchronizingsStopParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            var scheduling = await dbContext.Schedulings
+                .Include(s => s.User)
+                .Include(s => s.User.Organazition)
+                .FirstOrDefaultAsync(s => s.Id == param.Id && s.Status.Equals("正常") && s.EndTreatDate != null);
+
+            if (scheduling == null)
+            {
+                return NotFound(Json(new { Error = "同步失败，不存在或已同步该信息" }));
+            }
+
+            var stop = mapper.Map<SynchronizingsStop>(scheduling);
+            if (stop.Endtreat == 1)
+            {
+                stop.Reason = "";
+            }
+            var stops = new List<SynchronizingsStop>
+            {
+                stop
+            };
+            var stopsInput = new SynchronizingsStopInput
+            {
+                Hospid = apiOptions.HospitalId,
+                Values = stops
+            };
+            var input = new { head = header, body = stopsInput };
+
+            return new ObjectResult(input);
+        }
+
+        /// <summary>
+        /// 同步全部未同步停/复诊信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("SynchronizingStops")]
+        //[Authorize]
+        [ValidateModel]
+        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingStops()
+        {
+            var header = GetOppointmentApiHeader();
+            var schedulings = await dbContext.Schedulings
+                .Include(s => s.User)
+                .Include(s => s.User.Organazition)
+                .Where(s => s.EndTreatDate != null && s.Status == "正常").ToListAsync();
+
+            if (schedulings == null || schedulings.Count == 0)
+            {
+                return NotFound(Json(new { Error = "同步失败，不存在未同步的停/复诊信息" }));
+            }
+
+            var stops = mapper.Map<List<SynchronizingsStop>>(schedulings);
+
+            var stopsInput = new SynchronizingsStopInput
+            {
+                Hospid = apiOptions.HospitalId,
+                Values = stops
+            };
+            var input = new { head = header, body = stopsInput };
 
             return new ObjectResult(input);
         }

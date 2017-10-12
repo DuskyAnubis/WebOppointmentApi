@@ -276,6 +276,8 @@ namespace WebOppointmentApi.Controllers
             scheduling.EndTreatName = "已停诊";
             scheduling.EndTreatDate = DateTime.Now;
             scheduling.EndTreatReason = input.EndTreatReason;
+            scheduling.IsSms = input.IsSms;
+            scheduling.SmsDate = Convert.ToDateTime(input.SmsDate + " " + input.SmsTime).ToString("g");
             scheduling.Status = "正常";
 
             dbContext.Schedulings.Update(scheduling);
@@ -312,6 +314,8 @@ namespace WebOppointmentApi.Controllers
             scheduling.EndTreatCode = "0";
             scheduling.EndTreatName = "未停诊";
             scheduling.RecoveryTreatDate = DateTime.Now;
+            scheduling.IsSms = input.IsSms;
+            scheduling.SmsDate = Convert.ToDateTime(input.SmsDate + " " + input.SmsTime).ToString("g");
             scheduling.Status = "正常";
 
             dbContext.Schedulings.Update(scheduling);

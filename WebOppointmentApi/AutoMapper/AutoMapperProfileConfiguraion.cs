@@ -119,6 +119,14 @@ namespace WebOppointmentApi.AutoMapper
             CreateMap<Registered, SynchronizingStateOrder>()
                 .ForMember(input => input.Oid, option => option.MapFrom(r => r.OrderId))
                 .ForMember(input => input.State, option => option.MapFrom(r => Convert.ToInt32(r.RegisteredStateCode)));
+
+            CreateMap<Scheduling, SynchronizingsStop>()
+                .ForMember(input => input.Endtreat, option => option.MapFrom(s => Convert.ToInt32(s.EndTreatCode)))
+                .ForMember(input => input.Deptid, option => option.MapFrom(s => s.User.OrganazitionId.ToString()))
+                .ForMember(input => input.Workid, option => option.MapFrom(s => s.Id.ToString()))
+                .ForMember(input => input.Issms, option => option.MapFrom(s => s.IsSms))
+                .ForMember(input => input.Time, option => option.MapFrom(s => s.SmsDate))
+                .ForMember(input => input.Reason, option => option.MapFrom(s => s.EndTreatReason));
         }
     }
 }

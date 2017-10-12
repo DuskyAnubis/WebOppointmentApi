@@ -197,11 +197,6 @@ namespace WebOppointmentApi.Dtos
     {
         [Required(ErrorMessage = "Id不能为空")]
         public int Id { get; set; }
-        public int EndTreat { get; set; }
-        public string EndTreatReason { get; set; }
-        public int IsSms { get; set; }
-        public string SmsDate { get; set; }
-        public string SmsTime { get; set; }
     }
 
     public class SynchronizingsStop
