@@ -124,7 +124,7 @@ namespace WebOppointmentApi.Controllers
                 return BadRequest(Json(new { Error = "请至少提前一天预约" }));
             }
 
-            var remainCount = scheduling.MaxCount - await dbContext.Registereds.CountAsync(r => r.SchedulingId == input.SchedulingId);
+            var remainCount = scheduling.MaxCount - await dbContext.Registereds.CountAsync(r => r.SchedulingId == input.SchedulingId && r.RegisteredStateCode != "3");
             if (remainCount <= 0)
             {
                 return BadRequest(Json(new { Error = "该预约班次预约已满" }));
@@ -279,6 +279,7 @@ namespace WebOppointmentApi.Controllers
                 return NotFound(Json(new { Error = "该预约不存在" }));
             }
 
+            registered.TransactionDate = DateTime.Now;
             registered.RegisteredStateCode = "3";
             registered.RegisteredStateName = "已取消";
             registered.Status = "正常";
@@ -311,7 +312,7 @@ namespace WebOppointmentApi.Controllers
 
             registered.RegisteredStateCode = "2";
             registered.RegisteredStateName = "未取号（爽约)";
-          
+
             dbContext.Registereds.Update(registered);
             await dbContext.SaveChangesAsync();
 

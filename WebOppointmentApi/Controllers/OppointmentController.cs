@@ -61,7 +61,7 @@ namespace WebOppointmentApi.Controllers
         /// <returns></returns>
         [HttpPost("SynchronizingHospital")]
         //[Authorize]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(void), 500)]
@@ -93,7 +93,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingDept")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -160,7 +160,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingDoctor")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -227,7 +227,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingWork")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -308,7 +308,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingOrderStates")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -344,7 +344,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingStop")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -428,7 +428,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingOrder")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -506,7 +506,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingMed")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -548,7 +548,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost("/api/v1/dept/update")]
-        [ProducesResponseType(typeof(UpdateDeptOutput), 201)]
+        [ProducesResponseType(typeof(UpdateDeptOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateDept([FromBody]OppointmentApiQuery query)
         {
@@ -562,8 +562,8 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Depts = depts
             };
-            var input = new { head = header, body = deptsOutput };
-            return new ObjectResult(input);
+            var output = new { head = header, body = deptsOutput };
+            return new ObjectResult(output);
         }
         #endregion
 
@@ -574,7 +574,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost("/api/v1/doctor/update")]
-        [ProducesResponseType(typeof(UpdateDeptOutput), 201)]
+        [ProducesResponseType(typeof(UpdateDeptOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateDoctor([FromBody]OppointmentApiQuery query)
         {
@@ -588,8 +588,8 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Doctors = doctors
             };
-            var input = new { head = header, body = doctorsOutput };
-            return new ObjectResult(input);
+            var output = new { head = header, body = doctorsOutput };
+            return new ObjectResult(output);
         }
         #endregion
 
@@ -600,7 +600,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpPost("/api/v1/work/update")]
-        [ProducesResponseType(typeof(UpdateDeptOutput), 201)]
+        [ProducesResponseType(typeof(UpdateWorkOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateWork([FromBody]OppointmentApiQuery query)
         {
@@ -644,8 +644,8 @@ namespace WebOppointmentApi.Controllers
                     Works = works
                 };
 
-                var input = new { head = header, body = worksOutout };
-                return new ObjectResult(input);
+                var output = new { head = header, body = worksOutout };
+                return new ObjectResult(output);
             }
             else
             {
@@ -668,9 +668,207 @@ namespace WebOppointmentApi.Controllers
                     Works = works
                 };
 
-                var input = new { head = header, body = worksOutout };
-                return new ObjectResult(input);
+                var output = new { head = header, body = worksOutout };
+                return new ObjectResult(output);
             }
+        }
+        #endregion
+
+        #region 更新预约执行情况
+        /// <summary>
+        /// 更新预约执行情况
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/order/update")]
+        [ProducesResponseType(typeof(UpdateOrderStateOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> UpdateOrderState([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            UpdateOrderStateParam param = JsonConvert.DeserializeObject<UpdateOrderStateParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            if (param.Optype == 1)
+            {
+                string sql = "";
+                if (param.Dates == "")
+                {
+                    sql = "select * from Registereds";
+                }
+                else
+                {
+                    string[] datesArray = param.Dates.Split(',');
+                    string dates = "";
+                    foreach (string str in datesArray)
+                    {
+                        dates += "'" + str + "',";
+                    }
+                    dates = dates.Substring(0, dates.Length - 1);
+                    sql = $"select * from Registereds where DoctorDate in ({dates})";
+                }
+                var registereds = await dbContext.Registereds
+                    .FromSql(sql)
+                    .Where(r => r.Scheduling.User.Organazition.Id == Convert.ToInt32(param.Deptid))
+                    .Where(r => r.Scheduling.UserId == Convert.ToInt32(param.Docid))
+                    .ToListAsync();
+
+                var orders = mapper.Map<List<UpdateOrderState>>(registereds);
+                var ordersOutout = new UpdateOrderStateOutput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Orders = orders
+                };
+
+                var output = new { head = header, body = ordersOutout };
+                return new ObjectResult(output);
+            }
+            else
+            {
+                string sql = $"select * from Registereds where Id in ({param.Ids})";
+
+                var registereds = await dbContext.Registereds
+                    .FromSql(sql)
+                    .ToListAsync();
+
+                var orders = mapper.Map<List<UpdateOrderState>>(registereds);
+                var ordersOutout = new UpdateOrderStateOutput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Orders = orders
+                };
+
+                var output = new { head = header, body = ordersOutout };
+                return new ObjectResult(output);
+            }
+        }
+        #endregion
+
+        #region 平台预约挂号
+        /// <summary>
+        /// 平台预约挂号
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/order/getorder")]
+        [ProducesResponseType(typeof(OrderOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> Order([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OrderParam param = JsonConvert.DeserializeObject<OrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            OrderOutput orderOutput;
+
+            var scheduling = await dbContext.Schedulings.FirstOrDefaultAsync(s => s.Id == Convert.ToInt32(param.Wid));
+            if (scheduling == null)
+            {
+                orderOutput = new OrderOutput
+                {
+                    Code = 9997,
+                    Msg = "提交的预约排班信息不存在",
+                    Result = null
+                };
+
+                return new ObjectResult(new { head = header, body = orderOutput });
+            }
+            if (scheduling.EndTreatCode.Equals("1"))
+            {
+                orderOutput = new OrderOutput
+                {
+                    Code = 9998,
+                    Msg = "提交的预约排班信息已停诊",
+                    Result = null
+                };
+
+                return new ObjectResult(new { head = header, body = orderOutput });
+            }
+            var remainCount = scheduling.MaxCount - await dbContext.Registereds.CountAsync(r => r.SchedulingId == Convert.ToInt32(param.Wid) && r.RegisteredStateCode != "3");
+            if (remainCount <= 0)
+            {
+                orderOutput = new OrderOutput
+                {
+                    Code = 9999,
+                    Msg = "提交的预约排班信息预约数量已满",
+                    Result = null
+                };
+
+                return new ObjectResult(new { head = header, body = orderOutput });
+            }
+            var registered = mapper.Map<Registered>(param);
+            registered.TransactionDate = DateTime.Now;
+            registered.RegisteredTypeName = dbContext.Dictionaries.FirstOrDefault(d => d.TypeCode.Equals("RegisteredType") && d.Code.Equals(registered.RegisteredTypeCode)).Name;
+            registered.GenderName = dbContext.Dictionaries.FirstOrDefault(d => d.TypeCode.Equals("Gender") && d.Code.Equals(registered.GenderCode)).Name;
+            registered.MedicalInsuranceName = dbContext.Dictionaries.FirstOrDefault(d => d.TypeCode.Equals("MedicalInsurance") && d.Code.Equals(registered.MedicalInsuranceCode)).Name;
+            registered.CardTypeName = dbContext.Dictionaries.FirstOrDefault(d => d.TypeCode.Equals("CardType") && d.Code.Equals(registered.CardTypeCode)).Name;
+            registered.MedicalTypeName = dbContext.Dictionaries.FirstOrDefault(d => d.TypeCode.Equals("MedicalType") && d.Code.Equals(registered.MedicalTypeCode)).Name;
+
+            dbContext.Registereds.Add(registered);
+            await dbContext.SaveChangesAsync();
+
+            var registeredOut = await dbContext.Registereds.FirstOrDefaultAsync(r => r.Id == registered.Id);
+            var order = mapper.Map<Order>(registeredOut);
+
+            orderOutput = new OrderOutput
+            {
+                Code = 1,
+                Msg = "预约挂号成功",
+                Result = order
+            };
+
+            var output = new { head = header, body = orderOutput };
+            return new ObjectResult(output);
+        }
+        #endregion
+
+        #region 平台取消预约挂号
+        /// <summary>
+        /// 平台取消预约挂号
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/order/cancelorder")]
+        [ProducesResponseType(typeof(CancelOrderOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> CancelOrder([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            CancelOrderParam param = JsonConvert.DeserializeObject<CancelOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            CancelOrderOutput cancelOrderOutput;
+
+            var registered = await dbContext.Registereds.FirstOrDefaultAsync(r => r.SchedulingId == Convert.ToInt32(param.Wid) && r.OrderId.Equals(param.Oid));
+            if (registered == null)
+            {
+                cancelOrderOutput = new CancelOrderOutput
+                {
+                    Code = 0,
+                    Msg = "提交的预约挂号信息不存在",
+                    Result = null
+                };
+
+                return new ObjectResult(new { head = header, body = cancelOrderOutput });
+            }
+
+            registered.TransactionDate = DateTime.Now;
+            registered.RegisteredStateCode = "3";
+            registered.RegisteredStateName = "已取消";
+            registered.Status = "同步";
+
+            dbContext.Registereds.Update(registered);
+            await dbContext.SaveChangesAsync();
+
+            var registeredOut = await dbContext.Registereds.FirstOrDefaultAsync(r => r.Id == registered.Id);
+            var order = mapper.Map<CancelOrder>(registeredOut);
+
+            cancelOrderOutput = new CancelOrderOutput
+            {
+                Code = 1,
+                Msg = "预约挂号成功",
+                Result = order
+            };
+
+            var output = new { head = header, body = cancelOrderOutput };
+            return new ObjectResult(output);
         }
         #endregion
 

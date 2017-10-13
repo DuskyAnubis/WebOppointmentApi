@@ -376,7 +376,6 @@ namespace WebOppointmentApi.Dtos
         public string Dates { get; set; }
         public string Ids { get; set; }
     }
-    #endregion
 
     public class UpdateWork
     {
@@ -415,5 +414,114 @@ namespace WebOppointmentApi.Dtos
             return Works.Count > 0;
         }
     }
+    #endregion
+
+    #region 更新预约执行情况
+    public class UpdateOrderStateParam
+    {
+        public string Hospid { get; set; }
+        public int Optype { get; set; }
+        public int Atype { get; set; }
+        public string Deptid { get; set; }
+        public string Docid { get; set; }
+        public string Dates { get; set; }
+        public string Ids { get; set; }
+    }
+
+    public class UpdateOrderState
+    {
+        public string Oid { get; set; }
+        public int State { get; set; }
+    }
+
+    public class UpdateOrderStateOutput
+    {
+        public string Hospid { get; set; }
+
+        public List<UpdateOrderState> Orders { get; set; }
+
+        public bool ShouldSerializeOrders()
+        {
+            return Orders.Count > 0;
+        }
+    }
+    #endregion
+
+    #region 平台预约挂号
+    public class OrderParam
+    {
+        public int Atype { get; set; }
+        public string Wid { get; set; }
+        public string Iid { get; set; }
+        public string Inum { get; set; }
+        public string Oid { get; set; }
+        public int Ptype { get; set; }
+        public int Rtype { get; set; }
+        public string Name { get; set; }
+        public string Tel { get; set; }
+        public string Time { get; set; }
+        public string Card { get; set; }
+        public string Gender { get; set; }
+        public string Addr { get; set; }
+        public string Birth { get; set; }
+        public string Cid { get; set; }
+        public int Ctype { get; set; }
+        public int Mtype { get; set; }
+    }
+
+    public class Order
+    {
+        public string Wid { get; set; }
+        public string Iid { get; set; }
+        public string Inum { get; set; }
+        public string Oid { get; set; }
+        public int Price { get; set; }
+        public int Ofee { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+        public int Count { get; set; }
+        public int Dcount { get; set; }
+        public string Tdate { get; set; }
+        public string Orderid { get; set; }
+    }
+
+    public class OrderOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public Order Result { get; set; }
+    }
+    #endregion
+
+    #region 平台取消预约挂号
+    public class CancelOrderParam
+    {
+        public int Atype { get; set; }
+        public string Wid { get; set; }
+        public string Iid { get; set; }
+        public string Inum { get; set; }
+        public string Oid { get; set; }
+        public string Name { get; set; }
+        public string Tel { get; set; }
+        public string Cid { get; set; }
+        public int Ctype { get; set; }
+    }
+
+    public class CancelOrder
+    {
+        public string Wid { get; set; }
+        public int Count { get; set; }
+        public int Dcount { get; set; }
+        public string Tdate { get; set; }
+    }
+
+    public class CancelOrderOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public CancelOrder Result { get; set; }
+    }
+    #endregion
+
     #endregion
 }
