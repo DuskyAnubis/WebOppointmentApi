@@ -101,7 +101,7 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(input => input.Docname, option => option.MapFrom(s => s.User.Name))
                 .ForMember(input => input.Mcount, option => option.MapFrom(s => s.MaxCount))
                 .ForMember(input => input.Tcount, option => option.MapFrom(s => s.TotalCount))
-                .ForMember(input => input.Acount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Count))
+                .ForMember(input => input.Acount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Where(r => r.RegisteredStateCode != "3").ToList().Count))
                 .ForMember(input => input.Wid, option => option.MapFrom(s => s.Id.ToString()))
                 .ForMember(input => input.Date, option => option.MapFrom(s => Convert.ToDateTime(s.SurgeryDate).ToString("yyyy-MM-dd")))
                 .ForMember(input => input.Pcode, option => option.MapFrom(s => Convert.ToInt32(s.PeriodTypeCode)))
@@ -155,6 +155,42 @@ namespace WebOppointmentApi.AutoMapper
             CreateMap<Scheduling, SynchronizingsMed>()
                 .ForMember(input => input.Workid, option => option.MapFrom(s => s.Id))
                 .ForMember(input => input.Acount, option => option.MapFrom(s => s.Registereds.Where(r => r.RegisteredStateCode == "1").ToList().Count));
+
+            CreateMap<Orgnazition, UpdateDept>()
+                .ForMember(input => input.Pid, option => option.MapFrom(o => o.Parent.ToString()))
+                .ForMember(input => input.Pname, option => option.UseValue(""))
+                .ForMember(input => input.Addr, option => option.MapFrom(o => o.Address))
+                .ForMember(input => input.Kword, option => option.MapFrom(o => o.KeyWord));
+
+            CreateMap<User, UpdateDoctor>()
+                .ForMember(input => input.Did, option => option.MapFrom(u => u.Organazition.Id.ToString()))
+                .ForMember(input => input.Dname, option => option.MapFrom(u => u.Organazition.Name))
+                .ForMember(input => input.Gender, option => option.MapFrom(u => Convert.ToUInt32(u.GenderCode)))
+                .ForMember(input => input.Rank, option => option.MapFrom(u => u.UserRankName))
+                .ForMember(input => input.Rankid, option => option.MapFrom(u => Convert.ToUInt32(u.UserRankCode)))
+                .ForMember(input => input.Wrank, option => option.MapFrom(u => u.RegisteredRankName))
+                .ForMember(input => input.Kword, option => option.MapFrom(u => u.KeyWord));
+
+            CreateMap<Scheduling, UpdateWork>()
+                .ForMember(input => input.Endtreat, option => option.MapFrom(s => Convert.ToInt32(s.EndTreatCode)))
+                .ForMember(input => input.Hoscode, option => option.UseValue(0))
+                .ForMember(input => input.Wtype, option => option.UseValue(0))
+                .ForMember(input => input.Docid, option => option.MapFrom(s => s.User.Id.ToString()))
+                .ForMember(input => input.Docname, option => option.MapFrom(s => s.User.Name))
+                .ForMember(input => input.Mcount, option => option.MapFrom(s => s.MaxCount))
+                .ForMember(input => input.Tcount, option => option.MapFrom(s => s.TotalCount))
+                .ForMember(input => input.Acount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Where(r => r.RegisteredStateCode != "3").ToList().Count))
+                .ForMember(input => input.Wid, option => option.MapFrom(s => s.Id.ToString()))
+                .ForMember(input => input.Date, option => option.MapFrom(s => Convert.ToDateTime(s.SurgeryDate).ToString("yyyy-MM-dd")))
+                .ForMember(input => input.Pcode, option => option.MapFrom(s => Convert.ToInt32(s.PeriodTypeCode)))
+                .ForMember(input => input.Stime, option => option.MapFrom(s => s.StartTime))
+                .ForMember(input => input.Etime, option => option.MapFrom(s => s.EndTime))
+                .ForMember(input => input.Rankid, option => option.MapFrom(s => Convert.ToInt32(s.User.UserRankCode)))
+                .ForMember(input => input.Price, option => option.MapFrom(s => s.Price.ToString()))
+                .ForMember(input => input.Ofee, option => option.MapFrom(s => s.TreatPrice.ToString()))
+                .ForMember(input => input.Price2, option => option.MapFrom(s => s.PlusPrice.ToString()))
+                .ForMember(input => input.Wrank, option => option.MapFrom(s => s.User.RegisteredRankName))
+                .ForMember(input => input.Addr, option => option.MapFrom(s => s.Address));
         }
     }
 }

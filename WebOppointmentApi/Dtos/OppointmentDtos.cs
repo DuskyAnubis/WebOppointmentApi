@@ -4,7 +4,13 @@ using WebOppointmentApi.Common;
 
 namespace WebOppointmentApi.Dtos
 {
-    public class OppointmentApiHeaderInput
+    public class OppointmentApiQuery
+    {
+        public string Head { get; set; }
+        public string Body { get; set; }
+    }
+
+    public class OppointmentApiHeader
     {
         public string Token { get; set; }
         public string Version { get; set; }
@@ -13,12 +19,13 @@ namespace WebOppointmentApi.Dtos
         public string Time { get; set; }
     }
 
-    public class OppointmentApiBodyOutput
+    public class OppointmentApiBody
     {
         public int Code { get; set; }
         public string Msg { get; set; }
         public string Result { get; set; }
     }
+    #region 平台提供接口
 
     #region 同步医院信息
     public class SynchronizingHospitalInput
@@ -155,7 +162,7 @@ namespace WebOppointmentApi.Dtos
         public string Hospid { get; set; }
         public int Opcode { get; set; }
         public int Atype { get; set; }
-        public int Deptid { get; set; }
+        public string Deptid { get; set; }
 
         public List<SynchronizingWork> Works { get; set; }
 
@@ -276,6 +283,132 @@ namespace WebOppointmentApi.Dtos
         public string Hospid { get; set; }
 
         public List<SynchronizingsMed> Works { get; set; }
+
+        public bool ShouldSerializeWorks()
+        {
+            return Works.Count > 0;
+        }
+    }
+    #endregion
+
+    #endregion
+
+    #region HIS提供接口
+
+    #region 更新科室信息
+    public class UpdateDeptParam
+    {
+        public string Hospid { get; set; }
+        public string Id { get; set; }
+    }
+
+    public class UpdateDept
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Pid { get; set; }
+        public string Pname { get; set; }
+        public string Tel { get; set; }
+        public string Addr { get; set; }
+        public string Info { get; set; }
+        public string Kword { get; set; }
+        public string Logourl { get; set; }
+        public string Picurl { get; set; }
+    }
+
+    public class UpdateDeptOutput
+    {
+        public string Hospid { get; set; }
+
+        public List<UpdateDept> Depts { get; set; }
+
+        public bool ShouldSerializeDepts()
+        {
+            return Depts.Count > 0;
+        }
+    }
+    #endregion
+
+    #region 更新医生信息
+    public class UpdateDoctorParam
+    {
+        public string Hospid { get; set; }
+        public string Id { get; set; }
+    }
+
+    public class UpdateDoctor
+    {
+        public string Id { get; set; }
+        public string Did { get; set; }
+        public string Dname { get; set; }
+        public string Name { get; set; }
+        public int Gender { get; set; }
+        public string Rank { get; set; }
+        public int Rankid { get; set; }
+        public string Wrank { get; set; }
+        public string Tel { get; set; }
+        public string Info { get; set; }
+        public string Kword { get; set; }
+        public string Picurl { get; set; }
+    }
+
+    public class UpdateDoctorOutput
+    {
+        public string Hospid { get; set; }
+
+        public List<UpdateDoctor> Doctors { get; set; }
+
+        public bool ShouldSerializeDoctors()
+        {
+            return Doctors.Count > 0;
+        }
+    }
+    #endregion
+
+    #region 更新排班信息
+    public class UpdateWorkParam
+    {
+        public string Hospid { get; set; }
+        public int Optype { get; set; }
+        public int Atype { get; set; }
+        public string Deptid { get; set; }
+        public string Docid { get; set; }
+        public string Dates { get; set; }
+        public string Ids { get; set; }
+    }
+    #endregion
+
+    public class UpdateWork
+    {
+        public int Endtreat { get; set; }
+        public int Hoscode { get; set; }
+        public int Wtype { get; set; }
+        public string Docid { get; set; }
+        public string Docname { get; set; }
+        public int Mcount { get; set; }
+        public int Tcount { get; set; }
+        public int Acount { get; set; }
+        public string Wid { get; set; }
+        public string Date { get; set; }
+        public int Pcode { get; set; }
+        public string Stime { get; set; }
+        public string Etime { get; set; }
+        public int Rankid { get; set; }
+        public string Price { get; set; }
+        public string Ofee { get; set; }
+        public string Price2 { get; set; }
+        public string Wrank { get; set; }
+        public string Addr { get; set; }
+    }
+
+    public class UpdateWorkOutput
+    {
+        public string Hospid { get; set; }
+        public int Opcode { get; set; }
+        public int Atype { get; set; }
+        public string Deptid { get; set; }
+
+        public List<UpdateWork> Works { get; set; }
 
         public bool ShouldSerializeWorks()
         {

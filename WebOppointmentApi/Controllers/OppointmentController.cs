@@ -33,13 +33,14 @@ namespace WebOppointmentApi.Controllers
             this.apiOptions = apiOptions;
         }
 
-        private OppointmentApiHeaderInput GetOppointmentApiHeader()
+        //同步信息时，生成Head
+        private OppointmentApiHeader GetOppointmentApiHeader()
         {
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             string timeSpan = Convert.ToInt64(ts.TotalSeconds).ToString();
             string token = Encrypt.Md5Encrypt(apiOptions.SecretKey + apiOptions.FromType + timeSpan);
 
-            OppointmentApiHeaderInput headerInput = new OppointmentApiHeaderInput
+            OppointmentApiHeader headerInput = new OppointmentApiHeader
             {
                 Token = token,
                 Version = apiOptions.Version,
@@ -60,7 +61,7 @@ namespace WebOppointmentApi.Controllers
         /// <returns></returns>
         [HttpPost("SynchronizingHospital")]
         //[Authorize]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(void), 500)]
@@ -92,7 +93,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingDept")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -159,7 +160,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingDoctor")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -226,7 +227,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingWork")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -247,16 +248,16 @@ namespace WebOppointmentApi.Controllers
                 {
                     return NotFound(Json(new { Error = "同步失败，排班信息不存在" }));
                 }
-                var wroks = mapper.Map<List<SynchronizingWork>>(schedulings);
-                var wroksInput = new SynchronizingWorkInput
+                var works = mapper.Map<List<SynchronizingWork>>(schedulings);
+                var worksInput = new SynchronizingWorkInput
                 {
                     Hospid = apiOptions.HospitalId,
                     Opcode = param.Opcode,
                     Atype = 0,
-                    Deptid = param.OrgId,
-                    Works = wroks
+                    Deptid = param.OrgId.ToString(),
+                    Works = works
                 };
-                var input = new { head = header, body = wroksInput };
+                var input = new { head = header, body = worksInput };
                 return new ObjectResult(input);
             }
             else
@@ -283,14 +284,14 @@ namespace WebOppointmentApi.Controllers
                 {
                     return NotFound(Json(new { Error = "同步失败，该排班信息不存在" }));
                 }
-                var wroks = mapper.Map<List<SynchronizingWork>>(schedulings);
+                var works = mapper.Map<List<SynchronizingWork>>(schedulings);
                 var doctorsInput = new SynchronizingWorkInput
                 {
                     Hospid = apiOptions.HospitalId,
                     Opcode = param.Opcode,
                     Atype = 0,
-                    Deptid = param.OrgId,
-                    Works = wroks
+                    Deptid = param.OrgId.ToString(),
+                    Works = works
                 };
                 var input = new { head = header, body = doctorsInput };
                 return new ObjectResult(input);
@@ -307,7 +308,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingOrderStates")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -343,7 +344,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingStop")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -387,7 +388,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingStops")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -427,7 +428,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingOrder")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -463,7 +464,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingOrders")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -505,7 +506,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("SynchronizingMed")]
         //[Authorize]
         [ValidateModel]
-        [ProducesResponseType(typeof(OppointmentApiBodyOutput), 201)]
+        [ProducesResponseType(typeof(OppointmentApiBody), 201)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
@@ -539,6 +540,139 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region HIS提供接口
+
+        #region 更新科室信息
+        /// <summary>
+        /// 更新科室信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/dept/update")]
+        [ProducesResponseType(typeof(UpdateDeptOutput), 201)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> UpdateDept([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            UpdateDeptParam param = JsonConvert.DeserializeObject<UpdateDeptParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            var orgs = await dbContext.Orgnazitions.Where(o => o.Id == Convert.ToInt32(param.Id)).ToListAsync();
+            var depts = mapper.Map<List<UpdateDept>>(orgs);
+            var deptsOutput = new UpdateDeptOutput
+            {
+                Hospid = apiOptions.HospitalId,
+                Depts = depts
+            };
+            var input = new { head = header, body = deptsOutput };
+            return new ObjectResult(input);
+        }
+        #endregion
+
+        #region 更新医生信息
+        /// <summary>
+        /// 更新医生信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/doctor/update")]
+        [ProducesResponseType(typeof(UpdateDeptOutput), 201)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> UpdateDoctor([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            UpdateDoctorParam param = JsonConvert.DeserializeObject<UpdateDoctorParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            var users = await dbContext.Users.Include(u => u.Organazition).Where(u => u.Id == Convert.ToInt32(param.Id)).ToListAsync();
+            var doctors = mapper.Map<List<UpdateDoctor>>(users);
+            var doctorsOutput = new UpdateDoctorOutput
+            {
+                Hospid = apiOptions.HospitalId,
+                Doctors = doctors
+            };
+            var input = new { head = header, body = doctorsOutput };
+            return new ObjectResult(input);
+        }
+        #endregion
+
+        #region 更新排班信息
+        /// <summary>
+        /// 更新排班信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/work/update")]
+        [ProducesResponseType(typeof(UpdateDeptOutput), 201)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> UpdateWork([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            UpdateWorkParam param = JsonConvert.DeserializeObject<UpdateWorkParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            if (param.Optype == 1)
+            {
+                string sql = "";
+                if (param.Dates == "")
+                {
+                    sql = "select * from Schedulings";
+                }
+                else
+                {
+                    string[] datesArray = param.Dates.Split(',');
+                    string dates = "";
+                    foreach (string str in datesArray)
+                    {
+                        dates += "'" + str + "',";
+                    }
+                    dates = dates.Substring(0, dates.Length - 1);
+                    sql = $"select * from Schedulings where SurgeryDate in ({dates})";
+                }
+                var schedulings = await dbContext.Schedulings
+                    .Include(s => s.User)
+                    .Include(s => s.User.Organazition)
+                    .Include(s => s.Registereds)
+                    .FromSql(sql)
+                    .Where(s => s.User.Organazition.Id == Convert.ToInt32(param.Deptid))
+                    .Where(s => s.UserId == Convert.ToInt32(param.Docid))
+                    .ToListAsync();
+
+                var works = mapper.Map<List<UpdateWork>>(schedulings);
+                var worksOutout = new UpdateWorkOutput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Opcode = param.Optype,
+                    Atype = 0,
+                    Deptid = param.Deptid,
+                    Works = works
+                };
+
+                var input = new { head = header, body = worksOutout };
+                return new ObjectResult(input);
+            }
+            else
+            {
+                string sql = $"select * from Schedulings where Id in ({param.Ids})";
+
+                var schedulings = await dbContext.Schedulings
+                    .Include(s => s.User)
+                    .Include(s => s.User.Organazition)
+                    .Include(s => s.Registereds)
+                    .FromSql(sql)
+                    .ToListAsync();
+
+                var works = mapper.Map<List<UpdateWork>>(schedulings);
+                var worksOutout = new UpdateWorkOutput
+                {
+                    Hospid = apiOptions.HospitalId,
+                    Opcode = param.Optype,
+                    Atype = 0,
+                    Deptid = param.Deptid,
+                    Works = works
+                };
+
+                var input = new { head = header, body = worksOutout };
+                return new ObjectResult(input);
+            }
+        }
+        #endregion
 
         #endregion
 
