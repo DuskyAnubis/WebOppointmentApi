@@ -210,7 +210,7 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(input => input.Address, option => option.MapFrom(o => o.Addr))
                 .ForMember(input => input.IDCard, option => option.MapFrom(o => o.Card))
                 .ForMember(input => input.Birth, option => option.MapFrom(o => o.Birth))
-                .ForMember(input => input.FromType, option => option.UseValue("预约平台"))
+                .ForMember(input => input.FromType, option => option.UseValue("健康山西"))
                 .ForMember(input => input.MedicalInsuranceCode, option => option.MapFrom(o => o.Ptype.ToString()))
                 .ForMember(input => input.CardTypeCode, option => option.MapFrom(o => o.Ctype.ToString()))
                 .ForMember(input => input.CardNo, option => option.MapFrom(o => o.Cid))
@@ -238,6 +238,24 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(output => output.Count, option => option.MapFrom(r => r.Scheduling.MaxCount - r.Scheduling.Registereds.Where(re => re.RegisteredStateCode != "3").ToList().Count))
                 .ForMember(output => output.Dcount, option => option.MapFrom(r => r.Scheduling.TotalCount - r.Scheduling.Registereds.Where(re => re.RegisteredStateCode != "3").ToList().Count))
                 .ForMember(output => output.Tdate, option => option.MapFrom(r => Convert.ToDateTime(r.TransactionDate).ToString("yyyy-MM-dd HH:mm:ss")));
+
+            CreateMap<Registered, UpdateOrder>()
+                .ForMember(output => output.Wid, option => option.MapFrom(r => r.SchedulingId.ToString()))
+                .ForMember(output => output.Iid, option => option.UseValue("0"))
+                .ForMember(output => output.Inum, option => option.UseValue("0"))
+                .ForMember(output => output.Oid, option => option.MapFrom(r => r.OrderId))
+                .ForMember(output => output.Price, option => option.MapFrom(r => r.Scheduling.Price))
+                .ForMember(output => output.Ofee, option => option.MapFrom(r => r.Scheduling.TreatPrice))
+                .ForMember(output => output.Date, option => option.MapFrom(r => Convert.ToDateTime(r.DoctorDate).ToString("yyyy-MM-dd")))
+                .ForMember(output => output.Time, option => option.MapFrom(r => r.DoctorTime))
+                .ForMember(output => output.Tdate, option => option.MapFrom(r => Convert.ToDateTime(r.TransactionDate).ToString("yyyy-MM-dd HH:mm:ss")))
+                .ForMember(output => output.Card, option => option.MapFrom(r => r.IDCard))
+                .ForMember(output => output.Cid, option => option.MapFrom(r => r.CardNo))
+                .ForMember(output => output.Ctype, option => option.MapFrom(r => Convert.ToInt32(r.CardTypeCode)))
+                .ForMember(output => output.Name, option => option.MapFrom(r => r.Name))
+                .ForMember(output => output.Tel, option => option.MapFrom(r => r.Phone))
+                .ForMember(output => output.State, option => option.MapFrom(r => Convert.ToInt32(r.RegisteredStateCode)))
+                .ForMember(output => output.Pcode, option => option.MapFrom(r => Convert.ToInt32(r.Scheduling.PeriodTypeCode)));
         }
     }
 }

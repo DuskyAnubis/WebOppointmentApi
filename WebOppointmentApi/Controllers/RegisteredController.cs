@@ -279,7 +279,6 @@ namespace WebOppointmentApi.Controllers
                 return NotFound(Json(new { Error = "该预约不存在" }));
             }
 
-            registered.TransactionDate = DateTime.Now;
             registered.RegisteredStateCode = "3";
             registered.RegisteredStateName = "已取消";
             registered.Status = "正常";

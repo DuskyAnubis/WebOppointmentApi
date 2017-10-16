@@ -523,5 +523,75 @@ namespace WebOppointmentApi.Dtos
     }
     #endregion
 
+    #region 更新实际取号量
+    public class UpdateMedParam
+    {
+        public string Hospid { get; set; }
+        public string Workid { get; set; }
+    }
+
+    public class UpdateMed
+    {
+        public int Acount { get; set; }
+    }
+    #endregion
+
+    #region 绑定诊疗卡校验(暂无)
+
+    #endregion
+
+    #region 心跳接口
+    public class HeartBeatParam
+    {
+        public string Time { get; set; }
+    }
+
+    public class HeartBeatOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Time { get; set; }
+    }
+    #endregion
+
+    #region 获取订单信息
+    public class UpdateOrderParam
+    {
+        public string Card { get; set; }
+        public string Date { get; set; }
+    }
+
+    public class UpdateOrder
+    {
+        public string Wid { get; set; }
+        public string Iid { get; set; }
+        public string Inum { get; set; }
+        public string Oid { get; set; }
+        public int Price { get; set; }
+        public int Ofee { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+        public string Tdate { get; set; }
+        public string Card { get; set; }
+        public string Cid { get; set; }
+        public int Ctype { get; set; }
+        public string Name { get; set; }
+        public string Tel { get; set; }
+        public int State { get; set; }
+        public int Pcode { get; set; }
+    }
+
+    public class UpdateOrderOutput
+    {
+        public string Hospid { get; set; }
+        public List<UpdateOrder> Orders { get; set; }
+
+        public bool ShouldSerializeOrders()
+        {
+            return Orders.Count > 0;
+        }
+    }
+    #endregion
+
     #endregion
 }

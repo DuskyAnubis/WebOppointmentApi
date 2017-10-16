@@ -849,7 +849,6 @@ namespace WebOppointmentApi.Controllers
                 return new ObjectResult(new { head = header, body = cancelOrderOutput });
             }
 
-            registered.TransactionDate = DateTime.Now;
             registered.RegisteredStateCode = "3";
             registered.RegisteredStateName = "已取消";
             registered.Status = "同步";
@@ -868,6 +867,104 @@ namespace WebOppointmentApi.Controllers
             };
 
             var output = new { head = header, body = cancelOrderOutput };
+            return new ObjectResult(output);
+        }
+        #endregion
+
+        #region 更新实际取号量
+        /// <summary>
+        /// 更新实际取号量
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/med/update")]
+        [ProducesResponseType(typeof(UpdateMed), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> UpdateMed([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            UpdateMedParam param = JsonConvert.DeserializeObject<UpdateMedParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            var count = await dbContext.Registereds.Where(r => r.SchedulingId == Convert.ToInt32(param.Workid)).Where(r => r.RegisteredStateCode.Equals("1")).CountAsync();
+            var med = new UpdateMed
+            {
+                Acount = count
+            };
+
+            var output = new { head = header, body = med };
+            return new ObjectResult(output);
+        }
+        #endregion
+
+        #region 绑定诊疗卡校验(暂无)
+
+        #endregion
+
+        #region 心跳接口
+        /// <summary>
+        /// 心跳接口
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/sysnc/heartbeat")]
+        [ProducesResponseType(typeof(UpdateMed), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> HeartBeat([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            HeartBeatParam param = JsonConvert.DeserializeObject<HeartBeatParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            var heartBeat = new HeartBeatOutput
+            {
+                Code = 1,
+                Msg = "操作成功",
+                Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
+            var output = new { head = header, body = heartBeat };
+            return new ObjectResult(output);
+        }
+        #endregion
+
+        #region 更新订单信息
+        /// <summary>
+        /// 更新订单信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/sysnc/orders")]
+        [ProducesResponseType(typeof(OrderOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> UpdateOrder([FromBody]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            UpdateOrderParam param = JsonConvert.DeserializeObject<UpdateOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            string date;
+            if (param.Date == "" || param.Date == null)
+            {
+                date = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                date = param.Date;
+            }
+
+            var registereds = await dbContext.Registereds
+                .Include(r => r.Scheduling)
+                .Where(r => r.IDCard.Equals(param.Card))
+                .Where(r => r.DoctorDate >= Convert.ToDateTime(date))
+                .OrderByDescending(r => r.DoctorDate)
+                .ToListAsync();
+
+            var orders = mapper.Map<List<UpdateOrder>>(registereds);
+            var orderOutput = new UpdateOrderOutput
+            {
+                Hospid = apiOptions.HospitalId,
+                Orders = orders
+            };
+
+            var output = new { head = header, body = orderOutput };
             return new ObjectResult(output);
         }
         #endregion
