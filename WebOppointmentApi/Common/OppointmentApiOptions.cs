@@ -9,7 +9,8 @@ namespace WebOppointmentApi.Common
     {
         public string HospitalId { get; set; }
         public string HospitalName { get; set; }
-        public string BaseUri { get; set; }
+        public string BaseUri1 { get; set; }
+        public string BaseUri2 { get; set; }
         public string FromType { get; set; }
         public string Version { get; set; }
         public string SecretKey { get; set; }

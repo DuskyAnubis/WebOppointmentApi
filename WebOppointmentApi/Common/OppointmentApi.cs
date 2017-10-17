@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -13,27 +15,32 @@ namespace WebOppointmentApi.Common
     {
         private readonly OppointmentApiOptions apiOptions;
 
-        public OppointmentApi(OppointmentApiOptions apiOptions)
+        public OppointmentApi()
         {
-            this.apiOptions = apiOptions;
+
         }
 
-        public HttpClient GetHttpClient()
+        public HttpClient GetHttpClient(string baseUri)
         {
             var client = new HttpClient
             {
-                BaseAddress = new Uri(apiOptions.BaseUri)
+                BaseAddress = new Uri(baseUri)
             };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             return client;
         }
 
-        public async Task<string> DoPostAsync<T>(string url, string json)
+        public async Task<string> DoPostAsync(string baseUri, string url, string head, string body)
         {
-            HttpClient client = GetHttpClient();
+            HttpClient client = GetHttpClient(baseUri);
 
-            var response = await client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")).ContinueWith(x => x.Result);
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>()
+            {
+                {"head",head},
+                {"body",body}
+            });
+            var response = await client.PostAsync(url, content).ContinueWith(x => x.Result);
 
             return response.Content.ReadAsStringAsync().Result;
         }

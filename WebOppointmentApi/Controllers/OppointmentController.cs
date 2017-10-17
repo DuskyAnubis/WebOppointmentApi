@@ -15,6 +15,7 @@ using WebOppointmentApi.Dtos;
 using WebOppointmentApi.Filters;
 using WebOppointmentApi.Models;
 using WebOppointmentApi.Common;
+using Newtonsoft.Json.Serialization;
 
 namespace WebOppointmentApi.Controllers
 {
@@ -78,9 +79,21 @@ namespace WebOppointmentApi.Controllers
             var hospitalInput = mapper.Map<SynchronizingHospitalInput>(hospital);
             hospitalInput.Id = apiOptions.HospitalId;
 
-            var input = new { head = header, body = hospitalInput };
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(hospitalInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "hosp/get", head, body);
 
-            return new ObjectResult(input);
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
         }
         #endregion
 
@@ -115,8 +128,22 @@ namespace WebOppointmentApi.Controllers
                     Opcode = param.Opcode,
                     Depts = depts
                 };
-                var input = new { head = header, body = deptsInput };
-                return new ObjectResult(input);
+
+                string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
+                string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(deptsInput, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                })));
+                OppointmentApi api = new OppointmentApi();
+                string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "dept/get", head, body);
+
+                OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+                OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+                return new ObjectResult(resultBody);
             }
             else
             {
@@ -145,8 +172,21 @@ namespace WebOppointmentApi.Controllers
                     Opcode = param.Opcode,
                     Depts = depts
                 };
-                var input = new { head = header, body = deptsInput };
-                return new ObjectResult(input);
+                string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
+                string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(deptsInput, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                })));
+                OppointmentApi api = new OppointmentApi();
+                string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "dept/get", head, body);
+
+                OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+                OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+                return new ObjectResult(resultBody);
             }
         }
         #endregion
@@ -909,7 +949,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/v1/sysnc/heartbeat")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> HeartBeat([FromBody]OppointmentApiQuery query)
+        public IActionResult HeartBeat([FromBody]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             HeartBeatParam param = JsonConvert.DeserializeObject<HeartBeatParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));

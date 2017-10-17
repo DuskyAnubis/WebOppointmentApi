@@ -126,7 +126,8 @@ namespace WebOppointmentApi
             {
                 HospitalId = Configuration.GetSection("OppointmentApi")["HospitalId"].ToString(),
                 HospitalName = Configuration.GetSection("OppointmentApi")["HospitalName"].ToString(),
-                BaseUri = Configuration.GetSection("OppointmentApi")["BaseUri"].ToString(),
+                BaseUri1 = Configuration.GetSection("OppointmentApi")["BaseUri1"].ToString(),
+                BaseUri2 = Configuration.GetSection("OppointmentApi")["BaseUri2"].ToString(),
                 Version = Configuration.GetSection("OppointmentApi")["Version"].ToString(),
                 FromType = Configuration.GetSection("OppointmentApi")["FromType"].ToString(),
                 SecretKey = Configuration.GetSection("OppointmentApi")["SecretKey"].ToString()

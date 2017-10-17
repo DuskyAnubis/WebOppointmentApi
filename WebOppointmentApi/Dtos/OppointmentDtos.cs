@@ -10,6 +10,12 @@ namespace WebOppointmentApi.Dtos
         public string Body { get; set; }
     }
 
+    public class OppointmentApiResult
+    {
+        public string Head { get; set; }
+        public string Body { get; set; }
+    }
+
     public class OppointmentApiHeader
     {
         public string Token { get; set; }
