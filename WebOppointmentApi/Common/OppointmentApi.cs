@@ -13,13 +13,6 @@ namespace WebOppointmentApi.Common
 {
     public class OppointmentApi
     {
-        private readonly OppointmentApiOptions apiOptions;
-
-        public OppointmentApi()
-        {
-
-        }
-
         public HttpClient GetHttpClient(string baseUri)
         {
             var client = new HttpClient
