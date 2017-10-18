@@ -222,8 +222,22 @@ namespace WebOppointmentApi.Controllers
                     Opcode = param.Opcode,
                     Doctors = doctors
                 };
-                var input = new { head = header, body = doctorsInput };
-                return new ObjectResult(input);
+
+                string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
+                string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(doctorsInput, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                })));
+                OppointmentApi api = new OppointmentApi();
+                string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "doctor/get", head, body);
+
+                OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+                OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+                return new ObjectResult(resultBody);
             }
             else
             {
@@ -252,8 +266,22 @@ namespace WebOppointmentApi.Controllers
                     Opcode = param.Opcode,
                     Doctors = doctors
                 };
-                var input = new { head = header, body = doctorsInput };
-                return new ObjectResult(input);
+
+                string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
+                string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(doctorsInput, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                })));
+                OppointmentApi api = new OppointmentApi();
+                string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "doctor/get", head, body);
+
+                OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+                OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+                return new ObjectResult(resultBody);
             }
         }
         #endregion
@@ -297,8 +325,22 @@ namespace WebOppointmentApi.Controllers
                     Deptid = param.OrgId.ToString(),
                     Works = works
                 };
-                var input = new { head = header, body = worksInput };
-                return new ObjectResult(input);
+
+                string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
+                string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(worksInput, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                })));
+                OppointmentApi api = new OppointmentApi();
+                string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "work/get", head, body);
+
+                OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+                OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+                return new ObjectResult(resultBody);
             }
             else
             {
@@ -325,7 +367,7 @@ namespace WebOppointmentApi.Controllers
                     return NotFound(Json(new { Error = "同步失败，该排班信息不存在" }));
                 }
                 var works = mapper.Map<List<SynchronizingWork>>(schedulings);
-                var doctorsInput = new SynchronizingWorkInput
+                var worksInput = new SynchronizingWorkInput
                 {
                     Hospid = apiOptions.HospitalId,
                     Opcode = param.Opcode,
@@ -333,8 +375,22 @@ namespace WebOppointmentApi.Controllers
                     Deptid = param.OrgId.ToString(),
                     Works = works
                 };
-                var input = new { head = header, body = doctorsInput };
-                return new ObjectResult(input);
+
+                string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                }));
+                string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(worksInput, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                })));
+                OppointmentApi api = new OppointmentApi();
+                string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "work/get", head, body);
+
+                OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+                OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+                return new ObjectResult(resultBody);
             }
         }
         #endregion
@@ -369,9 +425,22 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Orders = orders
             };
-            var input = new { head = header, body = ordersInput };
 
-            return new ObjectResult(input);
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(ordersInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "order/get", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
         }
         #endregion
 
@@ -416,9 +485,28 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Values = stops
             };
-            var input = new { head = header, body = stopsInput };
 
-            return new ObjectResult(input);
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(stopsInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "diagnose/stop", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            if (resultBody.Code == 1)
+            {
+                scheduling.Status = "同步";
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new ObjectResult(resultBody);
         }
 
         /// <summary>
@@ -453,9 +541,31 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Values = stops
             };
-            var input = new { head = header, body = stopsInput };
 
-            return new ObjectResult(input);
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(stopsInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "diagnose/stop", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            if (resultBody.Code == 1)
+            {
+                foreach (var item in schedulings)
+                {
+                    item.Status = "同步";
+                }
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new ObjectResult(resultBody);
         }
         #endregion
 
@@ -492,9 +602,27 @@ namespace WebOppointmentApi.Controllers
             order.Hospid = apiOptions.HospitalId;
             order.Hospname = apiOptions.HospitalName;
 
-            var input = new { head = header, body = order };
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(order, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "order/synorder", head, body);
 
-            return new ObjectResult(input);
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            if (resultBody.Code == 1)
+            {
+                registered.Status = "同步";
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new ObjectResult(resultBody);
         }
 
         /// <summary>
@@ -531,9 +659,30 @@ namespace WebOppointmentApi.Controllers
                 order.Hospname = apiOptions.HospitalName;
             }
 
-            var input = new { head = header, body = orders };
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(orders, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "order/synorders", head, body);
 
-            return new ObjectResult(input);
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            if (resultBody.Code == 1)
+            {
+                foreach (var item in registereds)
+                {
+                    item.Status = "同步";
+                }
+                await dbContext.SaveChangesAsync();
+            }
+
+            return new ObjectResult(resultBody);
         }
         #endregion
 
@@ -571,9 +720,22 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Works = meds
             };
-            var input = new { head = header, body = medsInput };
 
-            return new ObjectResult(input);
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(medsInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri1, "med/get", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
         }
         #endregion
 
@@ -602,7 +764,11 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Depts = depts
             };
-            var output = new { head = header, body = deptsOutput };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(deptsOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
@@ -628,7 +794,11 @@ namespace WebOppointmentApi.Controllers
                 Hospid = apiOptions.HospitalId,
                 Doctors = doctors
             };
-            var output = new { head = header, body = doctorsOutput };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(doctorsOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
@@ -675,7 +845,7 @@ namespace WebOppointmentApi.Controllers
                     .ToListAsync();
 
                 var works = mapper.Map<List<UpdateWork>>(schedulings);
-                var worksOutout = new UpdateWorkOutput
+                var worksOutput = new UpdateWorkOutput
                 {
                     Hospid = apiOptions.HospitalId,
                     Opcode = param.Optype,
@@ -684,7 +854,11 @@ namespace WebOppointmentApi.Controllers
                     Works = works
                 };
 
-                var output = new { head = header, body = worksOutout };
+                var output = new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(worksOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                };
                 return new ObjectResult(output);
             }
             else
@@ -699,7 +873,7 @@ namespace WebOppointmentApi.Controllers
                     .ToListAsync();
 
                 var works = mapper.Map<List<UpdateWork>>(schedulings);
-                var worksOutout = new UpdateWorkOutput
+                var worksOutput = new UpdateWorkOutput
                 {
                     Hospid = apiOptions.HospitalId,
                     Opcode = param.Optype,
@@ -708,7 +882,11 @@ namespace WebOppointmentApi.Controllers
                     Works = works
                 };
 
-                var output = new { head = header, body = worksOutout };
+                var output = new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(worksOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                };
                 return new ObjectResult(output);
             }
         }
@@ -753,13 +931,17 @@ namespace WebOppointmentApi.Controllers
                     .ToListAsync();
 
                 var orders = mapper.Map<List<UpdateOrderState>>(registereds);
-                var ordersOutout = new UpdateOrderStateOutput
+                var ordersOutput = new UpdateOrderStateOutput
                 {
                     Hospid = apiOptions.HospitalId,
                     Orders = orders
                 };
 
-                var output = new { head = header, body = ordersOutout };
+                var output = new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(ordersOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                };
                 return new ObjectResult(output);
             }
             else
@@ -771,13 +953,17 @@ namespace WebOppointmentApi.Controllers
                     .ToListAsync();
 
                 var orders = mapper.Map<List<UpdateOrderState>>(registereds);
-                var ordersOutout = new UpdateOrderStateOutput
+                var ordersOutput = new UpdateOrderStateOutput
                 {
                     Hospid = apiOptions.HospitalId,
                     Orders = orders
                 };
 
-                var output = new { head = header, body = ordersOutout };
+                var output = new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(ordersOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                };
                 return new ObjectResult(output);
             }
         }
@@ -809,7 +995,11 @@ namespace WebOppointmentApi.Controllers
                     Result = null
                 };
 
-                return new ObjectResult(new { head = header, body = orderOutput });
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(orderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
             }
             if (scheduling.EndTreatCode.Equals("1"))
             {
@@ -820,7 +1010,11 @@ namespace WebOppointmentApi.Controllers
                     Result = null
                 };
 
-                return new ObjectResult(new { head = header, body = orderOutput });
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(orderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
             }
             var remainCount = scheduling.MaxCount - await dbContext.Registereds.CountAsync(r => r.SchedulingId == Convert.ToInt32(param.Wid) && r.RegisteredStateCode != "3");
             if (remainCount <= 0)
@@ -832,7 +1026,11 @@ namespace WebOppointmentApi.Controllers
                     Result = null
                 };
 
-                return new ObjectResult(new { head = header, body = orderOutput });
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(orderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
             }
             var registered = mapper.Map<Registered>(param);
             registered.TransactionDate = DateTime.Now;
@@ -855,7 +1053,11 @@ namespace WebOppointmentApi.Controllers
                 Result = order
             };
 
-            var output = new { head = header, body = orderOutput };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(orderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
@@ -886,7 +1088,11 @@ namespace WebOppointmentApi.Controllers
                     Result = null
                 };
 
-                return new ObjectResult(new { head = header, body = cancelOrderOutput });
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(cancelOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
             }
 
             registered.RegisteredStateCode = "3";
@@ -906,7 +1112,11 @@ namespace WebOppointmentApi.Controllers
                 Result = order
             };
 
-            var output = new { head = header, body = cancelOrderOutput };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(cancelOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
@@ -931,7 +1141,11 @@ namespace WebOppointmentApi.Controllers
                 Acount = count
             };
 
-            var output = new { head = header, body = med };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(med, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
@@ -961,7 +1175,11 @@ namespace WebOppointmentApi.Controllers
                 Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
-            var output = new { head = header, body = heartBeat };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(heartBeat, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
@@ -1004,7 +1222,11 @@ namespace WebOppointmentApi.Controllers
                 Orders = orders
             };
 
-            var output = new { head = header, body = orderOutput };
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(orderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
             return new ObjectResult(output);
         }
         #endregion
