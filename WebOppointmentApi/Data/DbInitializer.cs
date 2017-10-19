@@ -45,12 +45,12 @@ namespace WebOppointmentApi.Data
             //    new Dictionary{TypeCode="UserRank",TypeName="职称",Code="12",Name="护士长",RemarkName="",RemarkValue="" },
             //    new Dictionary{TypeCode="UserRank",TypeName="职称",Code="99",Name="其他",RemarkName="",RemarkValue="" },
 
-            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="01",Name="执业医师号",RemarkName="挂号费",RemarkValue="0" },
-            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="02",Name="主治医师号",RemarkName="挂号费",RemarkValue="0" },
-            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="03",Name="副主任医师号",RemarkName="挂号费",RemarkValue="0" },
-            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="04",Name="主任医师号",RemarkName="挂号费",RemarkValue="0" },
-            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="05",Name="特邀专家号",RemarkName="挂号费",RemarkValue="0" },
-            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="06",Name="其他",RemarkName="挂号费",RemarkValue="0" },
+            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="1",Name="执业医师号",RemarkName="挂号费",RemarkValue="0" },
+            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="2",Name="主治医师号",RemarkName="挂号费",RemarkValue="0" },
+            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="3",Name="副主任医师号",RemarkName="挂号费",RemarkValue="0" },
+            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="4",Name="主任医师号",RemarkName="挂号费",RemarkValue="0" },
+            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="5",Name="特邀专家号",RemarkName="挂号费",RemarkValue="0" },
+            //    new Dictionary{TypeCode="RegisteredRank",TypeName="挂号级别",Code="6",Name="其他",RemarkName="挂号费",RemarkValue="0" },
 
             //    new Dictionary{TypeCode="SchedulingType",TypeName="排班类别",Code="1",Name="医生排班",RemarkName="",RemarkValue="" },
             //    new Dictionary{TypeCode="SchedulingType",TypeName="排班类别",Code="2",Name="职称排班",RemarkName="",RemarkValue="" },
