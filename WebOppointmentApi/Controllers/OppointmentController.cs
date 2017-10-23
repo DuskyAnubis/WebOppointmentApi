@@ -353,6 +353,7 @@ namespace WebOppointmentApi.Controllers
                 foreach (var id in ids)
                 {
                     var scheduling = await dbContext.Schedulings
+                        .IgnoreQueryFilters()
                         .Include(s => s.User)
                         .Include(s => s.User.Organazition)
                         .Include(s => s.Registereds)

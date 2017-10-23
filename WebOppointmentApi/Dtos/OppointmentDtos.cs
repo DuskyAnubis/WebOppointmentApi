@@ -133,9 +133,7 @@ namespace WebOppointmentApi.Dtos
     {
         [Required(ErrorMessage = "请输入Opcode")]
         public int Opcode { get; set; }
-        [Required(ErrorMessage = "请输入科室ID")]
         public int OrgId { get; set; }
-        [Required(ErrorMessage = "请输入出诊日期")]
         public string Date { get; set; }
         public int[] Ids { get; set; }
     }
