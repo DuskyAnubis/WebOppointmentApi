@@ -770,7 +770,11 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateDeptParam param = JsonConvert.DeserializeObject<UpdateDeptParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
-            var orgs = await dbContext.Orgnazitions.Where(o => o.Id == Convert.ToInt32(param.Id)).ToListAsync();
+            IQueryable<Orgnazition> queryable = dbContext.Orgnazitions.AsQueryable<Orgnazition>();
+            queryable = queryable.Where(q => string.IsNullOrEmpty(param.Id) || q.Id == Convert.ToInt32(param.Id));
+            queryable = queryable.Where(q => q.OrgTypeCode.Equals("01"));
+
+            var orgs = await queryable.ToListAsync();
             var depts = mapper.Map<List<UpdateDept>>(orgs);
             var deptsOutput = new UpdateDeptOutput
             {
@@ -800,7 +804,12 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateDoctorParam param = JsonConvert.DeserializeObject<UpdateDoctorParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
-            var users = await dbContext.Users.Include(u => u.Organazition).Where(u => u.Id == Convert.ToInt32(param.Id)).ToListAsync();
+            IQueryable<User> queryable = dbContext.Users.Include(q => q.Organazition).AsQueryable<User>();
+            queryable = queryable.Where(q => string.IsNullOrEmpty(param.Deptid) || q.OrganazitionId == Convert.ToInt32(param.Deptid));
+            queryable = queryable.Where(q => string.IsNullOrEmpty(param.Id) || q.Id == Convert.ToInt32(param.Id));
+            queryable = queryable.Where(q => q.UserTypeCode.Equals("01"));
+
+            var users = await queryable.ToListAsync();
             var doctors = mapper.Map<List<UpdateDoctor>>(users);
             var doctorsOutput = new UpdateDoctorOutput
             {

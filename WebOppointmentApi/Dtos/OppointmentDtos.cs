@@ -337,6 +337,7 @@ namespace WebOppointmentApi.Dtos
     public class UpdateDoctorParam
     {
         public string Hospid { get; set; }
+        public string Deptid { get; set; }
         public string Id { get; set; }
     }
 
