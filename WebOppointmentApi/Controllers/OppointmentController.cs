@@ -53,6 +53,18 @@ namespace WebOppointmentApi.Controllers
             return headerInput;
         }
 
+        //HIS提供接口，Token验证
+        private bool VaildToken(OppointmentApiHeader header)
+        {
+            bool b = false;
+            string token = Encrypt.Md5Encrypt(apiOptions.SecretKey + header.Fromtype + header.Time);
+            if (token.Equals(header.Token))
+            {
+                b = true;
+            }
+            return b;
+        }
+
         #region 平台提供接口
 
         #region 同步医院信息
