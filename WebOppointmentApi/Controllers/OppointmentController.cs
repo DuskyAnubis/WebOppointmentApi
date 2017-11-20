@@ -770,6 +770,11 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateDeptParam param = JsonConvert.DeserializeObject<UpdateDeptParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
             IQueryable<Orgnazition> queryable = dbContext.Orgnazitions.AsQueryable<Orgnazition>();
             queryable = queryable.Where(q => string.IsNullOrEmpty(param.Id) || q.Id == Convert.ToInt32(param.Id));
             queryable = queryable.Where(q => q.OrgTypeCode.Equals("01"));
@@ -803,6 +808,11 @@ namespace WebOppointmentApi.Controllers
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateDoctorParam param = JsonConvert.DeserializeObject<UpdateDoctorParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
 
             IQueryable<User> queryable = dbContext.Users.Include(q => q.Organazition).AsQueryable<User>();
             queryable = queryable.Where(q => string.IsNullOrEmpty(param.Deptid) || q.OrganazitionId == Convert.ToInt32(param.Deptid));
@@ -838,6 +848,11 @@ namespace WebOppointmentApi.Controllers
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateWorkParam param = JsonConvert.DeserializeObject<UpdateWorkParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
 
             if (param.Optype == 1)
             {
@@ -928,6 +943,11 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateOrderStateParam param = JsonConvert.DeserializeObject<UpdateOrderStateParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
             if (param.Optype == 1)
             {
                 string sql = "";
@@ -1004,6 +1024,11 @@ namespace WebOppointmentApi.Controllers
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             OrderParam param = JsonConvert.DeserializeObject<OrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
 
             OrderOutput orderOutput;
 
@@ -1098,6 +1123,11 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             CancelOrderParam param = JsonConvert.DeserializeObject<CancelOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
             CancelOrderOutput cancelOrderOutput;
 
             var registered = await dbContext.Registereds.FirstOrDefaultAsync(r => r.SchedulingId == Convert.ToInt32(param.Wid) && r.OrderId.Equals(param.Oid));
@@ -1157,6 +1187,11 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateMedParam param = JsonConvert.DeserializeObject<UpdateMedParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
             var count = await dbContext.Registereds.Where(r => r.SchedulingId == Convert.ToInt32(param.Workid)).Where(r => r.RegisteredStateCode.Equals("1")).CountAsync();
             var med = new UpdateMed
             {
@@ -1190,6 +1225,11 @@ namespace WebOppointmentApi.Controllers
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             HeartBeatParam param = JsonConvert.DeserializeObject<HeartBeatParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
             var heartBeat = new HeartBeatOutput
             {
                 Code = 1,
@@ -1219,6 +1259,11 @@ namespace WebOppointmentApi.Controllers
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateOrderParam param = JsonConvert.DeserializeObject<UpdateOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
 
             string date;
             if (param.Date == "" || param.Date == null)
