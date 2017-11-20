@@ -73,7 +73,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("SynchronizingHospital")]
-        //[Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
         [ProducesResponseType(typeof(string), 404)]
@@ -116,7 +116,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingDept")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
@@ -210,7 +210,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingDoctor")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
@@ -305,7 +305,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingWork")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
@@ -415,7 +415,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingOrderStates")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
@@ -464,7 +464,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingStop")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
@@ -589,7 +589,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingOrder")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
@@ -706,7 +706,7 @@ namespace WebOppointmentApi.Controllers
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost("SynchronizingMed")]
-        //[Authorize]
+        [Authorize]
         [ValidateModel]
         [ProducesResponseType(typeof(OppointmentApiBody), 200)]
         [ProducesResponseType(typeof(void), 400)]
