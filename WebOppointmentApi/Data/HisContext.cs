@@ -12,7 +12,8 @@ namespace WebOppointmentApi.Data
 
         }
 
-        public DbSet<门诊挂号> GH { get; set; }
+        public DbSet<门诊挂号> 门诊挂号 { get; set; }
+        public DbSet<系统数据> 系统数据 { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -140,6 +141,23 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.预存款支付)
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");
+            });
+
+            modelBuilder.Entity<系统数据>(entity =>
+            {
+                entity.HasKey(e => e.Name)
+                    .ForSqlServerIsClustered(false);
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Word)
+                    .HasColumnName("word")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
         }
     }

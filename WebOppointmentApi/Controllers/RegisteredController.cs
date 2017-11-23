@@ -23,11 +23,13 @@ namespace WebOppointmentApi.Controllers
     public class RegisteredController : Controller
     {
         private readonly ApiContext dbContext;
+        private readonly HisContext hisContext;
         private readonly IMapper mapper;
 
-        public RegisteredController(ApiContext dbContext, IMapper mapper)
+        public RegisteredController(ApiContext dbContext, HisContext hisContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.hisContext = hisContext;
             this.mapper = mapper;
         }
 
@@ -332,7 +334,12 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> TakeRegistered([FromRoute]int id)
         {
-            var registered = await dbContext.Registereds.FirstOrDefaultAsync(r => r.Id == id);
+            var registered = await dbContext.Registereds
+                .Include(r => r.Scheduling)
+                .Include(r => r.Scheduling.User)
+                .Include(r => r.Scheduling.User.Organazition)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
             if (registered == null)
             {
                 return NotFound(Json(new { Error = "该预约不存在" }));
@@ -344,6 +351,51 @@ namespace WebOppointmentApi.Controllers
 
             dbContext.Registereds.Update(registered);
             await dbContext.SaveChangesAsync();
+
+            系统数据 system = await hisContext.系统数据.FirstOrDefaultAsync(q => q.Name == "工本费");
+
+            //挂号信息写入HIS系统
+            门诊挂号 gh = new 门诊挂号
+            {
+                姓名 = registered.Name,
+                年龄 = Convert.ToInt16(DateTime.Now.Year - Convert.ToDateTime(registered.Birth).Year),
+                性别 = registered.GenderName,
+                通信地址 = registered.Address,
+                电话 = registered.Phone,
+                日期 = registered.RegisteredDate,
+                科室 = registered.Scheduling.User.Organazition.Name,
+                挂号类别 = registered.Scheduling.User.RegisteredRankName,
+                操作员 = "预约诊疗平台",
+                医师 = registered.Scheduling.User.Name,
+                挂号费 = registered.Scheduling.Price / 100,
+                工本费 = Convert.ToDecimal(system.Word),
+                金额 = registered.Scheduling.Price / 100 + Convert.ToDecimal(system.Word),
+                作废标志 = 0,
+                卡号 = "",
+                初诊 = 1,
+                复诊 = 0,
+                急诊 = 0,
+                交班 = false,
+                退票号 = 0,
+                就诊标志 = false,
+                民族 = "",
+                接诊医师id = 0,
+                出生日期 = Convert.ToDateTime(registered.Birth),
+                过敏史 = "",
+                年龄单位 = "岁",
+                身份证 = registered.IDCard,
+                总预存款 = 0,
+                总费用 = 0,
+                预存款支付 = 0,
+                现金支付 = 0,
+                来源 = registered.FromType,
+                预存款余额 = 0,
+                状态 = 0,
+                退款 = 0
+            };
+
+            hisContext.门诊挂号.Add(gh);
+            await hisContext.SaveChangesAsync();
 
             return new NoContentResult();
         }
