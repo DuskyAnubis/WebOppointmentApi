@@ -541,8 +541,24 @@ namespace WebOppointmentApi.Dtos
     }
     #endregion
 
-    #region 绑定诊疗卡校验(暂无)
+    #region 绑定诊疗卡校验
+    public class BindCardParam
+    {
+        public string ZlkCardNum { get; set; }
+        public string PatientName { get; set; }
+        public string IdentityCard { get; set; }
+        public string Tel { get; set; }
+    }
 
+    public class BindCard
+    {
+        public string Code { get; set; }
+        public string Msg { get; set; }
+        public string ZlkCardNum { get; set; }
+        public string PatientName { get; set; }
+        public string IdentityCard { get; set; }
+        public string Tel { get; set; }
+    }
     #endregion
 
     #region 心跳接口

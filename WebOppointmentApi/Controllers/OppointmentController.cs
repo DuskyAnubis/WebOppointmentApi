@@ -24,12 +24,14 @@ namespace WebOppointmentApi.Controllers
     public class OppointmentController : Controller
     {
         private readonly ApiContext dbContext;
+        private readonly HisContext hisContext;
         private readonly IMapper mapper;
         private readonly OppointmentApiOptions apiOptions;
 
-        public OppointmentController(ApiContext dbContext, IMapper mapper, OppointmentApiOptions apiOptions)
+        public OppointmentController(ApiContext dbContext, HisContext hisContext, IMapper mapper, OppointmentApiOptions apiOptions)
         {
             this.dbContext = dbContext;
+            this.hisContext = hisContext;
             this.mapper = mapper;
             this.apiOptions = apiOptions;
         }
@@ -1207,8 +1209,71 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
-        #region 绑定诊疗卡校验(暂无)
+        #region 绑定诊疗卡校验
+        /// <summary>
+        /// 绑定诊疗卡校验
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/v1/medicalcard/bindcheck")]
+        [ProducesResponseType(typeof(UpdateMed), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> BindCard([FromBody] OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            BindCardParam param = JsonConvert.DeserializeObject<BindCardParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            BindCard bindCard;
+
+            var gh = await hisContext.门诊挂号
+                .Where(q => string.IsNullOrEmpty(param.ZlkCardNum) || q.卡号.Equals(param.ZlkCardNum))
+                .Where(q => string.IsNullOrEmpty(param.PatientName) || q.姓名.Equals(param.PatientName))
+                .Where(q => string.IsNullOrEmpty(param.IdentityCard) || q.身份证.Equals(param.IdentityCard))
+                .Where(q => string.IsNullOrEmpty(param.Tel) || q.电话.Equals(param.Tel))
+                .FirstOrDefaultAsync();
+
+            if (gh == null)
+            {
+                bindCard = new BindCard
+                {
+                    Code = "0",
+                    Msg = "校验失败，不存在该诊疗卡信息",
+                    ZlkCardNum = "",
+                    PatientName = "",
+                    IdentityCard = "",
+                    Tel = ""
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(bindCard, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+
+            bindCard = new BindCard
+            {
+                Code = "1",
+                Msg = "校验成功",
+                ZlkCardNum = gh.卡号,
+                PatientName = gh.姓名,
+                IdentityCard = gh.身份证,
+                Tel = gh.电话
+            };
+
+            var output = new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(bindCard, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            };
+            return new ObjectResult(output);
+
+        }
         #endregion
 
         #region 心跳接口
