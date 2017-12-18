@@ -33,7 +33,7 @@ namespace WebOppointmentApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddJsonOptions(option=>option.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss");
+            services.AddMvc().AddJsonOptions(option => option.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss");
 
             //添加DbContext的注入
             services.AddDbContext<ApiContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ApiConnection"), b => b.UseRowNumberForPaging()));
@@ -71,10 +71,11 @@ namespace WebOppointmentApi
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                  builder => builder.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials());
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("X-TotalCount", "X-TotalPage")
+                    .AllowCredentials());
             });
 
             //JWT相关
@@ -143,14 +144,15 @@ namespace WebOppointmentApi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            //使用跨域
+            app.UseCors("CorsPolicy");
+
             //注入Swagger生成API文档,此方法需要写在app.UseMvc()方法前
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebOppointmentApi v1");
             });
-            //使用跨域
-            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseMvc();
