@@ -326,14 +326,22 @@ namespace WebOppointmentApi.Controllers
         /// 取号
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("WithTake/{id}")]
         [ValidateModel]
         [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> TakeRegistered([FromRoute]int id)
+        public async Task<IActionResult> TakeRegistered([FromRoute]int id, [FromBody]TakeRegisteredInput input)
         {
+            if (input.Id != id)
+            {
+                return BadRequest(Json(new { Error = "请求参数错误" }));
+            }
+
             var registered = await dbContext.Registereds
                 .Include(r => r.Scheduling)
                 .Include(r => r.Scheduling.User)
@@ -371,7 +379,7 @@ namespace WebOppointmentApi.Controllers
                 工本费 = Convert.ToDecimal(system.Word),
                 金额 = registered.Scheduling.Price / 100 + Convert.ToDecimal(system.Word),
                 作废标志 = 0,
-                卡号 = "",
+                卡号 = input.CardNo,
                 初诊 = 1,
                 复诊 = 0,
                 急诊 = 0,
@@ -388,6 +396,7 @@ namespace WebOppointmentApi.Controllers
                 总费用 = 0,
                 预存款支付 = 0,
                 现金支付 = 0,
+                Password = "",
                 来源 = registered.FromType,
                 预存款余额 = 0,
                 状态 = 0,

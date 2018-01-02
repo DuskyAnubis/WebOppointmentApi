@@ -144,4 +144,12 @@ namespace WebOppointmentApi.Dtos
         public string Status { get; set; }
     }
 
+    public class TakeRegisteredInput
+    {
+        [Required(ErrorMessage = "Id不能为空")]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "请输入患者诊疗卡号")]
+        public string CardNo { get; set; }
+    }
+
 }
