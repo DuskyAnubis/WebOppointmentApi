@@ -764,7 +764,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/dept/update")]
+        [HttpPost("/api/dept/update")]
         [ProducesResponseType(typeof(UpdateDeptOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateDept([FromBody]OppointmentApiQuery query)
@@ -803,7 +803,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/doctor/update")]
+        [HttpPost("/api/doctor/update")]
         [ProducesResponseType(typeof(UpdateDeptOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateDoctor([FromBody]OppointmentApiQuery query)
@@ -843,7 +843,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/work/update")]
+        [HttpPost("/api/work/update")]
         [ProducesResponseType(typeof(UpdateWorkOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateWork([FromBody]OppointmentApiQuery query)
@@ -937,7 +937,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/order/update")]
+        [HttpPost("/api/order/update")]
         [ProducesResponseType(typeof(UpdateOrderStateOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateOrderState([FromBody]OppointmentApiQuery query)
@@ -1019,7 +1019,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/order/getorder")]
+        [HttpPost("/api/order/getorder")]
         [ProducesResponseType(typeof(OrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> Order([FromBody]OppointmentApiQuery query)
@@ -1117,7 +1117,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/order/cancelorder")]
+        [HttpPost("/api/order/cancelorder")]
         [ProducesResponseType(typeof(CancelOrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> CancelOrder([FromBody]OppointmentApiQuery query)
@@ -1181,7 +1181,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/med/update")]
+        [HttpPost("/api/med/update")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateMed([FromBody]OppointmentApiQuery query)
@@ -1215,7 +1215,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/medicalcard/bindcheck")]
+        [HttpPost("/api/medicalcard/bindcheck")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> BindCard([FromBody] OppointmentApiQuery query)
@@ -1282,7 +1282,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/sysnc/heartbeat")]
+        [HttpPost("/api/sysnc/heartbeat")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public IActionResult HeartBeat([FromBody]OppointmentApiQuery query)
@@ -1317,7 +1317,7 @@ namespace WebOppointmentApi.Controllers
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        [HttpPost("/api/v1/sysnc/orders")]
+        [HttpPost("/api/sysnc/orders")]
         [ProducesResponseType(typeof(OrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateOrder([FromBody]OppointmentApiQuery query)
