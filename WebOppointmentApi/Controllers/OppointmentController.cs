@@ -60,7 +60,7 @@ namespace WebOppointmentApi.Controllers
         {
             bool b = false;
             string token = Encrypt.Md5Encrypt(apiOptions.SecretKey + header.Fromtype + header.Time);
-            if (String.Equals(token,header.Token,StringComparison.CurrentCultureIgnoreCase))
+            if (String.Equals(token, header.Token, StringComparison.CurrentCultureIgnoreCase))
             {
                 b = true;
             }
@@ -770,7 +770,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> UpdateDept([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            UpdateDeptParam param = JsonConvert.DeserializeObject<UpdateDeptParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            UpdateDeptParam param = JsonConvert.DeserializeObject<UpdateDeptParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -809,7 +809,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> UpdateDoctor([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            UpdateDoctorParam param = JsonConvert.DeserializeObject<UpdateDoctorParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            UpdateDoctorParam param = JsonConvert.DeserializeObject<UpdateDoctorParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -849,7 +849,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> UpdateWork([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            UpdateWorkParam param = JsonConvert.DeserializeObject<UpdateWorkParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            UpdateWorkParam param = JsonConvert.DeserializeObject<UpdateWorkParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -943,7 +943,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> UpdateOrderState([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            UpdateOrderStateParam param = JsonConvert.DeserializeObject<UpdateOrderStateParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            UpdateOrderStateParam param = JsonConvert.DeserializeObject<UpdateOrderStateParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -1025,7 +1025,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> Order([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            OrderParam param = JsonConvert.DeserializeObject<OrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            OrderParam param = JsonConvert.DeserializeObject<OrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -1123,7 +1123,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> CancelOrder([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            CancelOrderParam param = JsonConvert.DeserializeObject<CancelOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            CancelOrderParam param = JsonConvert.DeserializeObject<CancelOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -1187,7 +1187,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> UpdateMed([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            UpdateMedParam param = JsonConvert.DeserializeObject<UpdateMedParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            UpdateMedParam param = JsonConvert.DeserializeObject<UpdateMedParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -1221,7 +1221,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> BindCard([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            BindCardParam param = JsonConvert.DeserializeObject<BindCardParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            BindCardParam param = JsonConvert.DeserializeObject<BindCardParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -1288,7 +1288,7 @@ namespace WebOppointmentApi.Controllers
         public IActionResult HeartBeat([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            HeartBeatParam param = JsonConvert.DeserializeObject<HeartBeatParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            HeartBeatParam param = JsonConvert.DeserializeObject<HeartBeatParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
@@ -1323,7 +1323,7 @@ namespace WebOppointmentApi.Controllers
         public async Task<IActionResult> UpdateOrder([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
-            UpdateOrderParam param = JsonConvert.DeserializeObject<UpdateOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
+            UpdateOrderParam param = JsonConvert.DeserializeObject<UpdateOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
             {
