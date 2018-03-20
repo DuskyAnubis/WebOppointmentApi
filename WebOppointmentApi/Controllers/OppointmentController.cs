@@ -60,7 +60,7 @@ namespace WebOppointmentApi.Controllers
         {
             bool b = false;
             string token = Encrypt.Md5Encrypt(apiOptions.SecretKey + header.Fromtype + header.Time);
-            if (token.Equals(header.Token))
+            if (String.Equals(token,header.Token,StringComparison.CurrentCultureIgnoreCase))
             {
                 b = true;
             }
