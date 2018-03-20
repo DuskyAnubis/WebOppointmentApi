@@ -767,7 +767,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/dept/update")]
         [ProducesResponseType(typeof(UpdateDeptOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateDept([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> UpdateDept([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateDeptParam param = JsonConvert.DeserializeObject<UpdateDeptParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -806,7 +806,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/doctor/update")]
         [ProducesResponseType(typeof(UpdateDeptOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateDoctor([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> UpdateDoctor([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateDoctorParam param = JsonConvert.DeserializeObject<UpdateDoctorParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -846,7 +846,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/work/update")]
         [ProducesResponseType(typeof(UpdateWorkOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateWork([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> UpdateWork([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateWorkParam param = JsonConvert.DeserializeObject<UpdateWorkParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -940,7 +940,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/order/update")]
         [ProducesResponseType(typeof(UpdateOrderStateOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateOrderState([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> UpdateOrderState([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateOrderStateParam param = JsonConvert.DeserializeObject<UpdateOrderStateParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -1022,7 +1022,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/order/getorder")]
         [ProducesResponseType(typeof(OrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> Order([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> Order([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             OrderParam param = JsonConvert.DeserializeObject<OrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -1120,7 +1120,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/order/cancelorder")]
         [ProducesResponseType(typeof(CancelOrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> CancelOrder([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> CancelOrder([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             CancelOrderParam param = JsonConvert.DeserializeObject<CancelOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -1184,7 +1184,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/med/update")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateMed([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> UpdateMed([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateMedParam param = JsonConvert.DeserializeObject<UpdateMedParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -1218,7 +1218,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/medicalcard/bindcheck")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> BindCard([FromBody] OppointmentApiQuery query)
+        public async Task<IActionResult> BindCard([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             BindCardParam param = JsonConvert.DeserializeObject<BindCardParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -1285,7 +1285,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/sysnc/heartbeat")]
         [ProducesResponseType(typeof(UpdateMed), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public IActionResult HeartBeat([FromBody]OppointmentApiQuery query)
+        public IActionResult HeartBeat([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             HeartBeatParam param = JsonConvert.DeserializeObject<HeartBeatParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
@@ -1320,7 +1320,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/sysnc/orders")]
         [ProducesResponseType(typeof(OrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> UpdateOrder([FromBody]OppointmentApiQuery query)
+        public async Task<IActionResult> UpdateOrder([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             UpdateOrderParam param = JsonConvert.DeserializeObject<UpdateOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)));
