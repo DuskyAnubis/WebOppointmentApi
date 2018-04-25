@@ -139,4 +139,10 @@ namespace WebOppointmentApi.Dtos
         public string SmsDate { get; set; }
         public string SmsTime { get; set; }
     }
+
+    public class SchedulingAutoInput
+    {
+        public DateTime BaseDate { get; set; }
+        public int SchedulingDays { get; set; }
+    }
 }

@@ -324,5 +324,73 @@ namespace WebOppointmentApi.Controllers
         }
 
         #endregion
+
+        #region 自动排班
+        /// <summary>
+        /// 自动排班
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost("WithAuto")]
+        [ValidateModel]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SchedulingAuto([FromBody]SchedulingAutoInput input)
+        {
+            DateTime today = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+            DateTime baseDate = input.BaseDate;
+            int schedulingDays = input.SchedulingDays;
+
+            IQueryable<Scheduling> query = dbContext.Schedulings.AsQueryable<Scheduling>();
+            List<Scheduling> baseSchedulings = await dbContext.Schedulings.Where(s => s.SurgeryDate.Equals(baseDate)).ToListAsync();
+
+            foreach (var item in baseSchedulings)
+            {
+                for (int i = 1; i <= schedulingDays; i++)
+                {
+                    int c = await dbContext.Schedulings.Where(s => s.UserId == item.UserId && s.SurgeryDate.Equals(today.AddDays(i)) && s.PeriodTypeCode.Equals(item.PeriodTypeCode)).CountAsync();
+                    if (c > 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Scheduling scheduling = new Scheduling
+                        {
+                            SchedulingTypeCode = item.SchedulingTypeCode,
+                            SchedulingTypeName = item.SchedulingTypeName,
+                            EndTreatCode = "0",
+                            EndTreatName = "未停珍",
+                            UserId = item.UserId,
+                            SurgeryDate = today.AddDays(i),
+                            EndTreatDate = null,
+                            RecoveryTreatDate = null,
+                            EndTreatReason = "",
+                            MaxCount = item.MaxCount,
+                            TotalCount = item.TotalCount,
+                            PeriodTypeCode = item.PeriodTypeCode,
+                            PeriodTypeName = item.PeriodTypeName,
+                            StartTime = item.StartTime,
+                            EndTime = item.EndTime,
+                            Price = item.Price,
+                            TreatPrice = item.TreatPrice,
+                            PlusPrice = item.PlusPrice,
+                            Address = item.Address,
+                            IsSms = 0,
+                            SmsDate = "",
+                            Status = "正常",
+                            SchedulingDate = DateTime.Now
+                        };
+
+                        dbContext.Schedulings.Add(scheduling);
+                    }
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+        #endregion
     }
 }
