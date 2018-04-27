@@ -242,7 +242,7 @@ namespace WebOppointmentApi.AutoMapper
             CreateMap<Registered, UpdateOrder>()
                 .ForMember(output => output.Wid, option => option.MapFrom(r => r.SchedulingId.ToString()))
                 .ForMember(output => output.Iid, option => option.UseValue("0"))
-                .ForMember(output => output.Inum, option => option.UseValue("0"))
+                .ForMember(output => output.Inum, option => option.MapFrom(r => r.Id.ToString()))
                 .ForMember(output => output.Oid, option => option.MapFrom(r => r.OrderId))
                 .ForMember(output => output.Price, option => option.MapFrom(r => r.Scheduling.Price))
                 .ForMember(output => output.Ofee, option => option.MapFrom(r => r.Scheduling.TreatPrice))
