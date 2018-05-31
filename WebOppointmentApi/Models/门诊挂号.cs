@@ -47,5 +47,7 @@ namespace WebOppointmentApi.Models
         public decimal? 预存款余额 { get; set; }
         public int 状态 { get; set; }
         public decimal 退款 { get; set; }
+        public int Dw_Id { get; set; }
+        public int Czy_Id { get; set; }
     }
 }

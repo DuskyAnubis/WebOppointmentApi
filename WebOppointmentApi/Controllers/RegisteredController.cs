@@ -400,7 +400,9 @@ namespace WebOppointmentApi.Controllers
                 来源 = registered.FromType,
                 预存款余额 = 0,
                 状态 = 0,
-                退款 = 0
+                退款 = 0,
+                Dw_Id = 1,
+                Czy_Id = 1
             };
 
             hisContext.门诊挂号.Add(gh);

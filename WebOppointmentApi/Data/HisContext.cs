@@ -141,6 +141,14 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.预存款支付)
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Dw_Id)
+                    .HasColumnName("Dw_Id")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Czy_Id)
+                    .HasColumnName("Czy_Id")
+                    .HasDefaultValueSql("((0))");
             });
 
             modelBuilder.Entity<系统数据>(entity =>
