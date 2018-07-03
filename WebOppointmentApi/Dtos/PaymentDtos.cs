@@ -1,39 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using WebOppointmentApi.Common;
 
 namespace WebOppointmentApi.Dtos
 {
-    public class PaymentApiQuery
-    {
-        public string Head { get; set; }
-        public string Body { get; set; }
-    }
-
-    public class PaymentApiResult
-    {
-        public string Head { get; set; }
-        public string Body { get; set; }
-    }
-
-    public class PaymentApiHeader
-    {
-        public string Token { get; set; }
-        public string Version { get; set; }
-        public string Fromtype { get; set; }
-        public string Sessionid { get; set; }
-        public string Time { get; set; }
-    }
-
-    public class PaymentApiBody
-    {
-        public int Code { get; set; }
-        public string Msg { get; set; }
-        public string Result { get; set; }
-    }
-
     #region 平台提供接口
+
+    #region 对账单接口
+    public class DownPayBillParam
+    {
+        [Required(ErrorMessage = "请输入对账日期")]
+        public string TradeDate { get; set; }
+    }
+
+    public class DownPayBillInput
+    {
+        public string Hospid { get; set; }
+        public string Tradedate { get; set; }
+    }
+    #endregion
+
+    #region 预约支付成功短信接口
+    public class OrderSmsParam
+    {
+        public string Phone { get; set; }
+        public string Oid { get; set; }
+        public string SmsContent { get; set; }
+    }
+
+    public class OrderSmsInput
+    {
+        public string Hospid { get; set; }
+        public string Phone { get; set; }
+        public string Oid { get; set; }
+        public string Smscontent { get; set; }
+    }
+    #endregion
+
+    #region 开单短信通知接口
+
+    #endregion
 
     #endregion
 
