@@ -67,7 +67,6 @@ namespace WebOppointmentApi
             });
 
             //配置跨域
-
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
