@@ -101,7 +101,7 @@ namespace WebOppointmentApi.Controllers
             })));
 
             OppointmentApi api = new OppointmentApi();
-            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "api/downpaybill", head, body);
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "api/downpaybill", head, body);
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
             OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
