@@ -20,13 +20,14 @@ namespace WebOppointmentApi
                 operation.Parameters = new List<IParameter>();
             }
 
-            var actionAttrs = context.ApiDescription.ActionAttributes();
+            var actionAttrs = context.ApiDescription.ControllerAttributes();
 
             var isAuthorized = actionAttrs.Any(a => a.GetType() == typeof(AuthorizeAttribute));
 
             if (isAuthorized == false) //提供action都没有权限特性标记，检查控制器有没有
             {
                 var controllerAttrs = context.ApiDescription.ControllerAttributes();
+                
 
                 isAuthorized = controllerAttrs.Any(a => a.GetType() == typeof(AuthorizeAttribute));
             }
