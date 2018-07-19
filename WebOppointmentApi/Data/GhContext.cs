@@ -158,10 +158,6 @@ namespace WebOppointmentApi.Data
 
                 entity.Property(e => e.门诊号).ValueGeneratedNever();
 
-                entity.Property(e => e.CzyId).HasColumnName("Czy_Id");
-
-                entity.Property(e => e.DwId).HasColumnName("Dw_Id");
-
                 entity.Property(e => e.PassWord)
                     .HasMaxLength(100)
                     .IsUnicode(false)
@@ -275,6 +271,14 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.预存款余额).HasColumnType("money");
 
                 entity.Property(e => e.预存款支付).HasColumnType("money");
+
+                entity.Property(e => e.Dw_Id)
+                   .HasColumnName("Dw_Id")
+                   .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Czy_Id)
+                    .HasColumnName("Czy_Id")
+                    .HasDefaultValueSql("((0))");
             });
 
             modelBuilder.Entity<系统数据>(entity =>

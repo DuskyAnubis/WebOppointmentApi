@@ -26,13 +26,15 @@ namespace WebOppointmentApi.Controllers
     {
         private readonly ApiContext dbContext;
         private readonly GhContext ghContext;
+        private readonly HisContext hisContext;
         private readonly IMapper mapper;
         private readonly OppointmentApiOptions apiOptions;
 
-        public PaymentController(ApiContext dbContext, GhContext ghContext, IMapper mapper, OppointmentApiOptions apiOptions)
+        public PaymentController(ApiContext dbContext, GhContext ghContext, HisContext hisContext, IMapper mapper, OppointmentApiOptions apiOptions)
         {
             this.dbContext = dbContext;
             this.ghContext = ghContext;
+            this.hisContext = hisContext;
             this.mapper = mapper;
             this.apiOptions = apiOptions;
         }
@@ -144,6 +146,78 @@ namespace WebOppointmentApi.Controllers
 
             OppointmentApi api = new OppointmentApi();
             string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "orderinfo/sms", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
+        #endregion
+
+        #region 开单短信通知
+        /// <summary>
+        /// 开单短信通知
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("BillingSms")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> BillingSms([FromBody]BillingSmsParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            BillingSmsInput smsInput;
+
+            划价临时库 order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.划价号.Equals(param.BillNum) && o.DwId == 1);
+            if (order == null)
+            {
+                return NotFound(Json(new { Error = "发送短信失败，划价信息不存在" }));
+            }
+
+            if (order.卡号 == null)
+            {
+                return NotFound(Json(new { Error = "发送短信失败，未查询到病人卡号" }));
+            }
+
+            var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(order.卡号) && r.Dw_Id == 1);
+            if (registered == null)
+            {
+                var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(order.卡号) && r.Dw_Id == 1);
+                if (registeredLs == null)
+                {
+                    return NotFound(Json(new { Error = "发送短信失败，未查询到病人信息" }));
+                }
+                else
+                {
+                    smsInput = new BillingSmsInput
+                    {
+                        Hospid = apiOptions.HospitalId,
+                        Hospname=apiOptions.HospitalName
+                    };
+                }
+            }
+            else
+            {
+                smsInput = new BillingSmsInput
+                {
+                    Hospid = apiOptions.HospitalId
+                };
+            }
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(smsInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "billing/sms", head, body);
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
             OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
