@@ -25,14 +25,14 @@ namespace WebOppointmentApi.Controllers
     public class PaymentController : Controller
     {
         private readonly ApiContext dbContext;
-        private readonly HisContext hisContext;
+        private readonly GhContext ghContext;
         private readonly IMapper mapper;
         private readonly OppointmentApiOptions apiOptions;
 
-        public PaymentController(ApiContext dbContext, HisContext hisContext, IMapper mapper, OppointmentApiOptions apiOptions)
+        public PaymentController(ApiContext dbContext, GhContext ghContext, IMapper mapper, OppointmentApiOptions apiOptions)
         {
             this.dbContext = dbContext;
-            this.hisContext = hisContext;
+            this.ghContext = ghContext;
             this.mapper = mapper;
             this.apiOptions = apiOptions;
         }

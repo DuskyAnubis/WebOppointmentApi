@@ -24,14 +24,14 @@ namespace WebOppointmentApi.Controllers
     public class OppointmentController : Controller
     {
         private readonly ApiContext dbContext;
-        private readonly HisContext hisContext;
+        private readonly GhContext ghContext;
         private readonly IMapper mapper;
         private readonly OppointmentApiOptions apiOptions;
 
-        public OppointmentController(ApiContext dbContext, HisContext hisContext, IMapper mapper, OppointmentApiOptions apiOptions)
+        public OppointmentController(ApiContext dbContext, GhContext ghContext, IMapper mapper, OppointmentApiOptions apiOptions)
         {
             this.dbContext = dbContext;
-            this.hisContext = hisContext;
+            this.ghContext = ghContext;
             this.mapper = mapper;
             this.apiOptions = apiOptions;
         }
@@ -1230,7 +1230,7 @@ namespace WebOppointmentApi.Controllers
 
             BindCard bindCard;
 
-            var gh = await hisContext.门诊挂号
+            var gh = await ghContext.门诊挂号
                 .Where(q => string.IsNullOrEmpty(param.ZlkCardNum) || q.卡号.Equals(param.ZlkCardNum))
                 .Where(q => string.IsNullOrEmpty(param.PatientName) || q.姓名.Equals(param.PatientName))
                 .Where(q => string.IsNullOrEmpty(param.IdentityCard) || q.身份证.Equals(param.IdentityCard))

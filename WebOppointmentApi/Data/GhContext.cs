@@ -4,10 +4,10 @@ using WebOppointmentApi.Models;
 
 namespace WebOppointmentApi.Data
 {
-    public class HisContext : DbContext
+    public class GhContext : DbContext
     {
 
-        public HisContext(DbContextOptions<HisContext> options) : base(options)
+        public GhContext(DbContextOptions<GhContext> options) : base(options)
         {
 
         }

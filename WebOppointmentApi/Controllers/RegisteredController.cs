@@ -23,13 +23,13 @@ namespace WebOppointmentApi.Controllers
     public class RegisteredController : Controller
     {
         private readonly ApiContext dbContext;
-        private readonly HisContext hisContext;
+        private readonly GhContext ghContext;
         private readonly IMapper mapper;
 
-        public RegisteredController(ApiContext dbContext, HisContext hisContext, IMapper mapper)
+        public RegisteredController(ApiContext dbContext, GhContext ghContext, IMapper mapper)
         {
             this.dbContext = dbContext;
-            this.hisContext = hisContext;
+            this.ghContext = ghContext;
             this.mapper = mapper;
         }
 
@@ -360,7 +360,7 @@ namespace WebOppointmentApi.Controllers
             dbContext.Registereds.Update(registered);
             await dbContext.SaveChangesAsync();
 
-            系统数据 system = await hisContext.系统数据.FirstOrDefaultAsync(q => q.Name == "工本费");
+            系统数据 system = await ghContext.系统数据.FirstOrDefaultAsync(q => q.Name == "工本费");
 
             //挂号信息写入HIS系统
             门诊挂号 gh = new 门诊挂号
@@ -405,8 +405,8 @@ namespace WebOppointmentApi.Controllers
                 Czy_Id = 1
             };
 
-            hisContext.门诊挂号.Add(gh);
-            await hisContext.SaveChangesAsync();
+            ghContext.门诊挂号.Add(gh);
+            await ghContext.SaveChangesAsync();
 
             return new NoContentResult();
         }

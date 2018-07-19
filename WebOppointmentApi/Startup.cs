@@ -38,7 +38,7 @@ namespace WebOppointmentApi
             //添加DbContext的注入
             services.AddDbContext<ApiContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ApiConnection"), b => b.UseRowNumberForPaging()));
             //添加HISContext的注入
-            services.AddDbContext<HisContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HisConnection"), b => b.UseRowNumberForPaging()));
+            services.AddDbContext<GhContext>(options => options.UseSqlServer(Configuration.GetConnectionString("GhConnection"), b => b.UseRowNumberForPaging()));
 
             //添加AutoMapper
             var mapperConfig = new MapperConfiguration(cfg =>
