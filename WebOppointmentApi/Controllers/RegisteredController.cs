@@ -384,7 +384,7 @@ namespace WebOppointmentApi.Controllers
                 复诊 = 0,
                 急诊 = 0,
                 交班 = false,
-                退票号 = 0,
+                退票号 = "0",
                 就诊标志 = false,
                 民族 = "",
                 接诊医师id = 0,
@@ -396,13 +396,13 @@ namespace WebOppointmentApi.Controllers
                 总费用 = 0,
                 预存款支付 = 0,
                 现金支付 = 0,
-                Password = "",
+                PassWord = "",
                 来源 = registered.FromType,
                 预存款余额 = 0,
                 状态 = 0,
                 退款 = 0,
-                Dw_Id = 1,
-                Czy_Id = 1
+                DwId = 1,
+                CzyId = 1
             };
 
             ghContext.门诊挂号.Add(gh);

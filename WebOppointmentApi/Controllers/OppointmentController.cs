@@ -1237,7 +1237,14 @@ namespace WebOppointmentApi.Controllers
                 .Where(q => string.IsNullOrEmpty(param.Tel) || q.电话.Equals(param.Tel))
                 .FirstOrDefaultAsync();
 
-            if (gh == null)
+            var ghls = await ghContext.门诊挂号流水帐
+                .Where(q => string.IsNullOrEmpty(param.ZlkCardNum) || q.卡号.Equals(param.ZlkCardNum))
+                .Where(q => string.IsNullOrEmpty(param.PatientName) || q.姓名.Equals(param.PatientName))
+                .Where(q => string.IsNullOrEmpty(param.IdentityCard) || q.身份证.Equals(param.IdentityCard))
+                .Where(q => string.IsNullOrEmpty(param.Tel) || q.电话.Equals(param.Tel))
+                .FirstOrDefaultAsync();
+
+            if (gh == null && ghls == null)
             {
                 bindCard = new BindCard
                 {
@@ -1256,15 +1263,31 @@ namespace WebOppointmentApi.Controllers
                 });
             }
 
-            bindCard = new BindCard
+            if (gh != null)
             {
-                Code = "1",
-                Msg = "校验成功",
-                ZlkCardNum = gh.卡号,
-                PatientName = gh.姓名,
-                IdentityCard = gh.身份证,
-                Tel = gh.电话
-            };
+                bindCard = new BindCard
+                {
+                    Code = "1",
+                    Msg = "校验成功",
+                    ZlkCardNum = gh.卡号,
+                    PatientName = gh.姓名,
+                    IdentityCard = gh.身份证,
+                    Tel = gh.电话
+                };
+            }
+            else
+            {
+                bindCard = new BindCard
+                {
+                    Code = "1",
+                    Msg = "校验成功",
+                    ZlkCardNum = ghls.卡号,
+                    PatientName = ghls.姓名,
+                    IdentityCard = ghls.身份证,
+                    Tel = ghls.电话
+                };
+            }
+
 
             var output = new
             {

@@ -112,10 +112,8 @@ namespace WebOppointmentApi.Dtos
         public string Opcode { get; set; }
     }
 
-    public class SearchPendingPaymentOutput
+    public class PendingPayment
     {
-        public string Code { get; set; }
-        public string Msg { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
         public int State { get; set; }
@@ -129,6 +127,12 @@ namespace WebOppointmentApi.Dtos
         public List<PendingPaymentDetails> Detail { get; set; }
     }
 
+    public class SearchPendingPaymentOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public List<PendingPayment> Items { get; set; }
+    }
     #endregion
 
     #region 订单支付

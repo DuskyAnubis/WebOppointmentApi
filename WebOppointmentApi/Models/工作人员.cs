@@ -46,6 +46,6 @@ namespace WebOppointmentApi.Models
         public int KsId { get; set; }
         public bool 挂号运行权限 { get; set; }
         public bool? 入网许可 { get; set; }
-        public int DwId { get; set; }
+        public int Dw_Id { get; set; }
     }
 }

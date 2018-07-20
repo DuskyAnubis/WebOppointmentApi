@@ -256,6 +256,14 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(output => output.Tel, option => option.MapFrom(r => r.Phone))
                 .ForMember(output => output.State, option => option.MapFrom(r => Convert.ToInt32(r.RegisteredStateCode)))
                 .ForMember(output => output.Pcode, option => option.MapFrom(r => Convert.ToInt32(r.Scheduling.PeriodTypeCode)));
+
+            CreateMap<划价临时库, PendingPaymentDetails>()
+                .ForMember(output => output.CItemName, option => option.MapFrom(o => o.名称))
+                .ForMember(output => output.NPrice, option => option.MapFrom(o => o.单价))
+                .ForMember(output => output.NNum, option => option.MapFrom(o => o.数量))
+                .ForMember(output => output.CUnit, option => option.MapFrom(o => o.单位))
+                .ForMember(output => output.NMoney, option => option.MapFrom(o => o.金额))
+                .ForMember(output => output.CStandard, option => option.MapFrom(o => o.规格));
         }
     }
 }

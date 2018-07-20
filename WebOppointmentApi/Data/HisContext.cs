@@ -27,7 +27,7 @@ namespace WebOppointmentApi.Data
                     .HasMaxLength(50)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.DwId)
+                entity.Property(e => e.Dw_Id)
                     .HasColumnName("Dw_Id")
                     .HasDefaultValueSql("((1))");
 
@@ -727,6 +727,13 @@ namespace WebOppointmentApi.Data
 
                 entity.Property(e => e.职称).HasDefaultValueSql("((1))");
             });
+
+            modelBuilder.Entity<工作人员>().HasQueryFilter(m => m.Dw_Id == 1);
+            modelBuilder.Entity<划价临时库>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<划价流水帐>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<门诊收费>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<门诊收费流水帐>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<医师代码>().HasQueryFilter(m => m.DwId == 1);
         }
     }
 }

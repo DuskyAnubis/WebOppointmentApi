@@ -29,25 +29,25 @@ namespace WebOppointmentApi.Models
         public int 急诊 { get; set; }
         public bool? 交班 { get; set; }
         public DateTime? 交班日期 { get; set; }
-        public decimal? 退票号 { get; set; }
+        public string 退票号 { get; set; }
         public DateTime? 日结帐日期 { get; set; }
-        public bool? 就诊标志 { get; set; }
+        public bool 就诊标志 { get; set; }
         public string 民族 { get; set; }
         public int 接诊医师id { get; set; }
         public DateTime? 出生日期 { get; set; }
         public string 过敏史 { get; set; }
         public string 年龄单位 { get; set; }
         public string 身份证 { get; set; }
-        public decimal? 总预存款 { get; set; }
-        public decimal? 总费用 { get; set; }
-        public decimal? 预存款支付 { get; set; }
-        public decimal? 现金支付 { get; set; }
-        public string Password { get; set; }
+        public decimal 总预存款 { get; set; }
+        public decimal 总费用 { get; set; }
+        public decimal 预存款支付 { get; set; }
+        public decimal 现金支付 { get; set; }
+        public decimal 预存款余额 { get; set; }
+        public string PassWord { get; set; }
         public string 来源 { get; set; }
-        public decimal? 预存款余额 { get; set; }
         public int 状态 { get; set; }
         public decimal 退款 { get; set; }
-        public int Dw_Id { get; set; }
-        public int Czy_Id { get; set; }
+        public int DwId { get; set; }
+        public int CzyId { get; set; }
     }
 }
