@@ -60,5 +60,7 @@ namespace WebOppointmentApi.Models
         public int CzyId { get; set; }
         public int DwId { get; set; }
         public int YsId { get; set; }
+        public string CateId { get; set; }
+        public string CateName { get; set; }
     }
 }

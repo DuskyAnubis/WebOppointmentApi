@@ -294,6 +294,12 @@ namespace WebOppointmentApi.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.金额).HasColumnType("money");
+
+                entity.Property(e => e.CateId)
+                    .HasColumnName("CateId");
+
+                entity.Property(e => e.CateName)
+                   .HasColumnName("CateName");
             });
 
             modelBuilder.Entity<划价流水帐>(entity =>
@@ -489,6 +495,12 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.金额)
                     .HasColumnType("money")
                     .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.CateId)
+                    .HasColumnName("CateId");
+
+                entity.Property(e => e.CateName)
+                   .HasColumnName("CateName");
             });
 
             modelBuilder.Entity<门诊收费>(entity =>

@@ -41,7 +41,6 @@ namespace WebOppointmentApi.Dtos
     public class BillingSmsParam
     {
         public string BillNum { get; set; }
-        public string BillType { get; set; }
     }
 
     public class BillingSmsInput
@@ -64,7 +63,6 @@ namespace WebOppointmentApi.Dtos
     public class SendPendingPaymentParam
     {
         public string BillNum { get; set; }
-        public string BillType { get; set; }
     }
 
     public class PendingPaymentDetails
