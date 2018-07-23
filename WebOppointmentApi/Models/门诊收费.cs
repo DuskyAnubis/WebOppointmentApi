@@ -35,5 +35,9 @@ namespace WebOppointmentApi.Models
         public string 性别 { get; set; }
         public int DwId { get; set; }
         public int CzyId { get; set; }
+        public string PayMethod { get; set; }
+        public string PayFrom { get; set; }
+        public bool IsWindowRefund { get; set; }
+        public int WindowRefundFlag { get; set; }
     }
 }

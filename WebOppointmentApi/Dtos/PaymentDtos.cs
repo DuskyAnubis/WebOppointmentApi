@@ -147,7 +147,7 @@ namespace WebOppointmentApi.Dtos
 
     public class PayOrderOutput
     {
-        public string Code { get; set; }
+        public int Code { get; set; }
         public string Msg { get; set; }
         public string Cflowcode { get; set; }
         public string Cpatientcode { get; set; }
