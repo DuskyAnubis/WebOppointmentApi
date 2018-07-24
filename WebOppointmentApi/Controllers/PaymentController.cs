@@ -728,6 +728,309 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 退费
+        /// <summary>
+        /// 退费
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/register/fade")]
+        [ProducesResponseType(typeof(RefundOrderOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> RefundOrder([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            RefundOrderParam param = JsonConvert.DeserializeObject<RefundOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            int paymentCount = await hisContext.门诊收费.CountAsync(p => p.收费id == Convert.ToInt32(param.Cflowcode));
+            int paymentSerialCount = await hisContext.门诊收费流水帐.CountAsync(p => p.收费id == Convert.ToInt32(param.Cflowcode));
+
+            if (paymentCount == 0 && paymentSerialCount == 0)
+            {
+                var refundOrderOutput = new RefundOrderOutput
+                {
+                    Code = 0,
+                    Msg = $"退费失败！未查询到流水号为{param.Cflowcode}的收费信息！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(refundOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+
+            if (hisContext.门诊收费.Count(p => p.退票 == Convert.ToInt32(param.Cflowcode)) > 0 || (hisContext.门诊收费流水帐.Count(p => p.退票 == Convert.ToInt32(param.Cflowcode)) > 0))
+            {
+                var refundOrderOutput = new RefundOrderOutput
+                {
+                    Code = -2,
+                    Msg = $"退费失败！流水号为{param.Cflowcode}的收费信息已退费！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(refundOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+
+            if (hisContext.划价临时库.Count(p => p.发药标志 == 1 && p.发票流水号 == Convert.ToInt32(param.Cflowcode)) > 0 || (hisContext.划价流水帐.Count(p => p.发药标志 == 1 && p.发票流水号 == Convert.ToInt32(param.Cflowcode)) > 0))
+            {
+                var refundOrderOutput = new RefundOrderOutput
+                {
+                    Code = 0,
+                    Msg = $"退费失败！流水号为{param.Cflowcode}的收费信息已发药，无法退费！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(refundOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+
+            var user = await hisContext.工作人员.FirstOrDefaultAsync(u => u.代码.Equals(param.Userid));
+            if (paymentCount > 0)
+            {
+                var payment = await hisContext.门诊收费.FirstOrDefaultAsync(p => p.收费id == Convert.ToInt32(param.Cflowcode));
+                var orders = await hisContext.划价临时库.Where(o => o.发票流水号 == Convert.ToInt32(param.Cflowcode)).ToListAsync();
+
+                var paymentRefund = new 门诊收费
+                {
+                    日期 = DateTime.Now,
+                    操作员 = user.姓名,
+                    病人姓名 = payment.病人姓名,
+                    卡号 = payment.卡号,
+                    总金额 = payment.总金额 * -1,
+                    优惠额 = payment.优惠额 * -1,
+                    账户支付 = payment.账户支付 * -1,
+                    统筹支付 = payment.统筹支付 * -1,
+                    补助金 = payment.补助金 * -1,
+                    现金支付 = payment.现金支付 * -1,
+                    交班标志 = false,
+                    结帐日期 = null,
+                    门诊号 = payment.门诊号,
+                    发票号 = "",
+                    退票 = payment.收费id,
+                    费别 = "自费",
+                    折扣率 = payment.折扣率,
+                    单据流水号 = "",
+                    医疗保险号 = "",
+                    基金支付额 = payment.基金支付额 * -1,
+                    帐户余额 = payment.帐户余额,
+                    公补基金支付 = payment.公补基金支付 * -1,
+                    医保 = "",
+                    性别 = payment.性别,
+                    DwId = 1,
+                    CzyId = user.Id,
+                    PayMethod = payment.PayMethod,
+                    PayFrom = payment.PayFrom,
+                    IsWindowRefund = false,
+                    WindowRefundFlag = 0
+                };
+                hisContext.Add(paymentRefund);
+                hisContext.SaveChanges();
+
+                foreach (var order in orders)
+                {
+                    var orderRefund = new 划价临时库
+                    {
+                        日期 = DateTime.Now,
+                        发票流水号 = paymentRefund.收费id,
+                        代码 = order.代码,
+                        货号 = order.货号,
+                        名称 = order.名称,
+                        规格 = order.规格,
+                        单位 = order.单位,
+                        单价 = order.单价,
+                        数量 = order.数量 * -1,
+                        金额 = order.金额 * -1,
+                        药品付数 = order.药品付数,
+                        材质分类 = order.材质分类,
+                        收费科室 = order.收费科室,
+                        科室id = order.科室id,
+                        物理分类 = order.物理分类,
+                        特殊药品 = order.特殊药品,
+                        库存量 = order.库存量,
+                        日结帐日期 = null,
+                        月结帐日期 = null,
+                        发药标志 = order.发药标志,
+                        发药日期 = order.发药日期,
+                        操作员 = user.姓名,
+                        医保码 = order.医保码,
+                        医保比例 = order.医保比例,
+                        医保金额 = order.医保金额,
+                        医师 = order.医师,
+                        划价号 = order.划价号,
+                        病人姓名 = order.病人姓名,
+                        用法 = order.用法,
+                        用量 = order.用量,
+                        使用频率 = order.使用频率,
+                        性别 = order.性别,
+                        年龄 = order.年龄,
+                        地址 = order.地址,
+                        批号 = order.批号,
+                        YfId = order.YfId,
+                        疾病诊断 = order.疾病诊断,
+                        接口码1 = order.接口码1,
+                        接口码2 = order.接口码2,
+                        合疗分类 = order.合疗分类,
+                        政府采购价 = order.政府采购价,
+                        禁忌 = order.禁忌,
+                        卡号 = order.卡号,
+                        组别 = order.组别,
+                        分组标识 = order.分组标识,
+                        处方类别 = order.处方类别,
+                        套餐名称 = order.套餐名称,
+                        农合卡号 = order.农合卡号,
+                        一付量 = order.一付量,
+                        CzyId = user.Id,
+                        DwId = 1,
+                        YsId = order.YsId,
+                        CateId = order.CateId,
+                        CateName = order.CateName
+                    };
+                    hisContext.Add(orderRefund);
+                }
+                hisContext.SaveChanges();
+
+                var refundOrderOutput = new RefundOrderOutput
+                {
+                    Code = 1,
+                    Msg = $"退费成功!"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(refundOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                var payment = await hisContext.门诊收费流水帐.FirstOrDefaultAsync(o => o.收费id == Convert.ToInt32(param.Cflowcode));
+                var orders = await hisContext.划价流水帐.Where(o => o.发票流水号 == Convert.ToInt32(param.Cflowcode)).ToListAsync();
+
+                var paymentRefund = new 门诊收费
+                {
+                    日期 = DateTime.Now,
+                    操作员 = user.姓名,
+                    病人姓名 = payment.病人姓名,
+                    卡号 = payment.卡号,
+                    总金额 = payment.总金额 * -1,
+                    优惠额 = payment.优惠额 * -1,
+                    账户支付 = payment.账户支付 * -1,
+                    统筹支付 = payment.统筹支付 * -1,
+                    补助金 = payment.补助金 * -1,
+                    现金支付 = payment.现金支付 * -1,
+                    交班标志 = false,
+                    结帐日期 = null,
+                    门诊号 = payment.门诊号,
+                    发票号 = "",
+                    退票 = payment.收费id,
+                    费别 = "自费",
+                    折扣率 = payment.折扣率,
+                    单据流水号 = "",
+                    医疗保险号 = "",
+                    基金支付额 = payment.基金支付额 * -1,
+                    帐户余额 = payment.帐户余额,
+                    公补基金支付 = payment.公补基金支付 * -1,
+                    医保 = "",
+                    性别 = payment.性别,
+                    DwId = 1,
+                    CzyId = user.Id,
+                    PayMethod = payment.PayMethod,
+                    PayFrom = payment.PayFrom,
+                    IsWindowRefund = false,
+                    WindowRefundFlag = 0
+                };
+                hisContext.Add(paymentRefund);
+                hisContext.SaveChanges();
+
+                foreach (var order in orders)
+                {
+                    var orderRefund = new 划价临时库
+                    {
+                        日期 = DateTime.Now,
+                        发票流水号 = paymentRefund.收费id,
+                        代码 = order.代码,
+                        货号 = order.货号,
+                        名称 = order.名称,
+                        规格 = order.规格,
+                        单位 = order.单位,
+                        单价 = order.单价 == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.单价),
+                        数量 = order.数量 == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.数量) * -1,
+                        金额 = order.金额 == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.金额) * -1,
+                        药品付数 = 1,
+                        材质分类 = order.材质分类,
+                        收费科室 = order.收费科室,
+                        科室id = order.科室id == null ? Convert.ToInt32(0) : Convert.ToInt32(order.科室id),
+                        物理分类 = order.物理分类,
+                        特殊药品 = order.特殊药品 == null ? false : Convert.ToBoolean(order.特殊药品),
+                        库存量 = order.库存量 == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.库存量),
+                        日结帐日期 = null,
+                        月结帐日期 = null,
+                        发药标志 = 0,
+                        发药日期 = order.发药日期,
+                        操作员 = user.姓名,
+                        医保码 = order.医保码,
+                        医保比例 = order.医保比例 == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.医保比例),
+                        医保金额 = order.医保金额 == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.医保金额),
+                        医师 = order.医师,
+                        划价号 = order.划价号,
+                        病人姓名 = order.病人姓名,
+                        用法 = order.用法,
+                        用量 = order.用量,
+                        使用频率 = order.使用频率,
+                        性别 = order.性别,
+                        年龄 = order.年龄,
+                        地址 = order.地址,
+                        批号 = order.批号,
+                        YfId = order.YfId == null ? Convert.ToDecimal(0.00) : Convert.ToDecimal(order.YfId),
+                        疾病诊断 = order.疾病诊断,
+                        接口码1 = order.接口码1,
+                        接口码2 = order.接口码2,
+                        合疗分类 = order.合疗分类,
+                        政府采购价 = order.政府采购价,
+                        禁忌 = order.禁忌,
+                        卡号 = order.卡号,
+                        组别 = order.组别,
+                        分组标识 = order.分组标识,
+                        处方类别 = order.处方类别,
+                        套餐名称 = order.套餐名称,
+                        农合卡号 = order.农合卡号,
+                        一付量 = order.一付量,
+                        CzyId = user.Id,
+                        DwId = 1,
+                        YsId = order.YsId,
+                        CateId = order.CateId,
+                        CateName = order.CateName
+                    };
+                    hisContext.Add(orderRefund);
+                }
+                hisContext.SaveChanges();
+
+                var refundOrderOutput = new RefundOrderOutput
+                {
+                    Code = 1,
+                    Msg = $"退费成功!"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(refundOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+        #endregion
+
         #endregion
     }
 }
