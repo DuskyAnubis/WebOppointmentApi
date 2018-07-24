@@ -1102,6 +1102,61 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 人工窗口退费置标志
+        /// <summary>
+        /// 人工窗口退费置标志
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/search/setwindowfadefareflag")]
+        [ProducesResponseType(typeof(FlagWindowRefundOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> FlagWindowRefund([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            FlagWindowRefundParam param = JsonConvert.DeserializeObject<FlagWindowRefundParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+            var payment = await hisContext.门诊收费.Where(p => p.退票 != null && p.收费id == Convert.ToInt32(param.CFlowCode) && p.PayFrom.Equals("健康山西") && p.IsWindowRefund == true && p.WindowRefundFlag == 0).FirstOrDefaultAsync();
+
+            if (payment == null)
+            {
+                var flagWindowRefundOutput = new FlagWindowRefundOutput
+                {
+                    Code = 0,
+                    Msg = $"查询窗口退费失败，未能找到信息！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(flagWindowRefundOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                payment.WindowRefundFlag = 1;
+                hisContext.Update(payment);
+                hisContext.SaveChanges();
+
+                var flagWindowRefundOutput = new FlagWindowRefundOutput
+                {
+                    Code = 0,
+                    Msg = $"操作成功！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(flagWindowRefundOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+        #endregion
+
         #endregion
     }
 }

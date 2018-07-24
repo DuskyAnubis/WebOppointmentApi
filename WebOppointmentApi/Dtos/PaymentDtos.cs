@@ -211,7 +211,7 @@ namespace WebOppointmentApi.Dtos
     #region 人工窗口退费置标志
     public class FlagWindowRefundParam
     {
-        public string Cflowcode { get; set; }
+        public string CFlowCode { get; set; }
     }
 
     public class FlagWindowRefundOutput
