@@ -1031,6 +1031,77 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 人工窗口退费查询
+        /// <summary>
+        /// 人工窗口退费查询
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/search/windowfadefare")]
+        [ProducesResponseType(typeof(SearchWindowRefundOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SearchWindowRefund([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SearchWindowRefundParam param = JsonConvert.DeserializeObject<SearchWindowRefundParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            var payments = await hisContext.门诊收费.Where(p => string.IsNullOrEmpty(param.CFlowCode) || p.收费id == Convert.ToInt32(param.CFlowCode))
+                .Where(p => p.退票 != null && p.PayFrom.Equals("健康山西") && p.IsWindowRefund == true && p.WindowRefundFlag == 0).ToListAsync();
+
+            if (payments == null || payments.Count == 0)
+            {
+                var searchWindowRefundOutput = new SearchWindowRefundOutput
+                {
+                    Code = 0,
+                    Msg = $"查询窗口退费失败，未能找到信息！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchWindowRefundOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                List<SearchWindowRefund> SearchWindowRefunds = new List<SearchWindowRefund>();
+                foreach (var payment in payments)
+                {
+                    var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.发票流水号 == payment.收费id);
+                    var searchWindowRefund = new SearchWindowRefund
+                    {
+                        CFlowCode = payment.收费id.ToString(),
+                        CRateType = order.CateId,
+                        NMoney = payment.总金额.ToString(),
+                        CPatientCode = payment.卡号,
+                        CPatientName = payment.病人姓名,
+                        Ordercode = order.划价号,
+                        TradeDate = Convert.ToDateTime(payment.日期).ToString("yyyy-MM-dd hh:mm:ss")
+                    };
+                    SearchWindowRefunds.Add(searchWindowRefund);
+                }
+
+                var searchWindowRefundOutput = new SearchWindowRefundOutput
+                {
+                    Code = 1,
+                    Msg = $"查询窗口退费成功!",
+                    Result = SearchWindowRefunds
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchWindowRefundOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+        #endregion
+
         #endregion
     }
 }

@@ -186,13 +186,11 @@ namespace WebOppointmentApi.Dtos
     #region 人工窗口退费查询
     public class SearchWindowRefundParam
     {
-        public string Cflowcode { get; set; }
+        public string CFlowCode { get; set; }
     }
 
-    public class SearchWindowRefundOutput
+    public class SearchWindowRefund
     {
-        public string Code { get; set; }
-        public string Msg { get; set; }
         public string CFlowCode { get; set; }
         public string CRateType { get; set; }
         public string NMoney { get; set; }
@@ -200,6 +198,13 @@ namespace WebOppointmentApi.Dtos
         public string CPatientName { get; set; }
         public string Ordercode { get; set; }
         public string TradeDate { get; set; }
+    }
+
+    public class SearchWindowRefundOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public List<SearchWindowRefund> Result { get; set; }
     }
     #endregion
 
@@ -211,7 +216,7 @@ namespace WebOppointmentApi.Dtos
 
     public class FlagWindowRefundOutput
     {
-        public string Code { get; set; }
+        public int Code { get; set; }
         public string Msg { get; set; }
     }
     #endregion
