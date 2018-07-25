@@ -1157,6 +1157,153 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 查询交易流水
+        /// <summary>
+        /// 查询交易流水
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/search/tradeflow")]
+        [ProducesResponseType(typeof(SearchTradeFlowOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SearchTradeFlow([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SearchTradeFlowParam param = JsonConvert.DeserializeObject<SearchTradeFlowParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            DateTime begin = Convert.ToDateTime(param.Trade_beg + " 00:00:00");
+            DateTime end = Convert.ToDateTime(param.Trade_end + " 23:59:59");
+
+            var payments = await hisContext.门诊收费.Where(p => p.PayFrom.Equals("健康山西") && p.日期 >= begin && p.日期 <= end).ToListAsync();
+            var paymentsSerial = await hisContext.门诊收费流水帐.Where(p => p.PayFrom.Equals("健康山西") && p.日期 >= begin && p.日期 <= end).ToListAsync();
+
+            if (payments.Count == 0 && paymentsSerial.Count == 0)
+            {
+                var searchTradeFlowOutput = new SearchTradeFlowOutput
+                {
+                    Code = 0,
+                    Msg = $"查询流水失败，未能找到信息！"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchTradeFlowOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                List<SearchTradeFlow> tradeFlows = new List<SearchTradeFlow>();
+
+                foreach (var item in payments)
+                {
+                    var idCard = "";
+                    var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
+                    if (registered == null)
+                    {
+                        var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
+                        if (registeredLs != null)
+                        {
+                            if (!string.IsNullOrEmpty(registeredLs.身份证))
+                            {
+                                idCard = registeredLs.身份证;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(registered.身份证))
+                        {
+                            idCard = registered.身份证;
+                        }
+                    }
+                    var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
+                    var searchTradeFlow = new SearchTradeFlow
+                    {
+                        Cflowcode = item.收费id.ToString(),
+                        OrderCode = order.划价号,
+                        Cateid = order.CateId,
+                        Tradetype = item.退票 == null ? "缴费" : "退费",
+                        Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+                        Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+                        Ls_cpscode = item.PayMethod,
+                        Cpatientname = item.病人姓名,
+                        Cpatientcode = item.卡号,
+                        Cidentitycard = idCard,
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+                        Bdayend = "0",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
+                }
+                foreach (var item in paymentsSerial)
+                {
+                    var idCard = "";
+                    var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
+                    if (registered == null)
+                    {
+                        var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
+                        if (registeredLs != null)
+                        {
+                            if (!string.IsNullOrEmpty(registeredLs.身份证))
+                            {
+                                idCard = registeredLs.身份证;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(registered.身份证))
+                        {
+                            idCard = registered.身份证;
+                        }
+                    }
+                    var order = await hisContext.划价流水帐.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
+                    var searchTradeFlow = new SearchTradeFlow
+                    {
+                        Cflowcode = item.收费id.ToString(),
+                        OrderCode = order.划价号,
+                        Cateid = order.CateId,
+                        Tradetype = item.退票 == null ? "缴费" : "退费",
+                        Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+                        Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+                        Ls_cpscode = item.PayMethod,
+                        Cpatientname = item.病人姓名,
+                        Cpatientcode = item.卡号,
+                        Cidentitycard = idCard,
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+                        Bdayend = "1",
+                        Dayendtime = Convert.ToDateTime(item.结帐日期).ToString("yyyy-MM-dd hh:mm:ss")
+                    };
+                    tradeFlows.Add(searchTradeFlow);
+                }
+
+                var searchTradeFlowOutput = new SearchTradeFlowOutput
+                {
+                    Code = 1,
+                    Msg = $"查询成功！",
+                    Results = tradeFlows
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchTradeFlowOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+
+        #endregion
+
         #endregion
     }
 }

@@ -250,7 +250,7 @@ namespace WebOppointmentApi.Dtos
 
     public class SearchTradeFlowOutput
     {
-        public string Code { get; set; }
+        public int Code { get; set; }
         public string Msg { get; set; }
         public List<SearchTradeFlow> Results { get; set; }
     }
