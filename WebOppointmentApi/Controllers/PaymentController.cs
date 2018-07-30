@@ -277,7 +277,7 @@ namespace WebOppointmentApi.Controllers
             SendPendingPaymentinput paymentInput;
 
             List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
-            if (orders == null && orders.Count == 0)
+            if (orders == null || orders.Count == 0)
             {
                 return NotFound(Json(new { Error = "推送失败，划价信息不存在!" }));
             }
