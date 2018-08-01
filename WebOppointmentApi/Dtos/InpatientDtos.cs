@@ -100,6 +100,8 @@ namespace WebOppointmentApi.Dtos
 
     public class SynchronizingCostItemContent
     {
+        public int Id { get; set; }
+        public string Time { get; set; }
         public string Name { get; set; }
         public string Spec { get; set; }
         public string Count { get; set; }
@@ -112,6 +114,254 @@ namespace WebOppointmentApi.Dtos
     #endregion
 
     #region HIS提供接口
+
+    #region 同步绑定关系
+    public class SynchronizingBindParam
+    {
+        public int Opcode { get; set; }
+        public string Hospid { get; set; }
+        public string Pid { get; set; }
+        public string Phone { get; set; }
+        public string Userid { get; set; }
+    }
+
+    public class SynchronizingBindOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Result { get; set; }
+    }
+    #endregion
+
+    #region 获取检验报告明细
+
+    #endregion
+
+    #region 获取费用清单
+    public class UpdateCostListParam
+    {
+        public string Hospid { get; set; }
+        public string Pid { get; set; }
+        public string Time { get; set; }
+    }
+
+    public class UpdateCostListOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Hospid { get; set; }
+        public string Pid { get; set; }
+        public List<UpdateCostItem> Item { get; set; }
+    }
+
+    public class UpdateCostItem
+    {
+        public string Time { get; set; }
+        public string Total { get; set; }
+        public UpdateCostItemTitle Title { get; set; }
+        public List<UpdateCostItemContent> Content { get; set; }
+    }
+
+    public class UpdateCostItemTitle
+    {
+        public string Name { get; set; }
+        public string Spec { get; set; }
+        public string Count { get; set; }
+        public string Sum { get; set; }
+        public string Ext1 { get; set; }
+        public string Ext2 { get; set; }
+    }
+
+    public class UpdateCostItemContent
+    {
+        public int Id { get; set; }
+        public string Time { get; set; }
+        public string Name { get; set; }
+        public string Spec { get; set; }
+        public string Count { get; set; }
+        public string Sum { get; set; }
+        public string Ext1 { get; set; }
+        public string Ext2 { get; set; }
+    }
+    #endregion
+
+    #region 获取费用汇总
+    public class CostTotalParam
+    {
+        public string Hospid { get; set; }
+        public string Pid { get; set; }
+    }
+
+    public class CostTotalOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Time { get; set; }
+        public string Cid { get; set; }
+        public string Tprice { get; set; }
+        public string Cash { get; set; }
+        public string Dbcash { get; set; }
+        public string Copay { get; set; }
+        public string Ownpay { get; set; }
+        public string Hctprice { get; set; }
+        public string State { get; set; }
+        public CostTotalItem Item { get; set; }
+    }
+
+    public class CostTotalItem
+    {
+        public CostTotalTitle Title { get; set; }
+        public List<CostTotalContent> Item { get; set; }
+    }
+
+    public class CostTotalTitle
+    {
+        public string Name { get; set; }
+        public string Sum { get; set; }
+        public string Ext1 { get; set; }
+    }
+
+    public class CostTotalContent
+    {
+        public string Name { get; set; }
+        public string Sum { get; set; }
+        public string Ext1 { get; set; }
+    }
+    #endregion
+
+    #region 获取费用明细
+    public class CostDetailParam
+    {
+        public string Hospid { get; set; }
+        public string Pid { get; set; }
+        public CostDetailTitle Title { get; set; }
+        public List<CostDetailContent> Content { get; set; }
+    }
+
+    public class CostDetailOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Time { get; set; }
+        public string Total { get; set; }
+    }
+
+    public class CostDetailTitle
+    {
+        public string Name { get; set; }
+        public string Spec { get; set; }
+        public string Count { get; set; }
+        public string Sum { get; set; }
+        public string Ext1 { get; set; }
+        public string Ext2 { get; set; }
+    }
+
+    public class CostDetailContent
+    {
+        public int Id { get; set; }
+        public string Time { get; set; }
+        public string Name { get; set; }
+        public string Spec { get; set; }
+        public string Count { get; set; }
+        public string Sum { get; set; }
+        public string Ext1 { get; set; }
+        public string Ext2 { get; set; }
+    }
+    #endregion
+
+    #region 住院患者信息查询
+    public class SearchInpatientParam
+    {
+        public string Hospid { get; set; }
+        public string Inpcode { get; set; }
+        public string Pid { get; set; }
+    }
+
+    public class SearchInpatientOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Pid { get; set; }
+        public string Hospid { get; set; }
+        public string Hospname { get; set; }
+        public string Deptid { get; set; }
+        public string Deptname { get; set; }
+        public string Doctid { get; set; }
+        public string Docname { get; set; }
+        public int Gender { get; set; }
+        public int Age { get; set; }
+        public string PatientName { get; set; }
+        public string InPcode { get; set; }
+        public string Bednum { get; set; }
+        public string IdentityCard { get; set; }
+        public string Cpatientcode { get; set; }
+        public string State { get; set; }
+        public string Tel { get; set; }
+        public string Times { get; set; }
+        public string AdmissionDate { get; set; }
+        public string PayMoney { get; set; }
+        public string Totalfare { get; set; }
+        public string Leftmoney { get; set; }
+    }
+    #endregion
+
+    #region 住院押金支付
+    public class PayDepositParam
+    {
+        public string Inpcode { get; set; }
+        public string Cpatientcode { get; set; }
+        public string PayMoney { get; set; }
+        public string Userid { get; set; }
+        public string Payway { get; set; }
+        public string Cinterpayfromtype { get; set; }
+        public string Orderno { get; set; }
+    }
+
+    public class PayDepositOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Cflowcode { get; set; }
+    }
+    #endregion
+
+    #region 住院押金退费查询
+    public class SearchDepositFadeParam
+    {
+        public string Cflowcode { get; set; }
+    }
+
+    public class SearchDepositFadeOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Autoid { get; set; }
+        public string CflowCode { get; set; }
+        public string NMoney { get; set; }
+        public string Payway { get; set; }
+        public string InPcode { get; set; }
+        public string No_TreatList { get; set; }
+        public string PatName { get; set; }
+        public string TradeDate { get; set; }
+    }
+    #endregion
+
+    #region 住院押金退费置标识
+    public class FlaghDepositFadeParam
+    {
+        public string CFlowCode { get; set; }
+    }
+
+    public class FlaghDepositFadeOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+    }
+    #endregion
+
+    #region 检验报告更新
+
+    #endregion
 
     #endregion
 }
