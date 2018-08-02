@@ -740,12 +740,910 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.职称).HasDefaultValueSql("((1))");
             });
 
+            modelBuilder.Entity<Zy病案库>(entity =>
+            {
+                entity.HasKey(e => e.病人编号);
+
+                entity.ToTable("ZY_病案库");
+
+                entity.Property(e => e.DwId).HasColumnName("Dw_Id");
+
+                entity.Property(e => e.PInfo)
+                    .HasColumnName("pInfo")
+                    .HasMaxLength(512)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.一卡通)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.个人全自费支付).HasColumnType("money");
+
+                entity.Property(e => e.个人帐户支付).HasColumnType("money");
+
+                entity.Property(e => e.主诉)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.企业补充基金支付).HasColumnType("money");
+
+                entity.Property(e => e.优惠额).HasColumnType("money");
+
+                entity.Property(e => e.住院天数).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.住院次数).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.入院方式)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.入院日期)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.入院诊断)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.入院途径)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.公务员床补).HasColumnType("money");
+
+                entity.Property(e => e.公补基金支付).HasColumnType("money");
+
+                entity.Property(e => e.关系)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.出生地)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.出生地县区)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.出生地市)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.出生地省)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.出生日期).HasColumnType("datetime");
+
+                entity.Property(e => e.出院交退款).HasColumnType("money");
+
+                entity.Property(e => e.出院日期).HasColumnType("datetime");
+
+                entity.Property(e => e.医保类型)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医师代码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医院代付金额).HasColumnType("money");
+
+                entity.Property(e => e.单位)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.卡号)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.发票号)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.国籍)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.大额医疗基金支付).HasColumnType("money");
+
+                entity.Property(e => e.姓名).HasMaxLength(50);
+
+                entity.Property(e => e.婚否)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.审核人)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.家床标志)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.家庭住址)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.就诊号)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.工伤基金支付).HasColumnType("money");
+
+                entity.Property(e => e.工作单位电话)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.工作单位邮编)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.差额).HasColumnType("money");
+
+                entity.Property(e => e.常规费用)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.年龄)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.床位)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.性别)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.总费用).HasColumnType("money");
+
+                entity.Property(e => e.户口住址县区)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.户口住址市)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.户口住址省)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.户口住址邮编)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.手术情况)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.担保人)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.支付类型)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.支票支付).HasColumnType("money");
+
+                entity.Property(e => e.核算医师)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.欠款).HasColumnType("money");
+
+                entity.Property(e => e.民族)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.治疗情况)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.现住址县区)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.现住址市)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.现住址省)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.现金支付).HasColumnType("money");
+
+                entity.Property(e => e.生育基金支付).HasColumnType("money");
+
+                entity.Property(e => e.电话)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.病室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.病情)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.确诊icd)
+                    .HasColumnName("确诊ICD")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.确诊医师)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.确诊日期).HasColumnType("datetime");
+
+                entity.Property(e => e.确诊诊断)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.社会保障号)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.离休基金支付).HasColumnType("money");
+
+                entity.Property(e => e.科室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.籍贯)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.籍贯市)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.经办人)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.结算日期).HasColumnType("datetime");
+
+                entity.Property(e => e.统筹支付).HasColumnType("money");
+
+                entity.Property(e => e.职业)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.联系人)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.联系人地址)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.联系电话)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.补助金).HasColumnType("money");
+
+                entity.Property(e => e.记帐).HasColumnType("money");
+
+                entity.Property(e => e.诊断1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊断2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊断3)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊断4)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊断5)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.起始日期).HasColumnType("datetime");
+
+                entity.Property(e => e.身份证号)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.邮政编码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.门急诊诊断)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.预交金).HasColumnType("money");
+
+                entity.Property(e => e.预交金余额).HasColumnType("money");
+            });
+
+            modelBuilder.Entity<Zy病区床位>(entity =>
+            {
+                entity.HasKey(e => new { e.病区名, e.病室名, e.床位号, e.KsId });
+
+                entity.ToTable("ZY_病区床位");
+
+                entity.Property(e => e.病区名)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.病室名)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.KsId).HasColumnName("KS_ID");
+
+                entity.Property(e => e.DwId)
+                    .HasColumnName("Dw_Id")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.冷暖yfId).HasColumnName("冷暖YF_ID");
+
+                entity.Property(e => e.冷暖代码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.冷暖医保分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.冷暖医保码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.冷暖名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.冷暖接口码1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.冷暖接口码2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.冷暖材质分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.冷暖费).HasColumnType("money");
+
+                entity.Property(e => e.医保比例).HasColumnType("money");
+
+                entity.Property(e => e.合疗分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.合疗比例).HasColumnType("money");
+
+                entity.Property(e => e.床位yfId).HasColumnName("床位YF_ID");
+
+                entity.Property(e => e.床位代码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.床位医保分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.床位医保码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.床位名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.床位接口码1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.床位接口码2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.床位材质分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.床位费).HasColumnType("money");
+
+                entity.Property(e => e.护理yfId).HasColumnName("护理YF_ID");
+
+                entity.Property(e => e.护理医保分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.护理医保码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.护理名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.护理接口码1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.护理接口码2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.护理标准).HasColumnType("money");
+
+                entity.Property(e => e.是否记冷暖)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.是否记床位)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.是否记护理)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.是否记诊疗)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.诊疗yfId).HasColumnName("诊疗YF_ID");
+
+                entity.Property(e => e.诊疗代码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊疗医保分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.诊疗医保码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.诊疗名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊疗接口码1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊疗接口码2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊疗材质分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.诊疗费).HasColumnType("money");
+            });
+
+            modelBuilder.Entity<Zy记帐临时库>(entity =>
+            {
+                entity.ToTable("ZY_记帐临时库");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CzyId).HasColumnName("Czy_Id");
+
+                entity.Property(e => e.FId).HasColumnName("F_ID");
+
+                entity.Property(e => e.YfId)
+                    .HasColumnName("YF_ID")
+                    .HasColumnType("numeric(18, 0)");
+
+                entity.Property(e => e.上传日期).HasColumnType("datetime");
+
+                entity.Property(e => e.中药付数).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.代码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医保分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医保比例).HasColumnType("money");
+
+                entity.Property(e => e.医保码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医嘱类别)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医师编码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.单价).HasColumnType("money");
+
+                entity.Property(e => e.单位)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.发药日期).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.司药人)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.合疗分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.合疗比例).HasColumnType("money");
+
+                entity.Property(e => e.名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.备注)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.套餐名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.实交金额).HasColumnType("money");
+
+                entity.Property(e => e.实施标志).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.库存量).HasColumnType("money");
+
+                entity.Property(e => e.应交金额).HasColumnType("money");
+
+                entity.Property(e => e.所在科室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.执行频率)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.批号)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.接口码1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.接口码2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.操作员)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.收费科室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.政府采购价).HasColumnType("money");
+
+                entity.Property(e => e.数量).HasColumnType("money");
+
+                entity.Property(e => e.日期)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.材质分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.物理分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.用法)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.用量)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.科室id).HasColumnName("科室ID");
+
+                entity.Property(e => e.组别)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.规格)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.长天上传时间).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Zy记帐流水帐>(entity =>
+            {
+                entity.ToTable("ZY_记帐流水帐");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CzyId).HasColumnName("Czy_Id");
+
+                entity.Property(e => e.DwId)
+                    .HasColumnName("Dw_Id")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.FId).HasColumnName("F_ID");
+
+                entity.Property(e => e.LskId).HasColumnName("LSK_ID");
+
+                entity.Property(e => e.YfId)
+                    .HasColumnName("YF_ID")
+                    .HasColumnType("numeric(18, 0)")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.上传日期).HasColumnType("datetime");
+
+                entity.Property(e => e.中药付数).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.代码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医保分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医保比例).HasColumnType("money");
+
+                entity.Property(e => e.医保码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医嘱类别)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.医师编码)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.单价).HasColumnType("money");
+
+                entity.Property(e => e.单位)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.发药日期).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.司药人)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.合疗分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.合疗比例).HasColumnType("money");
+
+                entity.Property(e => e.名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.备注)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.套餐名称)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.实交金额).HasColumnType("money");
+
+                entity.Property(e => e.实施标志).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.库存量).HasColumnType("money");
+
+                entity.Property(e => e.应交金额).HasColumnType("money");
+
+                entity.Property(e => e.所在科室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.执行频率)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.批号)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.接口码1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.接口码2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.操作员)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.收费科室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.政府采购价).HasColumnType("money");
+
+                entity.Property(e => e.数量).HasColumnType("money");
+
+                entity.Property(e => e.日期)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.材质分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.物理分类)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.用法)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.用量)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.科室id).HasColumnName("科室ID");
+
+                entity.Property(e => e.组别)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.规格)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.长天上传时间).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Zy预交金>(entity =>
+            {
+                entity.HasKey(e => e.预交金编号);
+
+                entity.ToTable("ZY_预交金");
+
+                entity.Property(e => e.CzyId).HasColumnName("Czy_Id");
+
+                entity.Property(e => e.DwId).HasColumnName("Dw_Id");
+
+                entity.Property(e => e.备注)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.操作员)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.操作员科室)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.日期)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.日结帐日期).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.月结帐日期).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.金额)
+                    .HasColumnType("money")
+                    .HasDefaultValueSql("((0))");
+            });
+
             modelBuilder.Entity<工作人员>().HasQueryFilter(m => m.Dw_Id == 1);
             modelBuilder.Entity<划价临时库>().HasQueryFilter(m => m.DwId == 1);
             modelBuilder.Entity<划价流水帐>().HasQueryFilter(m => m.DwId == 1);
             modelBuilder.Entity<门诊收费>().HasQueryFilter(m => m.DwId == 1);
             modelBuilder.Entity<门诊收费流水帐>().HasQueryFilter(m => m.DwId == 1);
             modelBuilder.Entity<医师代码>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<Zy病案库>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<Zy病区床位>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<Zy记帐流水帐>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<Zy预交金>().HasQueryFilter(m => m.DwId == 1);
         }
     }
 }
