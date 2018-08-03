@@ -16,6 +16,11 @@ namespace WebOppointmentApi.Data
         public DbSet<门诊收费> 门诊收费 { get; set; }
         public DbSet<门诊收费流水帐> 门诊收费流水帐 { get; set; }
         public DbSet<医师代码> 医师代码 { get; set; }
+        public DbSet<Zy病案库> Zy病案库 { get; set; }
+        public DbSet<Zy病区床位> Zy病区床位 { get; set; }
+        public DbSet<Zy记帐临时库> Zy记帐临时库 { get; set; }
+        public DbSet<Zy记帐流水帐> Zy记帐流水帐 { get; set; }
+        public DbSet<Zy预交金> Zy预交金 { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
