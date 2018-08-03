@@ -180,6 +180,18 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 解除绑定住院服务
+
+        #endregion
+
+        #region 检验报告同步
+
+        #endregion
+
+        #region 费用清单同步
+
+        #endregion
+
         #endregion
 
         #region HIS提供接口
