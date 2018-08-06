@@ -556,7 +556,7 @@ namespace WebOppointmentApi.Controllers
                 var costTotalOutput = new CostTotalOutput
                 {
                     Code = 0,
-                    Msg = "获取失败!未查到该病人信息!"
+                    Msg = "获取费用汇总失败!未查到该病人信息!"
                 };
 
                 return new ObjectResult(new
@@ -628,6 +628,105 @@ namespace WebOppointmentApi.Controllers
                 {
                     head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
                     body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(costTotalOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+        #endregion
+
+        #region 获取费用明细
+        /// <summary>
+        /// 获取费用明细
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/cost/detail")]
+        [ProducesResponseType(typeof(SynchronizingBindOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> CostDetail([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            CostDetailParam param = JsonConvert.DeserializeObject<CostDetailParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            DateTime time = DateTime.Now;
+            var patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.病人编号 == Convert.ToInt32(param.Pid));
+            if (patient == null)
+            {
+                var costDetailOutput = new CostDetailOutput
+                {
+                    Code = 0,
+                    Msg = "获取费用明细失败!未查到该病人信息!"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(costDetailOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else if (!patient.IsBind)
+            {
+                var costDetailOutput = new CostDetailOutput
+                {
+                    Code = 2,
+                    Msg = "获取费用明细失败!该病人未绑定或已解绑!"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(costDetailOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                List<Zy记帐流水帐> payments = await hisContext.Zy记帐流水帐.Where(p => p.病人编号 == patient.病人编号 && p.日期 < time).ToListAsync();
+
+                CostDetailTitle costDetailTitle = new CostDetailTitle
+                {
+                    Name = "名称",
+                    Spec = "规格",
+                    Count = "数量",
+                    Sum = "金额",
+                    Ext1 = "扩展1",
+                    Ext2 = "扩展2"
+                };
+
+                List<CostDetailContent> costDetailContents = new List<CostDetailContent>();
+                foreach (var item in payments)
+                {
+                    CostDetailContent costDetailContent = new CostDetailContent
+                    {
+                        Id = item.Id,
+                        Time = item.日期.ToString("yyyy-MM-dd"),
+                        Name = item.名称,
+                        Spec = item.规格,
+                        Count = item.数量.ToString("0"),
+                        Sum = item.实交金额.ToString("0.00"),
+                        Ext1 = "",
+                        Ext2 = ""
+                    };
+                    costDetailContents.Add(costDetailContent);
+                }
+
+                var costDetailOutput = new CostDetailOutput()
+                {
+                    Code = 1,
+                    Msg = "获取费用明细成功!",
+                    Time = time.ToString("yyyy-MM-dd hh:mm:ss"),
+                    Total = patient.总费用.ToString("0.00"),
+                    Title = costDetailTitle,
+                    Content = costDetailContents
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(costDetailOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
                 });
             }
         }

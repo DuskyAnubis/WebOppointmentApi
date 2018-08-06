@@ -234,8 +234,6 @@ namespace WebOppointmentApi.Dtos
     {
         public string Hospid { get; set; }
         public string Pid { get; set; }
-        public CostDetailTitle Title { get; set; }
-        public List<CostDetailContent> Content { get; set; }
     }
 
     public class CostDetailOutput
@@ -244,6 +242,8 @@ namespace WebOppointmentApi.Dtos
         public string Msg { get; set; }
         public string Time { get; set; }
         public string Total { get; set; }
+        public CostDetailTitle Title { get; set; }
+        public List<CostDetailContent> Content { get; set; }
     }
 
     public class CostDetailTitle
