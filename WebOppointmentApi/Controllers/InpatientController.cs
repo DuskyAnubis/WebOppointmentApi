@@ -181,7 +181,50 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region 解除绑定住院服务
+        /// <summary>
+        /// 解除绑定住院服务
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("RelieveBindInpatient")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> RelieveBindInpatient([FromBody]RelieveBindInpatientParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            var patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.住院号 == Convert.ToInt32(param.InpatientNum));
+            if (patient == null)
+            {
+                return NotFound(Json(new { Error = "解除绑定信息失败，病人信息不存在!" }));
+            }
 
+            var relieveBindInpatientInput = new RelieveBindInpatientInput()
+            {
+                Hospid = apiOptions.HospitalId,
+                Pid = patient.病人编号.ToString(),
+                Userid=""
+            };
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(relieveBindInpatientInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri4, "relieve/bind", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
         #endregion
 
         #region 检验报告同步
