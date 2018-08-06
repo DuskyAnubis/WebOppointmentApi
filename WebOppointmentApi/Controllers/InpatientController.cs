@@ -205,7 +205,7 @@ namespace WebOppointmentApi.Controllers
             {
                 Hospid = apiOptions.HospitalId,
                 Pid = patient.病人编号.ToString(),
-                Userid=""
+                Userid = ""
             };
 
             string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
@@ -232,7 +232,109 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region 费用清单同步
+        /// <summary>
+        /// 费用清单同步
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("SynchronizingCostList")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingCostList([FromBody]SynchronizingCostListParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            var patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.住院号 == Convert.ToInt32(param.InpatientNum));
+            if (patient == null)
+            {
+                return NotFound(Json(new { Error = "同步费用清单失败，病人信息不存在!" }));
+            }
 
+            List<DateTime> times;
+            if (string.IsNullOrEmpty(param.Date))
+            {
+                times = new List<DateTime>();
+                DateTime beginDate = Convert.ToDateTime(patient.入院日期.ToString("yyyy-MM-dd") + " 00:00:00");
+                while (beginDate < DateTime.Now)
+                {
+                    times.Add(beginDate);
+                    beginDate = beginDate.AddDays(1);
+                }
+            }
+            else
+            {
+                times = new List<DateTime>
+                {
+                    Convert.ToDateTime(param.Date + " 00:00:00")
+                };
+            }
+
+            SynchronizingCostItemTitle costItemTitle = new SynchronizingCostItemTitle
+            {
+                Name = "品名",
+                Spec = "规格",
+                Count = "数量",
+                Sum = "金额",
+                Ext1 = "",
+                Ext2 = ""
+            };
+            List<SynchronizingCostItem> costItems = new List<SynchronizingCostItem>();
+            foreach (var date in times)
+            {
+                decimal totalPrie = await hisContext.Zy记帐流水帐.Where(p => p.病人编号 == patient.病人编号 && p.日期 >= date && p.日期 < date.AddDays(1)).Select(p => p.实交金额).SumAsync();
+                List<Zy记帐流水帐> payments = await hisContext.Zy记帐流水帐.Where(p => p.病人编号 == patient.病人编号 && p.日期 >= date && p.日期 < date.AddDays(1)).ToListAsync();
+                SynchronizingCostItem costItem = new SynchronizingCostItem
+                {
+                    Time = date.ToString("yyyy-MM-dd"),
+                    Total = totalPrie.ToString("0.00"),
+                    Title = costItemTitle
+                };
+                List<SynchronizingCostItemContent> costItemContents = new List<SynchronizingCostItemContent>();
+                foreach (var item in payments)
+                {
+                    SynchronizingCostItemContent costItemContent = new SynchronizingCostItemContent
+                    {
+                        Id = item.Id,
+                        Time = item.日期.ToString("yyyy-MM-dd"),
+                        Name = item.名称,
+                        Spec = item.规格,
+                        Count = item.数量.ToString("0"),
+                        Sum = item.实交金额.ToString("0.00"),
+                        Ext1 = "",
+                        Ext2 = ""
+                    };
+                    costItemContents.Add(costItemContent);
+                }
+                costItem.Content = costItemContents;
+                costItems.Add(costItem);
+            }
+
+            var synchronizingCostListInput = new SynchronizingCostListInput()
+            {
+                Hospid = apiOptions.HospitalId,
+                Pid = patient.病人编号.ToString(),
+                Item = costItems
+            };
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(synchronizingCostListInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri4, "cost/get", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
         #endregion
 
         #endregion
