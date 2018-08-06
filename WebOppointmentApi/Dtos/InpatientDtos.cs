@@ -211,7 +211,7 @@ namespace WebOppointmentApi.Dtos
     public class CostTotalItem
     {
         public CostTotalTitle Title { get; set; }
-        public List<CostTotalContent> Item { get; set; }
+        public List<CostTotalContent> Content { get; set; }
     }
 
     public class CostTotalTitle
