@@ -113,5 +113,8 @@ namespace WebOppointmentApi.Models
         public string 入院方式 { get; set; }
         public int 住院次数 { get; set; }
         public int DwId { get; set; }
+        public string UserId { get; set; }
+        public string Phone { get; set; }
+        public bool IsBind { get; set; }
     }
 }

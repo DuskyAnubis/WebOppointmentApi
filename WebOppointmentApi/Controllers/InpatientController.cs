@@ -257,7 +257,7 @@ namespace WebOppointmentApi.Controllers
             {
                 times = new List<DateTime>();
                 DateTime beginDate = Convert.ToDateTime(patient.入院日期.ToString("yyyy-MM-dd") + " 00:00:00");
-                while (beginDate < DateTime.Now)
+                while (beginDate < DateTime.Now.AddDays(-1))
                 {
                     times.Add(beginDate);
                     beginDate = beginDate.AddDays(1);
@@ -340,6 +340,73 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region HIS提供接口
+
+        #region 同步绑定关系
+        /// <summary>
+        /// 同步绑定关系
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/syn/bind")]
+        [ProducesResponseType(typeof(SynchronizingBindOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SynchronizingBind([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SynchronizingBindParam param = JsonConvert.DeserializeObject<SynchronizingBindParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            var patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.病人编号 == Convert.ToInt32(param.Pid));
+            if (patient == null)
+            {
+                var synchronizingBindOutput = new SynchronizingBindOutput
+                {
+                    Code = 0,
+                    Msg = "同步失败!未查到该病人信息!",
+                    Result = ""
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(synchronizingBindOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                patient.UserId = param.Userid;
+                patient.Phone = param.Phone;
+                patient.IsBind = param.Opcode == 1 ? true : false;
+                hisContext.Zy病案库.Update(patient);
+                hisContext.SaveChanges();
+
+                var synchronizingBindOutput = new SynchronizingBindOutput
+                {
+                    Code = 1,
+                    Msg = "同步成功!",
+                    Result = ""
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(synchronizingBindOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+        #endregion
+
+        #region 获取检验报告明细
+
+        #endregion
+
+        #region 获取费用清单
+
+        #endregion
 
         #endregion
     }
