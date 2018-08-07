@@ -808,7 +808,78 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region 住院押金支付
+        [HttpPost("/api/deposit/pay")]
+        [ProducesResponseType(typeof(PayDepositOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> PayDeposit([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            PayDepositParam param = JsonConvert.DeserializeObject<PayDepositParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            var patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.住院号 == Convert.ToInt32(param.Inpcode));
+            if (patient == null)
+            {
+                var payDepositOutput = new PayDepositOutput
+                {
+                    Code = 0,
+                    Msg = "充值失败!未查到该病人信息!"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(payDepositOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                var user = await hisContext.工作人员.FirstOrDefaultAsync(u => u.代码.Equals(param.Userid));
+
+                Zy预交金 deposit = new Zy预交金
+                {
+                    病人编号 = patient.病人编号,
+                    日期 = DateTime.Now,
+                    类别 = false,
+                    金额 = Convert.ToDecimal(param.PayMoney),
+                    操作员 = user.姓名,
+                    备注 = "补预交金",
+                    交班标志 = false,
+                    日结帐日期 = null,
+                    月结帐日期 = null,
+                    操作员科室 = user.科室,
+                    DwId = 1,
+                    CzyId = user.Id,
+                    PayMethod = param.Payway,
+                    PayFrom = "健康山西",
+                    OrderCode = param.Orderno
+                };
+
+                patient.预交金 = patient.预交金 + Convert.ToDecimal(param.PayMoney);
+                patient.预交金余额 = patient.预交金余额 + Convert.ToDecimal(param.PayMoney);
+
+                hisContext.Zy预交金.Update(deposit);
+                hisContext.Zy病案库.Update(patient);
+                hisContext.SaveChanges();
+
+                var payDepositOutput = new PayDepositOutput
+                {
+                    Code = 1,
+                    Msg = "充值成功!",
+                    Cflowcode = deposit.预交金编号.ToString()
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(payDepositOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
         #endregion
 
         #region 住院押金退费信息

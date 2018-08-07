@@ -20,5 +20,8 @@ namespace WebOppointmentApi.Models
         public string 操作员科室 { get; set; }
         public int DwId { get; set; }
         public int CzyId { get; set; }
+        public string PayMethod { get; set; }
+        public string PayFrom { get; set; }
+        public string OrderCode { get; set; }
     }
 }
