@@ -732,6 +732,97 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 住院患者信息查询
+        /// <summary>
+        /// 住院患者信息查询
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/search/inpatient")]
+        [ProducesResponseType(typeof(SearchInpatientOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SearchInpatient([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SearchInpatientParam param = JsonConvert.DeserializeObject<SearchInpatientParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            var patient = await hisContext.Zy病案库.Where(p => string.IsNullOrEmpty(param.Inpcode) || p.住院号 == Convert.ToInt32(param.Inpcode)).Where(p => string.IsNullOrEmpty(param.Pid) || p.病人编号 == Convert.ToInt32(param.Pid)).FirstOrDefaultAsync();
+            if (patient == null)
+            {
+                var searchInpatientOutput = new SearchInpatientOutput
+                {
+                    Code = 0,
+                    Msg = "未查到该病人信息!"
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchInpatientOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            else
+            {
+                var bed = await hisContext.Zy病区床位.FirstOrDefaultAsync(b => b.病人编号 == patient.病人编号);
+                var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(patient.医师代码));
+
+                var searchInpatientOutput = new SearchInpatientOutput()
+                {
+                    Code = 1,
+                    Msg = "查询病人信息成功!",
+                    Pid = patient.病人编号.ToString(),
+                    Hospid = apiOptions.HospitalId,
+                    Hospname = apiOptions.HospitalName,
+                    Deptid = doctor.KsId.ToString(),
+                    Deptname = patient.科室,
+                    Doctid = doctor.医师代码1,
+                    Docname = doctor.医师姓名,
+                    Gender = patient.性别 == "男" ? 1 : 2,
+                    Age = DateTime.Now.Year - Convert.ToDateTime(patient.出生日期).Year,
+                    PatientName = patient.姓名,
+                    InPcode = patient.住院号.ToString(),
+                    Bednum = bed != null ? bed.床位号.ToString() : "0",
+                    IdentityCard = patient.身份证号,
+                    Cpatientcode = patient.病人编号.ToString(),
+                    State = patient.出院标志 == 4 ? "2" : "1",
+                    Tel = patient.电话,
+                    Times = patient.住院次数.ToString(),
+                    AdmissionDate = patient.入院日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                    PayMoney = patient.预交金.ToString("0.00"),
+                    Totalfare = patient.总费用.ToString("0.00"),
+                    Leftmoney = patient.预交金余额.ToString("0.00")
+                };
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchInpatientOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+        }
+        #endregion
+
+        #region 住院押金支付
+
+        #endregion
+
+        #region 住院押金退费信息
+
+        #endregion
+
+        #region 住院押金退费置标志
+
+        #endregion
+
+        #region 检验报告更新
+
+        #endregion
+
         #endregion
     }
 }
