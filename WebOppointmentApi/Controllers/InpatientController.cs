@@ -883,11 +883,70 @@ namespace WebOppointmentApi.Controllers
         #endregion
 
         #region 住院押金退费信息
+        /// <summary>
+        /// 住院押金退费信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deposit/fadesearch")]
+        [ProducesResponseType(typeof(SearchDepositFadeOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SearchDepositFade([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SearchDepositFadeParam param = JsonConvert.DeserializeObject<SearchDepositFadeParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            var searchDepositFadeOutput = new SearchDepositFadeOutput
+            {
+                Code = 0,
+                Msg = "没有平台支付，窗口退费信息!"
+            };
+
+            return new ObjectResult(new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchDepositFadeOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            });
+
+        }
         #endregion
 
         #region 住院押金退费置标志
+        /// <summary>
+        /// 住院押金退费置标志
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/deposit/setFadeFareGetFlag")]
+        [ProducesResponseType(typeof(FlaghDepositFadeOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> FlaghDepositFade([FromForm]OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SearchDepositFadeParam param = JsonConvert.DeserializeObject<SearchDepositFadeParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            var flaghDepositFadeOutput = new FlaghDepositFadeOutput
+            {
+                Code = 0,
+                Msg = "没有平台支付，窗口退费信息!"
+            };
+
+            return new ObjectResult(new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(flaghDepositFadeOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+            });
+        }
         #endregion
 
         #region 检验报告更新
