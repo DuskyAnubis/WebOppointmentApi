@@ -891,7 +891,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/deposit/fadesearch")]
         [ProducesResponseType(typeof(SearchDepositFadeOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> SearchDepositFade([FromForm]OppointmentApiQuery query)
+        public IActionResult SearchDepositFade([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             SearchDepositFadeParam param = JsonConvert.DeserializeObject<SearchDepositFadeParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -925,7 +925,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/deposit/setFadeFareGetFlag")]
         [ProducesResponseType(typeof(FlaghDepositFadeOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> FlaghDepositFade([FromForm]OppointmentApiQuery query)
+        public IActionResult FlaghDepositFade([FromForm]OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             SearchDepositFadeParam param = JsonConvert.DeserializeObject<SearchDepositFadeParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
