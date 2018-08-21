@@ -148,6 +148,7 @@ namespace WebOppointmentApi.Dtos
         public int Mcount { get; set; }
         public int Tcount { get; set; }
         public int Acount { get; set; }
+        public int Dcount { get; set; }
         public string Wid { get; set; }
         public string Date { get; set; }
         public int Pcode { get; set; }

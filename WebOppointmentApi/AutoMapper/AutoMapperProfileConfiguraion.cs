@@ -102,6 +102,7 @@ namespace WebOppointmentApi.AutoMapper
                 .ForMember(input => input.Mcount, option => option.MapFrom(s => s.MaxCount))
                 .ForMember(input => input.Tcount, option => option.MapFrom(s => s.TotalCount))
                 .ForMember(input => input.Acount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Where(r => r.RegisteredStateCode != "3").ToList().Count))
+                .ForMember(input => input.Dcount, option => option.MapFrom(s => s.MaxCount - s.Registereds.Where(r => r.RegisteredStateCode != "3").ToList().Count))
                 .ForMember(input => input.Wid, option => option.MapFrom(s => s.Id.ToString()))
                 .ForMember(input => input.Date, option => option.MapFrom(s => Convert.ToDateTime(s.SurgeryDate).ToString("yyyy-MM-dd")))
                 .ForMember(input => input.Pcode, option => option.MapFrom(s => Convert.ToInt32(s.PeriodTypeCode)))
