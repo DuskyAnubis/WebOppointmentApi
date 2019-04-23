@@ -16,5 +16,7 @@ namespace WebOppointmentApi.Common
         public string FromType { get; set; }
         public string Version { get; set; }
         public string SecretKey { get; set; }
+        public string PaymentId { get; set; }
+        public string UserId { get; set; }
     }
 }

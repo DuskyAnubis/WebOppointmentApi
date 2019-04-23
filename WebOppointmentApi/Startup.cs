@@ -136,7 +136,9 @@ namespace WebOppointmentApi
                 BaseUri4 = Configuration.GetSection("OppointmentApi")["BaseUri4"].ToString(),
                 Version = Configuration.GetSection("OppointmentApi")["Version"].ToString(),
                 FromType = Configuration.GetSection("OppointmentApi")["FromType"].ToString(),
-                SecretKey = Configuration.GetSection("OppointmentApi")["SecretKey"].ToString()
+                SecretKey = Configuration.GetSection("OppointmentApi")["SecretKey"].ToString(),
+                PaymentId= Configuration.GetSection("OppointmentApi")["PaymentId"].ToString(),
+                UserId= Configuration.GetSection("OppointmentApi")["UserId"].ToString()
             };
             services.AddSingleton<OppointmentApiOptions>(apiOptions);
         }
