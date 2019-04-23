@@ -96,6 +96,92 @@ namespace WebOppointmentApi.Dtos
     }
     #endregion
 
+    #region 面对面扫码付款
+    public class ScanCodePayParam
+    {
+        public string BillNum { get; set; }
+    }
+
+    public class ScanCodePayDetail
+    {
+        public string Orderid { get; set; }
+        public string Price { get; set; }
+        public string Cateid { get; set; }
+        public string Name { get; set; }
+        public string Gender { get; set; }
+        public string State { get; set; }
+        public string Dname { get; set; }
+        public string Docname { get; set; }
+        public string Time { get; set; }
+        public string Title { get; set; }
+    }
+
+    public class ScanCodePayInput
+    {
+        public string Scantext { get; set; }
+        public string Userid { get; set; }
+        public string Hospid { get; set; }
+        public string Totaloid { get; set; }
+        public string Totalprice { get; set; }
+        public string Cateid { get; set; }
+        public string Totaltitle { get; set; }
+        public string State { get; set; }
+        public List<ScanCodePayDetail> Orderids { get; set; }
+    }
+    #endregion
+
+    #region 面对面扫码付款状态查询
+    public class ScanCodeQueryParam
+    {
+        public string BillNum { get; set; }
+    }
+
+    public class ScanCodeQueryInput
+    {
+        public string Userid { get; set; }
+        public string Hospid { get; set; }
+        public string Orderid { get; set; }
+    }
+    #endregion
+
+    #region 面对面扫码付款支付完成
+    public class ScanCodeCompleteParam
+    {
+        public string BillNum { get; set; }
+    }
+
+    public class ScanCodeCompleteDetail
+    {
+        public string Ouno { get; set; }
+        public string Price { get; set; }
+        public string Cflowcode { get; set; }
+    }
+
+    public class ScanCodeCompleteInput
+    {
+        public string Touno { get; set; }
+        public string Userid { get; set; }
+        public string Code { get; set; }
+        public string Totalprice { get; set; }
+        public string Tcflowcode { get; set; }
+        public List<ScanCodeCompleteDetail> Ounos { get; set; }
+    }
+    #endregion
+
+    #region 面对面扫码付款取消订单
+    public class ScanCodeCancelParam
+    {
+        public string BillNum { get; set; }
+    }
+
+    public class ScanCodeCancelInput
+    {
+        public string Userid { get; set; }
+        public string Hospid { get; set; }
+        public string Orderid { get; set; }
+    }
+    #endregion
+
     #endregion
 
     #region HIS提供接口
