@@ -491,13 +491,17 @@ namespace WebOppointmentApi.Controllers
                 return NotFound(Json(new { Error = "付款完成失败，划价信息不存在!" }));
             }
 
-
+            门诊收费 payment = await hisContext.门诊收费.FirstOrDefaultAsync(p => p.收费id == orders[0].发票流水号);
+            if (payment == null)
+            {
+                return NotFound(Json(new { Error = "付款完成失败，该划价单未收费!" }));
+            }
 
             decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).SumAsync(o => o.金额);
 
             ScanCodeCompleteDetail detail = new ScanCodeCompleteDetail
             {
-                Ouno = orders[0].OrderCode,
+                Ouno = payment.PlatformCode,
                 Price = totalPrice.ToString("0.00"),
                 Cflowcode = orders[0].发票流水号.ToString()
             };
@@ -509,7 +513,7 @@ namespace WebOppointmentApi.Controllers
 
             scanCodeCompleteInput = new ScanCodeCompleteInput
             {
-                Touno = orders[0].ParentOrderCode,
+                Touno = payment.ParentPlatformCode,
                 Userid = apiOptions.UserId,
                 Code = "1",
                 Totalprice = totalPrice.ToString("0.00"),
