@@ -491,6 +491,8 @@ namespace WebOppointmentApi.Controllers
                 return NotFound(Json(new { Error = "付款完成失败，划价信息不存在!" }));
             }
 
+
+
             decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).SumAsync(o => o.金额);
 
             ScanCodeCompleteDetail detail = new ScanCodeCompleteDetail
@@ -803,6 +805,7 @@ namespace WebOppointmentApi.Controllers
                         结帐日期 = null,
                         门诊号 = OutpatientNum,
                         发票号 = "",
+                        PInfo = "",
                         退票 = null,
                         费别 = "自费",
                         折扣率 = Convert.ToDecimal(0.00),
@@ -818,7 +821,9 @@ namespace WebOppointmentApi.Controllers
                         PayMethod = param.Ls_cpscode,
                         PayFrom = "健康山西",
                         IsWindowRefund = false,
-                        WindowRefundFlag = 0
+                        WindowRefundFlag = 0,
+                        ParentPlatformCode = "",
+                        PlatformCode = "",
                     };
                     hisContext.Add(payment);
                     hisContext.SaveChanges();
@@ -918,6 +923,7 @@ namespace WebOppointmentApi.Controllers
                         结帐日期 = null,
                         门诊号 = OutpatientNum,
                         发票号 = "",
+                        PInfo = "",
                         退票 = null,
                         费别 = "自费",
                         折扣率 = Convert.ToDecimal(0.00),
@@ -933,7 +939,9 @@ namespace WebOppointmentApi.Controllers
                         PayMethod = param.Ls_cpscode,
                         PayFrom = "健康山西",
                         IsWindowRefund = false,
-                        WindowRefundFlag = 0
+                        WindowRefundFlag = 0,
+                        ParentPlatformCode = "",
+                        PlatformCode = ""
                     };
                     hisContext.Add(payment);
                     hisContext.SaveChanges();
@@ -1066,6 +1074,7 @@ namespace WebOppointmentApi.Controllers
                     结帐日期 = null,
                     门诊号 = payment.门诊号,
                     发票号 = "",
+                    PInfo = "",
                     退票 = payment.收费id,
                     费别 = "自费",
                     折扣率 = payment.折扣率,
@@ -1081,7 +1090,9 @@ namespace WebOppointmentApi.Controllers
                     PayMethod = payment.PayMethod,
                     PayFrom = payment.PayFrom,
                     IsWindowRefund = false,
-                    WindowRefundFlag = 0
+                    WindowRefundFlag = 0,
+                    ParentPlatformCode = "",
+                    PlatformCode = ""
                 };
                 hisContext.Add(paymentRefund);
                 hisContext.SaveChanges();
@@ -1184,6 +1195,7 @@ namespace WebOppointmentApi.Controllers
                     结帐日期 = null,
                     门诊号 = payment.门诊号,
                     发票号 = "",
+                    PInfo = "",
                     退票 = payment.收费id,
                     费别 = "自费",
                     折扣率 = payment.折扣率,
@@ -1199,7 +1211,9 @@ namespace WebOppointmentApi.Controllers
                     PayMethod = payment.PayMethod,
                     PayFrom = payment.PayFrom,
                     IsWindowRefund = false,
-                    WindowRefundFlag = 0
+                    WindowRefundFlag = 0,
+                    ParentPlatformCode = "",
+                    PlatformCode = ""
                 };
                 hisContext.Add(paymentRefund);
                 hisContext.SaveChanges();

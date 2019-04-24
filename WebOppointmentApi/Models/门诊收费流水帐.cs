@@ -39,5 +39,7 @@ namespace WebOppointmentApi.Models
         public string PayFrom { get; set; }
         public bool IsWindowRefund { get; set; }
         public int WindowRefundFlag { get; set; }
+        public string ParentPlatformCode { get; set; }
+        public string PlatformCode { get; set; }
     }
 }
