@@ -100,6 +100,7 @@ namespace WebOppointmentApi.Dtos
     public class ScanCodePayParam
     {
         public string BillNum { get; set; }
+        public string ScanCode { get; set; }
     }
 
     public class ScanCodePayDetail

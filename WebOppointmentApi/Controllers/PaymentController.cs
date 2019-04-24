@@ -334,6 +334,255 @@ namespace WebOppointmentApi.Controllers
         }
         #endregion
 
+        #region 面对面扫码付款
+        /// <summary>
+        /// 面对面扫码付款
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("ScanCodePay")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> ScanCodePay([FromBody]ScanCodePayParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            ScanCodePayInput scanCodePayInput;
+
+            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
+            if (orders == null || orders.Count == 0)
+            {
+                return NotFound(Json(new { Error = "付款失败，划价信息不存在!" }));
+            }
+
+            var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
+            decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).SumAsync(o => o.金额);
+
+            ScanCodePayDetail detail = new ScanCodePayDetail
+            {
+                Orderid = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "1" + orders[0].CateId, param.BillNum),
+                Price = totalPrice.ToString("0.00"),
+                Cateid = orders[0].CateId,
+                Name = orders[0].病人姓名,
+                Gender = orders[0].性别,
+                State = "1",
+                Dname = doctor.所在科室,
+                Docname = doctor.医师姓名,
+                Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                Title = orders[0].名称 + "等"
+            };
+
+            List<ScanCodePayDetail> details = new List<ScanCodePayDetail>
+            {
+                detail
+            };
+
+            scanCodePayInput = new ScanCodePayInput
+            {
+                Scantext = param.ScanCode,
+                Userid = apiOptions.UserId,
+                Hospid = apiOptions.HospitalId,
+                Totaloid = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "18", param.BillNum),
+                Totalprice = totalPrice.ToString("0.00"),
+                Cateid = orders[0].CateId,
+                Totaltitle = orders[0].CateName + "费用",
+                State = "1",
+                Orderids = details
+            };
+
+            foreach (var order in orders)
+            {
+                order.ParentOrderCode = scanCodePayInput.Totaloid;
+                order.OrderCode = detail.Orderid;
+                hisContext.Update(order);
+            }
+            hisContext.SaveChanges();
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(scanCodePayInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "pay/scanpay", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
+        #endregion
+
+        #region 面对面扫码付款状态查询
+        /// <summary>
+        /// 面对面扫码付款状态查询
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("ScanCodeQuery")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> ScanCodeQuery([FromBody]ScanCodeQueryParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            ScanCodeQueryInput scanCodeQueryInput;
+
+            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
+            if (orders == null || orders.Count == 0)
+            {
+                return NotFound(Json(new { Error = "查询失败，划价信息不存在!" }));
+            }
+
+            scanCodeQueryInput = new ScanCodeQueryInput
+            {
+                Userid = apiOptions.UserId,
+                Hospid = apiOptions.HospitalId,
+                Orderid = orders[0].ParentOrderCode
+            };
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(scanCodeQueryInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "pay/orderquery", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
+        #endregion
+
+        #region 面对面扫码付款完成
+        /// <summary>
+        /// 面对面扫码付款完成
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("ScanCodeComplete")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> ScanCodeComplete([FromBody]ScanCodeCompleteParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            ScanCodeCompleteInput scanCodeCompleteInput;
+
+            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
+            if (orders == null || orders.Count == 0)
+            {
+                return NotFound(Json(new { Error = "付款完成失败，划价信息不存在!" }));
+            }
+
+            decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).SumAsync(o => o.金额);
+
+            ScanCodeCompleteDetail detail = new ScanCodeCompleteDetail
+            {
+                Ouno = orders[0].OrderCode,
+                Price = totalPrice.ToString("0.00"),
+                Cflowcode = orders[0].发票流水号.ToString()
+            };
+
+            List<ScanCodeCompleteDetail> details = new List<ScanCodeCompleteDetail>
+            {
+                detail
+            };
+
+            scanCodeCompleteInput = new ScanCodeCompleteInput
+            {
+                Touno = orders[0].ParentOrderCode,
+                Userid = apiOptions.UserId,
+                Code = "1",
+                Totalprice = totalPrice.ToString("0.00"),
+                Tcflowcode = orders[0].发票流水号.ToString(),
+                Ounos = details
+            };
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(scanCodeCompleteInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "pay/hispaynotice", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
+        #endregion
+
+        #region 面对面扫码付款取消
+        /// <summary>
+        /// 面对面扫码付款取消
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost("ScanCodeCancel")]
+        [ProducesResponseType(typeof(OppointmentApiBody), 200)]
+        [ProducesResponseType(typeof(void), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(ValidationError), 422)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> ScanCodeCancel([FromBody]ScanCodeCancelParam param)
+        {
+            var header = GetOppointmentApiHeader();
+            ScanCodeCancelInput scanCodeCancelInput;
+
+            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
+            if (orders == null || orders.Count == 0)
+            {
+                return NotFound(Json(new { Error = "付款取消失败，划价信息不存在!" }));
+            }
+
+            scanCodeCancelInput = new ScanCodeCancelInput
+            {
+                Userid = apiOptions.UserId,
+                Hospid = apiOptions.HospitalId,
+                Orderid = orders[0].ParentOrderCode
+            };
+
+            string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            string body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(scanCodeCancelInput, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            })));
+
+            OppointmentApi api = new OppointmentApi();
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri2, "pay/ordercancel", head, body);
+
+            OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
+            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            return new ObjectResult(resultBody);
+        }
+        #endregion
+
         #endregion
 
         #region HIS提供接口
@@ -894,7 +1143,9 @@ namespace WebOppointmentApi.Controllers
                         DwId = 1,
                         YsId = order.YsId,
                         CateId = order.CateId,
-                        CateName = order.CateName
+                        CateName = order.CateName,
+                        ParentOrderCode = "",
+                        OrderCode = "",
                     };
                     hisContext.Add(orderRefund);
                 }
@@ -1010,7 +1261,9 @@ namespace WebOppointmentApi.Controllers
                         DwId = 1,
                         YsId = order.YsId,
                         CateId = order.CateId,
-                        CateName = order.CateName
+                        CateName = order.CateName,
+                        ParentOrderCode = "",
+                        OrderCode = ""
                     };
                     hisContext.Add(orderRefund);
                 }
