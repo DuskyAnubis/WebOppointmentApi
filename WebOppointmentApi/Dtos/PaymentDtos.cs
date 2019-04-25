@@ -129,6 +129,25 @@ namespace WebOppointmentApi.Dtos
         public string State { get; set; }
         public List<ScanCodePayDetail> Orderids { get; set; }
     }
+
+    public class ScanCodeResultDetail
+    {
+        public string Oid { get; set; }
+        public string Ouno { get; set; }
+    }
+
+    public class ScanCodeResult
+    {
+        public string Ouno { get; set; }
+        public List<ScanCodeResultDetail> Ounos { get; set; }
+    }
+
+    public class ScanCodePayBody
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public ScanCodeResult Result { get; set; }
+    }
     #endregion
 
     #region 面对面扫码付款状态查询

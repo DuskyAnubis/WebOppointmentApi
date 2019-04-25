@@ -410,10 +410,10 @@ namespace WebOppointmentApi.Controllers
             })));
 
             OppointmentApi api = new OppointmentApi();
-            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "pay/scanpay", head, body);
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "api/pay/scanpay", head, body);
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
-            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+            ScanCodePayBody resultBody = JsonConvert.DeserializeObject<ScanCodePayBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
 
             return new ObjectResult(resultBody);
         }
@@ -459,10 +459,10 @@ namespace WebOppointmentApi.Controllers
             })));
 
             OppointmentApi api = new OppointmentApi();
-            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "pay/orderquery", head, body);
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "api/pay/orderquery", head, body);
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
-            OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+            ScanCodePayBody resultBody = JsonConvert.DeserializeObject<ScanCodePayBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
 
             return new ObjectResult(resultBody);
         }
@@ -531,7 +531,7 @@ namespace WebOppointmentApi.Controllers
             })));
 
             OppointmentApi api = new OppointmentApi();
-            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "pay/hispaynotice", head, body);
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "api/pay/hispaynotice", head, body);
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
             OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
@@ -580,7 +580,7 @@ namespace WebOppointmentApi.Controllers
             })));
 
             OppointmentApi api = new OppointmentApi();
-            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "pay/ordercancel", head, body);
+            string strResult = await api.DoPostAsync(apiOptions.BaseUri3, "api/pay/ordercancel", head, body);
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
             OppointmentApiBody resultBody = JsonConvert.DeserializeObject<OppointmentApiBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
