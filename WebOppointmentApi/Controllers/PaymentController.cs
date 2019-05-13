@@ -351,54 +351,66 @@ namespace WebOppointmentApi.Controllers
             var header = GetOppointmentApiHeader();
             ScanCodePayInput scanCodePayInput;
 
-            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
-            if (orders == null || orders.Count == 0)
+            string[] billNumArrary = param.BillNum.Split('|').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            if (billNumArrary.Length == 0)
+            {
+                return NotFound(Json(new { Error = "付款失败，请输入划价号" }));
+            }
+
+            int count = await hisContext.划价临时库.Where(o => billNumArrary.Contains(o.划价号)).CountAsync();
+            if (count <= 0)
             {
                 return NotFound(Json(new { Error = "付款失败，划价信息不存在!" }));
             }
 
-            var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
-            decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).SumAsync(o => o.金额);
+            string totalOId = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "18", billNumArrary[0]);
+            decimal totalSumPrice = await hisContext.划价临时库.Where(o => billNumArrary.Contains(o.划价号)).SumAsync(o => o.金额);
 
-            ScanCodePayDetail detail = new ScanCodePayDetail
+            List<ScanCodePayDetail> details = new List<ScanCodePayDetail>();
+            foreach (var billNum in billNumArrary)
             {
-                Orderid = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "1" + orders[0].CateId, param.BillNum),
-                Price = totalPrice.ToString("0.00"),
-                Cateid = orders[0].CateId,
-                Name = orders[0].病人姓名,
-                Gender = orders[0].性别,
-                State = "1",
-                Dname = doctor.所在科室,
-                Docname = doctor.医师姓名,
-                Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
-                Title = orders[0].名称 + "等"
-            };
+                List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(billNum)).ToListAsync();
 
-            List<ScanCodePayDetail> details = new List<ScanCodePayDetail>
-            {
-                detail
-            };
+                var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
+                decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(billNum)).SumAsync(o => o.金额);
+
+                ScanCodePayDetail detail = new ScanCodePayDetail
+                {
+                    Orderid = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "1" + orders[0].CateId, billNum),
+                    Price = totalPrice.ToString("0.00"),
+                    Cateid = orders[0].CateId,
+                    Name = orders[0].病人姓名,
+                    Gender = orders[0].性别,
+                    State = "1",
+                    Dname = doctor.所在科室,
+                    Docname = doctor.医师姓名,
+                    Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                    Title = orders[0].名称 + "等"
+                };
+                details.Add(detail);
+
+                foreach (var order in orders)
+                {
+                    order.ParentOrderCode = totalOId;
+                    order.OrderCode = detail.Orderid;
+                    hisContext.Update(order);
+                }
+            }
+
+            hisContext.SaveChanges();
 
             scanCodePayInput = new ScanCodePayInput
             {
                 Scantext = param.ScanCode,
                 Userid = apiOptions.UserId,
                 Hospid = apiOptions.HospitalId,
-                Totaloid = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "18", param.BillNum),
-                Totalprice = totalPrice.ToString("0.00"),
-                Cateid = orders[0].CateId,
-                Totaltitle = orders[0].CateName + "费用",
+                Totaloid = totalOId,
+                Totalprice = totalSumPrice.ToString("0.00"),
+                Cateid = "2",
+                Totaltitle = "患者门诊费用",
                 State = "1",
                 Orderids = details
             };
-
-            foreach (var order in orders)
-            {
-                order.ParentOrderCode = scanCodePayInput.Totaloid;
-                order.OrderCode = detail.Orderid;
-                hisContext.Update(order);
-            }
-            hisContext.SaveChanges();
 
             string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
             {
@@ -414,6 +426,21 @@ namespace WebOppointmentApi.Controllers
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
             ScanCodePayBody resultBody = JsonConvert.DeserializeObject<ScanCodePayBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            if (resultBody.Code == 1)
+            {
+                foreach (var item in resultBody.Result.Ounos)
+                {
+                    List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.OrderCode.Equals(item.Oid)).ToListAsync();
+                    foreach (var order in orders)
+                    {
+                        order.PlatformCode = item.Ouno;
+                        hisContext.Update(order);
+                    }
+                }
+
+                hisContext.SaveChanges();
+            }
 
             return new ObjectResult(resultBody);
         }
@@ -436,8 +463,14 @@ namespace WebOppointmentApi.Controllers
             var header = GetOppointmentApiHeader();
             ScanCodeQueryInput scanCodeQueryInput;
 
-            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
-            if (orders == null || orders.Count == 0)
+            string[] billNumArrary = param.BillNum.Split('|').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            if (billNumArrary.Length == 0)
+            {
+                return NotFound(Json(new { Error = "查询失败，请输入划价号" }));
+            }
+
+            划价临时库 order = await hisContext.划价临时库.Where(o => billNumArrary.Contains(o.划价号)).FirstOrDefaultAsync();
+            if (order == null)
             {
                 return NotFound(Json(new { Error = "查询失败，划价信息不存在!" }));
             }
@@ -446,7 +479,7 @@ namespace WebOppointmentApi.Controllers
             {
                 Userid = apiOptions.UserId,
                 Hospid = apiOptions.HospitalId,
-                Orderid = orders[0].ParentOrderCode
+                Orderid = order.ParentOrderCode
             };
 
             string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
@@ -463,6 +496,21 @@ namespace WebOppointmentApi.Controllers
 
             OppointmentApiResult result = JsonConvert.DeserializeObject<OppointmentApiResult>(strResult);
             ScanCodePayBody resultBody = JsonConvert.DeserializeObject<ScanCodePayBody>(Encrypt.Base64Decode(result.Body.Contains("%") ? Encrypt.UrlDecode(result.Body) : result.Body));
+
+            if (resultBody.Code == 1)
+            {
+                foreach (var item in resultBody.Result.Ounos)
+                {
+                    List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.OrderCode.Equals(item.Oid)).ToListAsync();
+                    foreach (var orderItem in orders)
+                    {
+                        orderItem.PlatformCode = item.Ouno;
+                        hisContext.Update(orderItem);
+                    }
+                }
+
+                hisContext.SaveChanges();
+            }
 
             return new ObjectResult(resultBody);
         }
@@ -485,39 +533,48 @@ namespace WebOppointmentApi.Controllers
             var header = GetOppointmentApiHeader();
             ScanCodeCompleteInput scanCodeCompleteInput;
 
-            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
-            if (orders == null || orders.Count == 0)
+            string[] billNumArrary = param.BillNum.Split('|').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            if (billNumArrary.Length == 0)
             {
-                return NotFound(Json(new { Error = "付款完成失败，划价信息不存在!" }));
+                return NotFound(Json(new { Error = "查询失败，请输入划价号" }));
             }
 
-            门诊收费 payment = await hisContext.门诊收费.FirstOrDefaultAsync(p => p.收费id == orders[0].发票流水号);
+            int count = await hisContext.划价临时库.Where(o => billNumArrary.Contains(o.划价号)).CountAsync();
+            if (count <= 0)
+            {
+                return NotFound(Json(new { Error = "付款失败，划价信息不存在!" }));
+            }
+
+            门诊收费 payment = await hisContext.门诊收费.FirstOrDefaultAsync(p => p.收费id == Convert.ToInt32(param.CFlowCode));
             if (payment == null)
             {
                 return NotFound(Json(new { Error = "付款完成失败，该划价单未收费!" }));
             }
 
-            decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).SumAsync(o => o.金额);
+            decimal totalSumPrice = await hisContext.划价临时库.Where(o => billNumArrary.Contains(o.划价号)).SumAsync(o => o.金额);
 
-            ScanCodeCompleteDetail detail = new ScanCodeCompleteDetail
+            List<ScanCodeCompleteDetail> details = new List<ScanCodeCompleteDetail>();
+            foreach (var billNum in billNumArrary)
             {
-                Ouno = payment.PlatformCode,
-                Price = totalPrice.ToString("0.00"),
-                Cflowcode = orders[0].发票流水号.ToString()
-            };
+                decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(billNum)).SumAsync(o => o.金额);
+                划价临时库 order = await hisContext.划价临时库.Where(o => o.划价号.Equals(billNum)).FirstOrDefaultAsync();
 
-            List<ScanCodeCompleteDetail> details = new List<ScanCodeCompleteDetail>
-            {
-                detail
-            };
+                ScanCodeCompleteDetail detail = new ScanCodeCompleteDetail
+                {
+                    Ouno = order.PlatformCode,
+                    Price = totalPrice.ToString("0.00"),
+                    Cflowcode = param.CFlowCode + billNum
+                };
+                details.Add(detail);
+            }
 
             scanCodeCompleteInput = new ScanCodeCompleteInput
             {
                 Touno = payment.ParentPlatformCode,
                 Userid = apiOptions.UserId,
                 Code = "1",
-                Totalprice = totalPrice.ToString("0.00"),
-                Tcflowcode = orders[0].发票流水号.ToString(),
+                Totalprice = totalSumPrice.ToString("0.00"),
+                Tcflowcode = param.CFlowCode,
                 Ounos = details
             };
 
@@ -557,17 +614,23 @@ namespace WebOppointmentApi.Controllers
             var header = GetOppointmentApiHeader();
             ScanCodeCancelInput scanCodeCancelInput;
 
-            List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.BillNum)).ToListAsync();
-            if (orders == null || orders.Count == 0)
+            string[] billNumArrary = param.BillNum.Split('|').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            if (billNumArrary.Length == 0)
             {
-                return NotFound(Json(new { Error = "付款取消失败，划价信息不存在!" }));
+                return NotFound(Json(new { Error = "查询失败，请输入划价号" }));
+            }
+
+            划价临时库 order = await hisContext.划价临时库.Where(o => billNumArrary.Contains(o.划价号)).FirstOrDefaultAsync();
+            if (order == null)
+            {
+                return NotFound(Json(new { Error = "查询失败，划价信息不存在!" }));
             }
 
             scanCodeCancelInput = new ScanCodeCancelInput
             {
                 Userid = apiOptions.UserId,
                 Hospid = apiOptions.HospitalId,
-                Orderid = orders[0].ParentOrderCode
+                Orderid = order.ParentOrderCode
             };
 
             string head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings
@@ -1161,6 +1224,7 @@ namespace WebOppointmentApi.Controllers
                         CateName = order.CateName,
                         ParentOrderCode = "",
                         OrderCode = "",
+                        PlatformCode = "",
                     };
                     hisContext.Add(orderRefund);
                 }
@@ -1281,7 +1345,8 @@ namespace WebOppointmentApi.Controllers
                         CateId = order.CateId,
                         CateName = order.CateName,
                         ParentOrderCode = "",
-                        OrderCode = ""
+                        OrderCode = "",
+                        PlatformCode = ""
                     };
                     hisContext.Add(orderRefund);
                 }

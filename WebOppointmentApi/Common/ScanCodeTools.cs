@@ -13,7 +13,7 @@ namespace WebOppointmentApi.Common
             StringBuilder sb = new StringBuilder();
             sb.Append("B");
             sb.Append(hospitalCode);
-            sb.Append(DateTime.Now.ToString("yyMMddhhmmss"));
+            sb.Append(DateTime.Now.ToString("yyMMddHHmmss"));
             sb.Append(typeCode);
             sb.Append(billNum);
 

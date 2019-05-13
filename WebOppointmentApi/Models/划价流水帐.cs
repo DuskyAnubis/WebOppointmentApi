@@ -64,5 +64,6 @@ namespace WebOppointmentApi.Models
         public string CateName { get; set; }
         public string ParentOrderCode { get; set; }
         public string OrderCode { get; set; }
+        public string PlatformCode { get; set; }
     }
 }

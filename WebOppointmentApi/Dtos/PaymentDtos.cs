@@ -168,6 +168,7 @@ namespace WebOppointmentApi.Dtos
     public class ScanCodeCompleteParam
     {
         public string BillNum { get; set; }
+        public string CFlowCode { get; set; }
     }
 
     public class ScanCodeCompleteDetail
