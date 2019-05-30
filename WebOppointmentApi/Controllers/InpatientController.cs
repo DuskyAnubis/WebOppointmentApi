@@ -838,22 +838,20 @@ namespace WebOppointmentApi.Controllers
             }
             else
             {
-                var user = await hisContext.工作人员.FirstOrDefaultAsync(u => u.代码.Equals(param.Userid));
-
                 Zy预交金 deposit = new Zy预交金
                 {
                     病人编号 = patient.病人编号,
                     日期 = DateTime.Now,
                     类别 = false,
                     金额 = Convert.ToDecimal(param.PayMoney),
-                    操作员 = user.姓名,
+                    操作员 = "健康山西",
                     备注 = "补预交金",
                     交班标志 = false,
                     日结帐日期 = null,
                     月结帐日期 = null,
-                    操作员科室 = user.科室,
+                    操作员科室 = "收款室",
                     DwId = 1,
-                    CzyId = user.Id,
+                    CzyId = 999,
                     PayMethod = param.Payway,
                     PayFrom = "健康山西",
                     OrderCode = param.Orderno
