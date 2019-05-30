@@ -862,7 +862,7 @@ namespace WebOppointmentApi.Controllers
                 patient.预交金 = patient.预交金 + Convert.ToDecimal(param.PayMoney);
                 patient.预交金余额 = patient.预交金余额 + Convert.ToDecimal(param.PayMoney);
 
-                hisContext.Zy预交金.Update(deposit);
+                hisContext.Zy预交金.Add(deposit);
                 hisContext.Zy病案库.Update(patient);
                 hisContext.SaveChanges();
 
