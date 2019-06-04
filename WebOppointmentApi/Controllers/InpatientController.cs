@@ -851,7 +851,7 @@ namespace WebOppointmentApi.Controllers
                     月结帐日期 = null,
                     操作员科室 = "收款室",
                     DwId = 1,
-                    CzyId = 999,
+                    CzyId = 368,
                     PayMethod = param.Payway,
                     PayFrom = "健康山西",
                     OrderCode = param.Orderno
