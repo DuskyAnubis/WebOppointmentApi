@@ -1538,39 +1538,19 @@ namespace WebOppointmentApi.Controllers
 
                 foreach (var item in payments)
                 {
-                    var idCard = "";
-                    var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
-                    if (registered == null)
-                    {
-                        var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
-                        if (registeredLs != null)
-                        {
-                            if (!string.IsNullOrEmpty(registeredLs.身份证))
-                            {
-                                idCard = registeredLs.身份证;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(registered.身份证))
-                        {
-                            idCard = registered.身份证;
-                        }
-                    }
                     var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
                     var searchTradeFlow = new SearchTradeFlow
                     {
                         Cflowcode = item.收费id.ToString(),
-                        OrderCode = order.划价号,
+                        OrderCode = order.ParentOrderCode,
                         Cateid = order.CateId,
-                        Tradetype = item.退票 == null ? "缴费" : "退费",
+                        Tradetype = "1",
                         Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
                         Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
-                        Ls_cpscode = item.PayMethod,
+                        Ls_cpscode = "10",
                         Cpatientname = item.病人姓名,
                         Cpatientcode = item.卡号,
-                        Cidentitycard = idCard,
+                        Cidentitycard = "",
                         Tongchoumoney = "0",
                         Accountmoney = "0",
                         Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
@@ -1581,39 +1561,19 @@ namespace WebOppointmentApi.Controllers
                 }
                 foreach (var item in paymentsSerial)
                 {
-                    var idCard = "";
-                    var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
-                    if (registered == null)
-                    {
-                        var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(item.卡号));
-                        if (registeredLs != null)
-                        {
-                            if (!string.IsNullOrEmpty(registeredLs.身份证))
-                            {
-                                idCard = registeredLs.身份证;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(registered.身份证))
-                        {
-                            idCard = registered.身份证;
-                        }
-                    }
                     var order = await hisContext.划价流水帐.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
                     var searchTradeFlow = new SearchTradeFlow
                     {
                         Cflowcode = item.收费id.ToString(),
-                        OrderCode = order.划价号,
+                        OrderCode = order.ParentOrderCode,
                         Cateid = order.CateId,
-                        Tradetype = item.退票 == null ? "缴费" : "退费",
+                        Tradetype = "1",
                         Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
                         Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
-                        Ls_cpscode = item.PayMethod,
+                        Ls_cpscode = "10",
                         Cpatientname = item.病人姓名,
                         Cpatientcode = item.卡号,
-                        Cidentitycard = idCard,
+                        Cidentitycard = "",
                         Tongchoumoney = "0",
                         Accountmoney = "0",
                         Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
