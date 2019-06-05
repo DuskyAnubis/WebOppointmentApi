@@ -1515,10 +1515,10 @@ namespace WebOppointmentApi.Controllers
             DateTime begin = Convert.ToDateTime(param.Trade_beg + " 00:00:00");
             DateTime end = Convert.ToDateTime(param.Trade_end + " 23:59:59");
 
-            var payments = await hisContext.门诊收费.Where(p => p.PayFrom.Equals("健康山西") && p.日期 >= begin && p.日期 <= end).ToListAsync();
-            var paymentsSerial = await hisContext.门诊收费流水帐.Where(p => p.PayFrom.Equals("健康山西") && p.日期 >= begin && p.日期 <= end).ToListAsync();
+            var orderTemporaryCodeList = await hisContext.划价临时库.Where(o => o.PlatformCode != "" && o.OrderCode != "" && o.日期 >= begin && o.日期 <= end).Select(o => o.OrderCode).Distinct().ToListAsync();
+            var orderSerialCodeList = await hisContext.划价流水帐.Where(o => o.PlatformCode != "" && o.OrderCode != "" && o.日期 >= begin && o.日期 <= end).Select(o => o.OrderCode).Distinct().ToListAsync();
 
-            if (payments.Count == 0 && paymentsSerial.Count == 0)
+            if (orderTemporaryCodeList.Count == 0 && orderSerialCodeList.Count == 0)
             {
                 var searchTradeFlowOutput = new SearchTradeFlowOutput
                 {
@@ -1536,49 +1536,51 @@ namespace WebOppointmentApi.Controllers
             {
                 List<SearchTradeFlow> tradeFlows = new List<SearchTradeFlow>();
 
-                foreach (var item in payments)
+                foreach (var item in orderTemporaryCodeList)
                 {
-                    var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
+                    var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.OrderCode == item);
+                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.OrderCode.Equals(item)).SumAsync(o => o.金额);
                     var searchTradeFlow = new SearchTradeFlow
                     {
-                        Cflowcode = item.收费id.ToString(),
-                        OrderCode = order.ParentOrderCode,
+                        Cflowcode = order.发票流水号.ToString() + order.划价号,
+                        OrderCode = order.OrderCode,
                         Cateid = order.CateId,
                         Tradetype = "1",
-                        Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
-                        Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+                        Nmoney = totalPrice.ToString("0.00"),
+                        Tradedate = order.日期.ToString("yyyy-MM-dd hh:mm:ss"),
                         Ls_cpscode = "10",
-                        Cpatientname = item.病人姓名,
-                        Cpatientcode = item.卡号,
+                        Cpatientname = order.病人姓名,
+                        Cpatientcode = order.卡号,
                         Cidentitycard = "",
                         Tongchoumoney = "0",
                         Accountmoney = "0",
-                        Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+                        Factmoney = totalPrice.ToString("0.00"),
                         Bdayend = "0",
                         Dayendtime = ""
                     };
                     tradeFlows.Add(searchTradeFlow);
                 }
-                foreach (var item in paymentsSerial)
+                foreach (var item in orderSerialCodeList)
                 {
-                    var order = await hisContext.划价流水帐.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
+                    var order = await hisContext.划价流水帐.FirstOrDefaultAsync(o => o.OrderCode == item);
+                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.OrderCode.Equals(item)).SumAsync(o => o.金额);
                     var searchTradeFlow = new SearchTradeFlow
                     {
-                        Cflowcode = item.收费id.ToString(),
+                        Cflowcode = order.发票流水号.ToString() + order.划价号,
                         OrderCode = order.ParentOrderCode,
                         Cateid = order.CateId,
                         Tradetype = "1",
-                        Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
-                        Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+                        Nmoney = totalPrice.ToString("0.00"),
+                        Tradedate = Convert.ToDateTime(order.日期).ToString("yyyy-MM-dd hh:mm:ss"),
                         Ls_cpscode = "10",
-                        Cpatientname = item.病人姓名,
-                        Cpatientcode = item.卡号,
+                        Cpatientname = order.病人姓名,
+                        Cpatientcode = order.卡号,
                         Cidentitycard = "",
                         Tongchoumoney = "0",
                         Accountmoney = "0",
-                        Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+                        Factmoney = totalPrice.ToString("0.00"),
                         Bdayend = "1",
-                        Dayendtime = Convert.ToDateTime(item.结帐日期).ToString("yyyy-MM-dd hh:mm:ss")
+                        Dayendtime = ""
                     };
                     tradeFlows.Add(searchTradeFlow);
                 }
@@ -1597,6 +1599,110 @@ namespace WebOppointmentApi.Controllers
                 });
             }
         }
+
+        ///// <summary>
+        ///// 查询交易流水（总订单号版本） 2019-06-05作废
+        ///// </summary>
+        ///// <param name="query"></param>
+        ///// <returns></returns>
+        //[HttpPost("/api/search/tradeflow")]
+        //[ProducesResponseType(typeof(SearchTradeFlowOutput), 200)]
+        //[ProducesResponseType(typeof(void), 500)]
+        //public async Task<IActionResult> SearchTradeFlow([FromForm]OppointmentApiQuery query)
+        //{
+        //    OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+        //    SearchTradeFlowParam param = JsonConvert.DeserializeObject<SearchTradeFlowParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+        //    if (!VaildToken(header))
+        //    {
+        //        return new ObjectResult("Token验证失败，请检查身份验证信息!");
+        //    }
+
+        //    DateTime begin = Convert.ToDateTime(param.Trade_beg + " 00:00:00");
+        //    DateTime end = Convert.ToDateTime(param.Trade_end + " 23:59:59");
+
+        //    var payments = await hisContext.门诊收费.Where(p => p.PayFrom.Equals("健康山西") && p.日期 >= begin && p.日期 <= end).ToListAsync();
+        //    var paymentsSerial = await hisContext.门诊收费流水帐.Where(p => p.PayFrom.Equals("健康山西") && p.日期 >= begin && p.日期 <= end).ToListAsync();
+
+        //    if (payments.Count == 0 && paymentsSerial.Count == 0)
+        //    {
+        //        var searchTradeFlowOutput = new SearchTradeFlowOutput
+        //        {
+        //            Code = 0,
+        //            Msg = $"查询流水失败，未能找到信息！"
+        //        };
+
+        //        return new ObjectResult(new
+        //        {
+        //            head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+        //            body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchTradeFlowOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+        //        });
+        //    }
+        //    else
+        //    {
+        //        List<SearchTradeFlow> tradeFlows = new List<SearchTradeFlow>();
+
+        //        foreach (var item in payments)
+        //        {
+        //            var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
+        //            var searchTradeFlow = new SearchTradeFlow
+        //            {
+        //                Cflowcode = item.收费id.ToString(),
+        //                OrderCode = order.ParentOrderCode,
+        //                Cateid = order.CateId,
+        //                Tradetype = "1",
+        //                Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+        //                Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+        //                Ls_cpscode = "10",
+        //                Cpatientname = item.病人姓名,
+        //                Cpatientcode = item.卡号,
+        //                Cidentitycard = "",
+        //                Tongchoumoney = "0",
+        //                Accountmoney = "0",
+        //                Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+        //                Bdayend = "0",
+        //                Dayendtime = ""
+        //            };
+        //            tradeFlows.Add(searchTradeFlow);
+        //        }
+        //        foreach (var item in paymentsSerial)
+        //        {
+        //            var order = await hisContext.划价流水帐.FirstOrDefaultAsync(o => o.发票流水号 == item.收费id);
+        //            var searchTradeFlow = new SearchTradeFlow
+        //            {
+        //                Cflowcode = item.收费id.ToString(),
+        //                OrderCode = order.ParentOrderCode,
+        //                Cateid = order.CateId,
+        //                Tradetype = "1",
+        //                Nmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+        //                Tradedate = Convert.ToDateTime(item.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+        //                Ls_cpscode = "10",
+        //                Cpatientname = item.病人姓名,
+        //                Cpatientcode = item.卡号,
+        //                Cidentitycard = "",
+        //                Tongchoumoney = "0",
+        //                Accountmoney = "0",
+        //                Factmoney = Convert.ToDecimal(item.总金额).ToString("0.00"),
+        //                Bdayend = "1",
+        //                Dayendtime = Convert.ToDateTime(item.结帐日期).ToString("yyyy-MM-dd hh:mm:ss")
+        //            };
+        //            tradeFlows.Add(searchTradeFlow);
+        //        }
+
+        //        var searchTradeFlowOutput = new SearchTradeFlowOutput
+        //        {
+        //            Code = 1,
+        //            Msg = $"查询成功！",
+        //            Results = tradeFlows
+        //        };
+
+        //        return new ObjectResult(new
+        //        {
+        //            head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+        //            body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchTradeFlowOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+        //        });
+        //    }
+        //}
 
         #endregion
 
