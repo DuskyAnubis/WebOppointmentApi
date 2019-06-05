@@ -751,7 +751,7 @@ namespace WebOppointmentApi.Controllers
                 return new ObjectResult("Token验证失败，请检查身份验证信息!");
             }
 
-            var patient = await hisContext.Zy病案库.Where(p => string.IsNullOrEmpty(param.Inpcode) || p.住院号 == Convert.ToInt32(param.Inpcode)).Where(p => string.IsNullOrEmpty(param.Pid) || p.病人编号 == Convert.ToInt32(param.Pid)).FirstOrDefaultAsync();
+            var patient = await hisContext.Zy病案库.Where(p => string.IsNullOrEmpty(param.Inpcode) || p.住院号 == Convert.ToInt32(param.Inpcode)).Where(p => string.IsNullOrEmpty(param.Pid) || p.病人编号 == Convert.ToInt32(param.Pid)).OrderByDescending(p => p.病人编号).FirstOrDefaultAsync();
             if (patient == null)
             {
                 var searchInpatientOutput = new SearchInpatientOutput
