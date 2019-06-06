@@ -738,7 +738,7 @@ namespace WebOppointmentApi.Controllers
                 {
                     InpatientPrepayment pre = await hisContext.InpatientPrepayments.FirstOrDefaultAsync(p => p.OrderCode.Equals(item.Oid));
                     pre.PlatformCode = item.Ouno;
-                    pre.ParentPlatformCode = item.Oid;
+                    pre.ParentPlatformCode = resultBody.Result.Ouno;
                 }
 
                 hisContext.SaveChanges();
@@ -799,7 +799,7 @@ namespace WebOppointmentApi.Controllers
                 {
                     InpatientPrepayment pre = await hisContext.InpatientPrepayments.FirstOrDefaultAsync(p => p.OrderCode.Equals(item.Oid));
                     pre.PlatformCode = item.Ouno;
-                    pre.ParentPlatformCode = item.Oid;
+                    pre.ParentPlatformCode = resultBody.Result.Ouno;
                 }
 
                 hisContext.SaveChanges();
