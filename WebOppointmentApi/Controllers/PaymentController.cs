@@ -676,6 +676,10 @@ namespace WebOppointmentApi.Controllers
             }
 
             Zy病案库 patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.病人编号 == prepayment.PatientId);
+            if (patient == null)
+            {
+                return NotFound(Json(new { Error = "付款失败，病人信息不存在!" }));
+            }
 
             ScanCodePayDetail detail = new ScanCodePayDetail
             {
