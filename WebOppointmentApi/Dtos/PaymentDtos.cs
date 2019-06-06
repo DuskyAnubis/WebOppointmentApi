@@ -103,6 +103,12 @@ namespace WebOppointmentApi.Dtos
         public string ScanCode { get; set; }
     }
 
+    public class ScanCodePrepaymentParam
+    {
+        public string SerialCode { get; set; }
+        public string ScanCode { get; set; }
+    }
+
     public class ScanCodePayDetail
     {
         public string Orderid { get; set; }
@@ -156,6 +162,11 @@ namespace WebOppointmentApi.Dtos
         public string BillNum { get; set; }
     }
 
+    public class ScanCodePrepaymentQueryParam
+    {
+        public string SerialCode { get; set; }
+    }
+
     public class ScanCodeQueryInput
     {
         public string Userid { get; set; }
@@ -169,6 +180,11 @@ namespace WebOppointmentApi.Dtos
     {
         public string BillNum { get; set; }
         public string CFlowCode { get; set; }
+    }
+
+    public class ScanCodePrepaymentCompleteParam
+    {
+        public string SerialCode { get; set; }
     }
 
     public class ScanCodeCompleteDetail
@@ -193,6 +209,11 @@ namespace WebOppointmentApi.Dtos
     public class ScanCodeCancelParam
     {
         public string BillNum { get; set; }
+    }
+
+    public class ScanCodePrepaymentCancelParam
+    {
+        public string SerialCode { get; set; }
     }
 
     public class ScanCodeCancelInput

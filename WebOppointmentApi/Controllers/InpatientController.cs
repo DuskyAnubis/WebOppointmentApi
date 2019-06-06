@@ -352,7 +352,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> SynchronizingBind([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             SynchronizingBindParam param = JsonConvert.DeserializeObject<SynchronizingBindParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -415,7 +415,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> UpdateCostList([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             UpdateCostListParam param = JsonConvert.DeserializeObject<UpdateCostListParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -541,7 +541,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> CostTotal([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             CostTotalParam param = JsonConvert.DeserializeObject<CostTotalParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -644,7 +644,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> CostDetail([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             CostDetailParam param = JsonConvert.DeserializeObject<CostDetailParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -743,7 +743,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> SearchInpatient([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             SearchInpatientParam param = JsonConvert.DeserializeObject<SearchInpatientParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -813,7 +813,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public async Task<IActionResult> PayDeposit([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             PayDepositParam param = JsonConvert.DeserializeObject<PayDepositParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -852,7 +852,7 @@ namespace WebOppointmentApi.Controllers
                     操作员科室 = "收款室",
                     DwId = 1,
                     CzyId = 368,
-                    PayMethod = param.Payway,
+                    PayMethod = "App支付",
                     PayFrom = "健康山西",
                     OrderCode = param.Orderno
                 };
@@ -891,7 +891,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public IActionResult SearchDepositFade([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             SearchDepositFadeParam param = JsonConvert.DeserializeObject<SearchDepositFadeParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))
@@ -925,7 +925,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(void), 500)]
         public IActionResult FlaghDepositFade([FromForm]OppointmentApiQuery query)
         {
-            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head.Contains("%") ? Encrypt.UrlDecode(query.Head) : query.Head));
             SearchDepositFadeParam param = JsonConvert.DeserializeObject<SearchDepositFadeParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             if (!VaildToken(header))

@@ -21,6 +21,7 @@ namespace WebOppointmentApi.Data
         public DbSet<Zy记帐临时库> Zy记帐临时库 { get; set; }
         public DbSet<Zy记帐流水帐> Zy记帐流水帐 { get; set; }
         public DbSet<Zy预交金> Zy预交金 { get; set; }
+        public DbSet<InpatientPrepayment> InpatientPrepayments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1649,6 +1650,7 @@ namespace WebOppointmentApi.Data
             modelBuilder.Entity<Zy病区床位>().HasQueryFilter(m => m.DwId == 1);
             modelBuilder.Entity<Zy记帐流水帐>().HasQueryFilter(m => m.DwId == 1);
             modelBuilder.Entity<Zy预交金>().HasQueryFilter(m => m.DwId == 1);
+            modelBuilder.Entity<InpatientPrepayment>().HasQueryFilter(m => m.Dw_Id == 1);
         }
     }
 }
