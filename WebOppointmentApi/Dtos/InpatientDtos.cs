@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -279,28 +280,48 @@ namespace WebOppointmentApi.Dtos
 
     public class SearchInpatientOutput
     {
+        [JsonProperty("code")]
         public int Code { get; set; }
+        [JsonProperty("msg")]
         public string Msg { get; set; }
+        [JsonProperty("pid")]
         public string Pid { get; set; }
+        [JsonProperty("hospid")]
         public string Hospid { get; set; }
+        [JsonProperty("hospname")]
         public string Hospname { get; set; }
+        [JsonProperty("deptid")]
         public string Deptid { get; set; }
+        [JsonProperty("deptname")]
         public string Deptname { get; set; }
+        [JsonProperty("doctid")]
         public string Doctid { get; set; }
+        [JsonProperty("docname")]
         public string Docname { get; set; }
+        [JsonProperty("gender")]
         public int Gender { get; set; }
+        [JsonProperty("age")]
         public int Age { get; set; }
         public string PatientName { get; set; }
         public string InPcode { get; set; }
+        [JsonProperty("bednum")]
         public string Bednum { get; set; }
+        [JsonProperty("identityCard")]
         public string IdentityCard { get; set; }
+        [JsonProperty("cpatientcode")]
         public string Cpatientcode { get; set; }
+        [JsonProperty("state")]
         public string State { get; set; }
+        [JsonProperty("tel")]
         public string Tel { get; set; }
+        [JsonProperty("times")]
         public string Times { get; set; }
+        [JsonProperty("admissionDate")]
         public string AdmissionDate { get; set; }
         public string PayMoney { get; set; }
+        [JsonProperty("totalfare")]
         public string Totalfare { get; set; }
+        [JsonProperty("leftmoney")]
         public string Leftmoney { get; set; }
     }
     #endregion

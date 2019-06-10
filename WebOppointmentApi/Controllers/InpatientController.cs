@@ -801,7 +801,7 @@ namespace WebOppointmentApi.Controllers
                 return new ObjectResult(new
                 {
                     head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
-                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchInpatientOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchInpatientOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new DefaultContractResolver() })))
                 });
             }
         }
