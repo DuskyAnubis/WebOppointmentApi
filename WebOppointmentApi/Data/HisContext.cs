@@ -687,7 +687,7 @@ namespace WebOppointmentApi.Data
 
                 entity.Property(e => e.医师代码1)
                     .HasColumnName("医师代码")
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
@@ -705,15 +705,13 @@ namespace WebOppointmentApi.Data
 
                 entity.Property(e => e.KsId).HasColumnName("KS_ID");
 
-                entity.Property(e => e.划价号).HasColumnType("numeric(18, 0)");
-
                 entity.Property(e => e.医保医师编码)
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.医师姓名)
-                    .HasMaxLength(8)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.密码)

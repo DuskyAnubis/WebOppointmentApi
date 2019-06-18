@@ -22,7 +22,7 @@ namespace WebOppointmentApi.Models
         public string 机器名 { get; set; }
         public DateTime 日期 { get; set; }
         public string 医保医师编码 { get; set; }
-        public decimal 划价号 { get; set; }
+        public int 划价号 { get; set; }
         public int DwId { get; set; }
         public int KsId { get; set; }
     }
