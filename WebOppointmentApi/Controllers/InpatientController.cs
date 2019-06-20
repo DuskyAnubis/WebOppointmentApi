@@ -498,7 +498,7 @@ namespace WebOppointmentApi.Controllers
                         UpdateCostItemContent costItemContent = new UpdateCostItemContent
                         {
                             Id = item.Id,
-                            Time = item.日期.ToString("yyyy-MM-dd"),
+                            Time = item.日期.ToString("yyyy-MM-dd HH:mm:ss"),
                             Name = item.名称,
                             Spec = item.规格,
                             Count = item.数量.ToString("0"),
@@ -612,7 +612,7 @@ namespace WebOppointmentApi.Controllers
                 {
                     Code = 1,
                     Msg = "获取费用汇总成功!",
-                    Time = time.ToString("yyyy-MM-dd hh:mm:ss"),
+                    Time = time.ToString("yyyy-MM-dd HH:mm:ss"),
                     Cid = apiOptions.HospitalId + patient.病人编号.ToString(),
                     Tprice = patient.总费用.ToString("0.00"),
                     Cash = patient.预交金.ToString("0.00"),
@@ -717,7 +717,7 @@ namespace WebOppointmentApi.Controllers
                 {
                     Code = 1,
                     Msg = "获取费用明细成功!",
-                    Time = time.ToString("yyyy-MM-dd hh:mm:ss"),
+                    Time = time.ToString("yyyy-MM-dd HH:mm:ss"),
                     Total = patient.总费用.ToString("0.00"),
                     Title = costDetailTitle,
                     Content = costDetailContents
@@ -792,7 +792,7 @@ namespace WebOppointmentApi.Controllers
                     State = patient.出院标志 == 4 ? "2" : "1",
                     Tel = patient.电话,
                     Times = patient.住院次数.ToString(),
-                    AdmissionDate = patient.入院日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                    AdmissionDate = patient.入院日期.ToString("yyyy-MM-dd HH:mm:ss"),
                     PayMoney = patient.预交金.ToString("0.00"),
                     Totalfare = patient.总费用.ToString("0.00"),
                     Leftmoney = patient.预交金余额.ToString("0.00")

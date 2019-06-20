@@ -204,7 +204,7 @@ namespace WebOppointmentApi.Controllers
                             Hospname = apiOptions.HospitalName,
                             Deptname = doctor.所在科室,
                             Doctorname = doctor.医师姓名,
-                            Time = order.日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                            Time = order.日期.ToString("yyyy-MM-dd HH:mm:ss"),
                             Pname = order.病人姓名,
                             Phone = registeredLs.电话,
                             Cateid = order.CateId,
@@ -229,7 +229,7 @@ namespace WebOppointmentApi.Controllers
                         Hospname = apiOptions.HospitalName,
                         Deptname = doctor.所在科室,
                         Doctorname = doctor.医师姓名,
-                        Time = order.日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                        Time = order.日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Pname = order.病人姓名,
                         Phone = registered.电话,
                         Cateid = order.CateId,
@@ -306,7 +306,7 @@ namespace WebOppointmentApi.Controllers
                 state = 1,
                 Dname = doctor.所在科室,
                 Docname = doctor.医师姓名,
-                Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                Time = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                 Cateid = orders[0].CateId,
                 Title = orders[0].CateName,
                 Price = totalPrice.ToString("0.00"),
@@ -384,7 +384,7 @@ namespace WebOppointmentApi.Controllers
                     State = "1",
                     Dname = doctor.所在科室,
                     Docname = doctor.医师姓名,
-                    Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                    Time = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                     Title = orders[0].名称 + "等"
                 };
                 details.Add(detail);
@@ -691,7 +691,7 @@ namespace WebOppointmentApi.Controllers
                 State = "1",
                 Dname = "收款室",
                 Docname = prepayment.UserName,
-                Time = prepayment.TradeTime.ToString("yyyy-MM-dd hh:mm:ss"),
+                Time = prepayment.TradeTime.ToString("yyyy-MM-dd HH:mm:ss"),
                 Title = "住院预交金"
             };
             List<ScanCodePayDetail> details = new List<ScanCodePayDetail>
@@ -974,7 +974,7 @@ namespace WebOppointmentApi.Controllers
                         State = orders[0].发票流水号 == 0 ? 1 : 3,
                         Dname = doctor.所在科室,
                         Docname = doctor.医师姓名,
-                        Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                        Time = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Cateid = orders[0].CateId,
                         Title = orders[0].CateName,
                         Price = totalPrice.ToString("0.00"),
@@ -1033,7 +1033,7 @@ namespace WebOppointmentApi.Controllers
                             State = orders[0].发票流水号 == 0 ? 1 : 3,
                             Dname = doctor.所在科室,
                             Docname = doctor.医师姓名,
-                            Time = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                            Time = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                             Cateid = orders[0].CateId,
                             Title = orders[0].CateName,
                             Price = totalPrice.ToString("0.00"),
@@ -1179,7 +1179,7 @@ namespace WebOppointmentApi.Controllers
                         Cidentitycard = IdCard,
                         Cpatientname = orders[0].病人姓名,
                         Csex = orders[0].性别,
-                        Ddiagnosetime = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                        Ddiagnosetime = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Deptname = doctor.所在科室,
                         Doctorname = doctor.医师姓名,
                         Cdiagnosetypename = "",
@@ -1297,7 +1297,7 @@ namespace WebOppointmentApi.Controllers
                         Cidentitycard = IdCard,
                         Cpatientname = orders[0].病人姓名,
                         Csex = orders[0].性别,
-                        Ddiagnosetime = orders[0].日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                        Ddiagnosetime = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Deptname = doctor.所在科室,
                         Doctorname = doctor.医师姓名,
                         Cdiagnosetypename = "",
@@ -1686,7 +1686,7 @@ namespace WebOppointmentApi.Controllers
                         CPatientCode = payment.卡号,
                         CPatientName = payment.病人姓名,
                         Ordercode = order.划价号,
-                        TradeDate = Convert.ToDateTime(payment.日期).ToString("yyyy-MM-dd hh:mm:ss")
+                        TradeDate = Convert.ToDateTime(payment.日期).ToString("yyyy-MM-dd HH:mm:ss")
                     };
                     SearchWindowRefunds.Add(searchWindowRefund);
                 }
@@ -1817,7 +1817,7 @@ namespace WebOppointmentApi.Controllers
                         Cateid = order.CateId,
                         Tradetype = "1",
                         Nmoney = totalPrice.ToString("0.00"),
-                        Tradedate = order.日期.ToString("yyyy-MM-dd hh:mm:ss"),
+                        Tradedate = order.日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Ls_cpscode = "10",
                         Cpatientname = order.病人姓名,
                         Cpatientcode = order.卡号,
@@ -1841,7 +1841,7 @@ namespace WebOppointmentApi.Controllers
                         Cateid = order.CateId,
                         Tradetype = "1",
                         Nmoney = totalPrice.ToString("0.00"),
-                        Tradedate = Convert.ToDateTime(order.日期).ToString("yyyy-MM-dd hh:mm:ss"),
+                        Tradedate = Convert.ToDateTime(order.日期).ToString("yyyy-MM-dd HH:mm:ss"),
                         Ls_cpscode = "10",
                         Cpatientname = order.病人姓名,
                         Cpatientcode = order.卡号,
@@ -1864,7 +1864,7 @@ namespace WebOppointmentApi.Controllers
                         Cateid = "7",
                         Tradetype = "1",
                         Nmoney = item.Money.ToString("0.00"),
-                        Tradedate = item.TradeTime.ToString("yyyy-MM-dd hh:mm:ss"),
+                        Tradedate = item.TradeTime.ToString("yyyy-MM-dd HH:mm:ss"),
                         Ls_cpscode = "10",
                         Cpatientname = patient.姓名,
                         Cpatientcode = patient.病人编号.ToString(),
