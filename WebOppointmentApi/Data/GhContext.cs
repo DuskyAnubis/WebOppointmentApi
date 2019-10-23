@@ -128,7 +128,7 @@ namespace WebOppointmentApi.Data
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.通信地址)
-                    .HasMaxLength(30)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.金额).HasColumnType("money");
@@ -247,7 +247,7 @@ namespace WebOppointmentApi.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.通信地址)
-                    .HasMaxLength(30)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.金额)
