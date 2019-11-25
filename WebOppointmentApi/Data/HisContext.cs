@@ -805,7 +805,7 @@ namespace WebOppointmentApi.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.出生地)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.出生地县区)
@@ -875,7 +875,7 @@ namespace WebOppointmentApi.Data
                     .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.家庭住址)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.就诊号)
@@ -1052,7 +1052,7 @@ namespace WebOppointmentApi.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.联系人地址)
-                    .HasMaxLength(50)
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.联系电话)
