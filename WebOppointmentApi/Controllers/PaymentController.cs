@@ -946,13 +946,13 @@ namespace WebOppointmentApi.Controllers
 
             if (param.Indextype.Equals("0"))
             {
-                List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.Orderid) && o.CateId.Equals(param.Cateid) && o.发票流水号 == 0).ToListAsync();
+                List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.接口码1.Equals(param.Orderid) && o.发票流水号 == -1).ToListAsync();
                 if (orders == null || orders.Count == 0)
                 {
                     var searchPendingPaymentOutPut = new SearchPendingPaymentOutput
                     {
                         Code = 0,
-                        Msg = $"未能查询到院内订单Id为{param.Orderid}的待缴费信息!",
+                        Msg = $"未能查询到订单号为{param.Orderid}的待缴费信息!",
                         Items = null
                     };
 
@@ -965,19 +965,19 @@ namespace WebOppointmentApi.Controllers
                 else
                 {
                     var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
-                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.Orderid) && o.发票流水号 == 0).SumAsync(o => o.金额);
+                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.接口码1.Equals(param.Orderid) && o.发票流水号 == -1).SumAsync(o => o.金额);
                     var details = mapper.Map<List<PendingPaymentDetails>>(orders);
                     PendingPayment payment = new PendingPayment
                     {
                         Name = orders[0].病人姓名,
                         Gender = orders[0].性别,
-                        State = orders[0].发票流水号 == 0 ? 1 : 3,
+                        State = 1,
                         Dname = doctor.所在科室,
                         Docname = doctor.医师姓名,
                         Time = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Cateid = orders[0].CateId,
                         Title = orders[0].CateName,
-                        Price = totalPrice.ToString("0.00"),
+                        Price = totalPrice.ToString(),
                         Orderid = orders[0].划价号,
                         Detail = details
                     };
@@ -1001,60 +1001,18 @@ namespace WebOppointmentApi.Controllers
             }
             else
             {
-                List<string> orderIds = await hisContext.划价临时库.Where(o => o.卡号.Equals(param.Cpatientcode) && o.发票流水号 == 0).Select(o => o.划价号).Distinct().ToListAsync();
-                if (orderIds == null || orderIds.Count == 0)
+                var searchPendingPaymentOutPut = new SearchPendingPaymentOutput
                 {
-                    var searchPendingPaymentOutPut = new SearchPendingPaymentOutput
-                    {
-                        Code = 0,
-                        Msg = $"未能查询到诊疗Id为{param.Cpatientcode}的待缴费信息!",
-                        Items = null
-                    };
+                    Code = 0,
+                    Msg = $"医院未开通主索引模式!",
+                    Items = null
+                };
 
-                    return new ObjectResult(new
-                    {
-                        head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
-                        body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchPendingPaymentOutPut, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
-                    });
-                }
-                else
+                return new ObjectResult(new
                 {
-                    List<PendingPayment> payments = new List<PendingPayment>();
-                    foreach (var item in orderIds)
-                    {
-                        List<划价临时库> orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(item) && o.发票流水号 == 0).ToListAsync();
-                        var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
-                        decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(item) && o.发票流水号 == 0).SumAsync(o => o.金额);
-                        var details = mapper.Map<List<PendingPaymentDetails>>(orders);
-                        PendingPayment payment = new PendingPayment
-                        {
-                            Name = orders[0].病人姓名,
-                            Gender = orders[0].性别,
-                            State = orders[0].发票流水号 == 0 ? 1 : 3,
-                            Dname = doctor.所在科室,
-                            Docname = doctor.医师姓名,
-                            Time = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
-                            Cateid = orders[0].CateId,
-                            Title = orders[0].CateName,
-                            Price = totalPrice.ToString("0.00"),
-                            Orderid = orders[0].划价号,
-                            Detail = details
-                        };
-                        payments.Add(payment);
-                    }
-
-                    var searchPendingPaymentOutPut = new SearchPendingPaymentOutput
-                    {
-                        Code = 1,
-                        Msg = "查询待缴费信息成功!",
-                        Items = payments
-                    };
-                    return new ObjectResult(new
-                    {
-                        head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
-                        body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchPendingPaymentOutPut, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
-                    });
-                }
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(searchPendingPaymentOutPut, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
             }
         }
         #endregion
@@ -1077,14 +1035,11 @@ namespace WebOppointmentApi.Controllers
             {
                 return new ObjectResult("Token验证失败，请检查身份验证信息!");
             }
-
-            string IdCard = "";
-            string OutpatientNum = "";
             List<划价临时库> orders;
 
             if (param.Indextype.Equals("0"))
             {
-                orders = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.Orderid) && o.CateId.Equals(param.Cateid) && o.发票流水号 == 0).ToListAsync();
+                orders = await hisContext.划价临时库.Where(o => o.接口码1.Equals(param.Orderid) && o.发票流水号 == -1).ToListAsync();
                 if (orders == null || orders.Count == 0)
                 {
                     var payOrderOutput = new PayOrderOutput
@@ -1102,44 +1057,23 @@ namespace WebOppointmentApi.Controllers
                 else
                 {
                     var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
-                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.划价号.Equals(param.Orderid) && o.CateId.Equals(param.Cateid) && o.发票流水号 == 0).SumAsync(o => o.金额);
-                    var user = await hisContext.工作人员.FirstOrDefaultAsync(u => u.代码.Equals(param.Userid));
-                    var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(orders[0].卡号));
-                    if (registered == null)
-                    {
-                        var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(orders[0].卡号));
-                        if (registeredLs != null)
-                        {
-                            if (!string.IsNullOrEmpty(registeredLs.身份证))
-                            {
-                                IdCard = registeredLs.身份证;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        OutpatientNum = registered.门诊号.ToString();
-                        if (!string.IsNullOrEmpty(registered.身份证))
-                        {
-                            IdCard = registered.身份证;
-                        }
-                    }
-
+                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.接口码1.Equals(param.Orderid) && o.发票流水号 == -1).SumAsync(o => o.金额);
+                  
                     门诊收费 payment = new 门诊收费
                     {
                         日期 = DateTime.Now,
-                        操作员 = user.姓名,
+                        操作员 = "健康山西",
                         病人姓名 = orders[0].病人姓名,
                         卡号 = orders[0].卡号,
                         总金额 = totalPrice,
                         优惠额 = Convert.ToDecimal(0.00),
-                        账户支付 = Convert.ToDecimal(0.00),
+                        账户支付 = totalPrice,
                         统筹支付 = Convert.ToDecimal(0.00),
                         补助金 = Convert.ToDecimal(0.00),
-                        现金支付 = totalPrice,
+                        现金支付 = Convert.ToDecimal(0.00),
                         交班标志 = false,
                         结帐日期 = null,
-                        门诊号 = OutpatientNum,
+                        门诊号 = "",
                         发票号 = "",
                         PInfo = "",
                         退票 = null,
@@ -1153,8 +1087,8 @@ namespace WebOppointmentApi.Controllers
                         医保 = "",
                         性别 = orders[0].性别,
                         DwId = 1,
-                        CzyId = user.Id,
-                        PayMethod = param.Ls_cpscode,
+                        CzyId = 999,
+                        PayMethod = "诊间支付",
                         PayFrom = "健康山西",
                         IsWindowRefund = false,
                         WindowRefundFlag = 0,
@@ -1163,6 +1097,7 @@ namespace WebOppointmentApi.Controllers
                     };
                     hisContext.Add(payment);
                     hisContext.SaveChanges();
+
                     foreach (var order in orders)
                     {
                         order.发票流水号 = payment.收费id;
@@ -1176,20 +1111,20 @@ namespace WebOppointmentApi.Controllers
                         Msg = "订单支付成功!",
                         Cflowcode = payment.收费id.ToString(),
                         Cpatientcode = orders[0].卡号,
-                        Cidentitycard = IdCard,
+                        Cidentitycard = "",
                         Cpatientname = orders[0].病人姓名,
                         Csex = orders[0].性别,
                         Ddiagnosetime = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
                         Deptname = doctor.所在科室,
                         Doctorname = doctor.医师姓名,
                         Cdiagnosetypename = "",
-                        Ndiagnosenum = OutpatientNum,
+                        Ndiagnosenum = orders[0].卡号,
                         Chousesectionname = "",
                         Chousename = "",
                         Clocation = "",
                         Nmoney = totalPrice.ToString("0.00"),
-                        Diagnoseid = OutpatientNum,
-                        Windowmsg = "",
+                        Diagnoseid = orders[0].卡号,
+                        Windowmsg = "缴费成功!",
                         Windowname = ""
                     };
 
@@ -1202,121 +1137,17 @@ namespace WebOppointmentApi.Controllers
             }
             else
             {
-                orders = await hisContext.划价临时库.Where(o => o.卡号.Equals(param.Cpatientcode) && o.CateId.Equals(param.Cateid) && o.发票流水号 == 0).ToListAsync();
-                if (orders == null || orders.Count == 0)
+                var payOrderOutput = new PayOrderOutput
                 {
-                    var payOrderOutput = new PayOrderOutput
-                    {
-                        Code = 0,
-                        Msg = "支付失败!未查到该病人订单或已支付!"
-                    };
+                    Code = 0,
+                    Msg = "医院未开通主索引模式!"
+                };
 
-                    return new ObjectResult(new
-                    {
-                        head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
-                        body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(payOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
-                    });
-                }
-                else
+                return new ObjectResult(new
                 {
-                    var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
-                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.卡号.Equals(param.Cpatientcode) && o.CateId.Equals(param.Cateid) && o.发票流水号 == 0).SumAsync(o => o.金额);
-                    var user = await hisContext.工作人员.FirstOrDefaultAsync(u => u.代码.Equals(param.Userid));
-                    var registered = await ghContext.门诊挂号.FirstOrDefaultAsync(r => r.卡号.Equals(orders[0].卡号));
-                    if (registered == null)
-                    {
-                        var registeredLs = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(r => r.卡号.Equals(orders[0].卡号));
-                        if (registeredLs != null)
-                        {
-                            if (!string.IsNullOrEmpty(registeredLs.身份证))
-                            {
-                                IdCard = registeredLs.身份证;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        OutpatientNum = registered.门诊号.ToString();
-                        if (!string.IsNullOrEmpty(registered.身份证))
-                        {
-                            IdCard = registered.身份证;
-                        }
-                    }
-
-                    门诊收费 payment = new 门诊收费
-                    {
-                        日期 = DateTime.Now,
-                        操作员 = user.姓名,
-                        病人姓名 = orders[0].病人姓名,
-                        卡号 = orders[0].卡号,
-                        总金额 = totalPrice,
-                        优惠额 = Convert.ToDecimal(0.00),
-                        账户支付 = Convert.ToDecimal(0.00),
-                        统筹支付 = Convert.ToDecimal(0.00),
-                        补助金 = Convert.ToDecimal(0.00),
-                        现金支付 = totalPrice,
-                        交班标志 = false,
-                        结帐日期 = null,
-                        门诊号 = OutpatientNum,
-                        发票号 = "",
-                        PInfo = "",
-                        退票 = null,
-                        费别 = "自费",
-                        折扣率 = Convert.ToDecimal(0.00),
-                        单据流水号 = "",
-                        医疗保险号 = "",
-                        基金支付额 = Convert.ToDecimal(0.00),
-                        帐户余额 = Convert.ToDecimal(0.00),
-                        公补基金支付 = Convert.ToDecimal(0.00),
-                        医保 = "",
-                        性别 = orders[0].性别,
-                        DwId = 1,
-                        CzyId = user.Id,
-                        PayMethod = param.Ls_cpscode,
-                        PayFrom = "健康山西",
-                        IsWindowRefund = false,
-                        WindowRefundFlag = 0,
-                        ParentPlatformCode = "",
-                        PlatformCode = ""
-                    };
-                    hisContext.Add(payment);
-                    hisContext.SaveChanges();
-                    foreach (var order in orders)
-                    {
-                        order.发票流水号 = payment.收费id;
-                        hisContext.Update(order);
-                    }
-                    hisContext.SaveChanges();
-
-                    var payOrderOutput = new PayOrderOutput
-                    {
-                        Code = 1,
-                        Msg = "订单支付成功!",
-                        Cflowcode = payment.收费id.ToString(),
-                        Cpatientcode = orders[0].卡号,
-                        Cidentitycard = IdCard,
-                        Cpatientname = orders[0].病人姓名,
-                        Csex = orders[0].性别,
-                        Ddiagnosetime = orders[0].日期.ToString("yyyy-MM-dd HH:mm:ss"),
-                        Deptname = doctor.所在科室,
-                        Doctorname = doctor.医师姓名,
-                        Cdiagnosetypename = "",
-                        Ndiagnosenum = OutpatientNum,
-                        Chousesectionname = "",
-                        Chousename = "",
-                        Clocation = "",
-                        Nmoney = totalPrice.ToString("0.00"),
-                        Diagnoseid = OutpatientNum,
-                        Windowmsg = "",
-                        Windowname = ""
-                    };
-
-                    return new ObjectResult(new
-                    {
-                        head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
-                        body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(payOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
-                    });
-                }
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(payOrderOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
             }
         }
         #endregion
