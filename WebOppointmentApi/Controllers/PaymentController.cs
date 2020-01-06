@@ -978,7 +978,7 @@ namespace WebOppointmentApi.Controllers
                         Cateid = orders[0].CateId,
                         Title = orders[0].CateName,
                         Price = totalPrice.ToString(),
-                        Orderid = orders[0].划价号,
+                        Orderid = orders[0].接口码1,
                         Detail = details
                     };
                     List<PendingPayment> payments = new List<PendingPayment>
