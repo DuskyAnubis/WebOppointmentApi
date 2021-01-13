@@ -84,7 +84,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> DownPayBill([FromBody]DownPayBillParam param)
+        public async Task<IActionResult> DownPayBill([FromBody] DownPayBillParam param)
         {
             var header = GetOppointmentApiHeader();
             var billInput = new DownPayBillInput()
@@ -124,7 +124,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> OrderSms([FromBody]OrderSmsParam param)
+        public async Task<IActionResult> OrderSms([FromBody] OrderSmsParam param)
         {
             var header = GetOppointmentApiHeader();
             var smsInput = new OrderSmsInput()
@@ -166,7 +166,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> BillingSms([FromBody]BillingSmsParam param)
+        public async Task<IActionResult> BillingSms([FromBody] BillingSmsParam param)
         {
             var header = GetOppointmentApiHeader();
             BillingSmsInput smsInput;
@@ -271,7 +271,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> SendPendingPayment([FromBody]SendPendingPaymentParam param)
+        public async Task<IActionResult> SendPendingPayment([FromBody] SendPendingPaymentParam param)
         {
             var header = GetOppointmentApiHeader();
             SendPendingPaymentinput paymentInput;
@@ -346,7 +346,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodePay([FromBody]ScanCodePayParam param)
+        public async Task<IActionResult> ScanCodePay([FromBody] ScanCodePayParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodePayInput scanCodePayInput;
@@ -458,7 +458,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodeQuery([FromBody]ScanCodeQueryParam param)
+        public async Task<IActionResult> ScanCodeQuery([FromBody] ScanCodeQueryParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodeQueryInput scanCodeQueryInput;
@@ -528,7 +528,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodeComplete([FromBody]ScanCodeCompleteParam param)
+        public async Task<IActionResult> ScanCodeComplete([FromBody] ScanCodeCompleteParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodeCompleteInput scanCodeCompleteInput;
@@ -609,7 +609,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodeCancel([FromBody]ScanCodeCancelParam param)
+        public async Task<IActionResult> ScanCodeCancel([FromBody] ScanCodeCancelParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodeCancelInput scanCodeCancelInput;
@@ -664,7 +664,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodePrepayment([FromBody]ScanCodePrepaymentParam param)
+        public async Task<IActionResult> ScanCodePrepayment([FromBody] ScanCodePrepaymentParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodePayInput scanCodePayInput;
@@ -760,7 +760,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodePrepaymentQuery([FromBody]ScanCodePrepaymentQueryParam param)
+        public async Task<IActionResult> ScanCodePrepaymentQuery([FromBody] ScanCodePrepaymentQueryParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodeQueryInput scanCodeQueryInput;
@@ -821,7 +821,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodePrepaymentComplete([FromBody]ScanCodePrepaymentCompleteParam param)
+        public async Task<IActionResult> ScanCodePrepaymentComplete([FromBody] ScanCodePrepaymentCompleteParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodeCompleteInput scanCodeCompleteInput;
@@ -884,7 +884,7 @@ namespace WebOppointmentApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(ValidationError), 422)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> ScanCodePrepaymentCancel([FromBody]ScanCodePrepaymentCancelParam param)
+        public async Task<IActionResult> ScanCodePrepaymentCancel([FromBody] ScanCodePrepaymentCancelParam param)
         {
             var header = GetOppointmentApiHeader();
             ScanCodeCancelInput scanCodeCancelInput;
@@ -934,7 +934,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/search/notpay")]
         [ProducesResponseType(typeof(SearchPendingPaymentOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> SearchPendingPayment([FromForm]OppointmentApiQuery query)
+        public async Task<IActionResult> SearchPendingPayment([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             SearchPendingPaymentParam param = JsonConvert.DeserializeObject<SearchPendingPaymentParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -1026,7 +1026,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/pay/result")]
         [ProducesResponseType(typeof(PayOrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> PayOrder([FromForm]OppointmentApiQuery query)
+        public async Task<IActionResult> PayOrder([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             PayOrderParam param = JsonConvert.DeserializeObject<PayOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -1058,7 +1058,7 @@ namespace WebOppointmentApi.Controllers
                 {
                     var doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师姓名.Equals(orders[0].医师));
                     decimal totalPrice = await hisContext.划价临时库.Where(o => o.接口码1.Equals(param.Orderid) && o.发票流水号 == -1).SumAsync(o => o.金额);
-                  
+
                     门诊收费 payment = new 门诊收费
                     {
                         日期 = DateTime.Now,
@@ -1087,7 +1087,7 @@ namespace WebOppointmentApi.Controllers
                         医保 = "",
                         性别 = orders[0].性别,
                         DwId = 1,
-                        CzyId = 999,
+                        CzyId = 368,
                         PayMethod = "诊间支付",
                         PayFrom = "健康山西",
                         IsWindowRefund = false,
@@ -1125,7 +1125,8 @@ namespace WebOppointmentApi.Controllers
                         Nmoney = totalPrice.ToString("0.00"),
                         Diagnoseid = orders[0].卡号,
                         Windowmsg = "缴费成功!",
-                        Windowname = ""
+                        Windowname = "",
+                        Crequestcode = orders[0].接口码1
                     };
 
                     return new ObjectResult(new
@@ -1161,7 +1162,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/register/fade")]
         [ProducesResponseType(typeof(RefundOrderOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> RefundOrder([FromForm]OppointmentApiQuery query)
+        public async Task<IActionResult> RefundOrder([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             RefundOrderParam param = JsonConvert.DeserializeObject<RefundOrderParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -1476,7 +1477,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/search/windowfadefare")]
         [ProducesResponseType(typeof(SearchWindowRefundOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> SearchWindowRefund([FromForm]OppointmentApiQuery query)
+        public async Task<IActionResult> SearchWindowRefund([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             SearchWindowRefundParam param = JsonConvert.DeserializeObject<SearchWindowRefundParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -1547,7 +1548,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/search/setwindowfadefareflag")]
         [ProducesResponseType(typeof(FlagWindowRefundOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> FlagWindowRefund([FromForm]OppointmentApiQuery query)
+        public async Task<IActionResult> FlagWindowRefund([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             FlagWindowRefundParam param = JsonConvert.DeserializeObject<FlagWindowRefundParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -1602,7 +1603,7 @@ namespace WebOppointmentApi.Controllers
         [HttpPost("/api/search/tradeflow")]
         [ProducesResponseType(typeof(SearchTradeFlowOutput), 200)]
         [ProducesResponseType(typeof(void), 500)]
-        public async Task<IActionResult> SearchTradeFlow([FromForm]OppointmentApiQuery query)
+        public async Task<IActionResult> SearchTradeFlow([FromForm] OppointmentApiQuery query)
         {
             OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
             SearchTradeFlowParam param = JsonConvert.DeserializeObject<SearchTradeFlowParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -1828,6 +1829,482 @@ namespace WebOppointmentApi.Controllers
         //    }
         //}
 
+        #endregion
+
+        #region 线上开单申请
+        /// <summary>
+        /// 线上开单申请
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/OnlineVisits/setrequest")]
+        [ProducesResponseType(typeof(SetRequestOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> SetRequest([FromForm] OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            SetRequestParam param = JsonConvert.DeserializeObject<SetRequestParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            try
+            {
+                if (!VaildToken(header))
+                {
+                    return new ObjectResult("Token验证失败，请检查身份验证信息!");
+                }
+
+                SetRequestOutput setRequestOutput;
+                划价临时库 order;
+                医师代码 doctor;
+                string billNum;
+
+                Yf yf = await hisContext.Yf.FirstOrDefaultAsync(y => y.Id == Convert.ToInt32(param.Labgroup));
+                if (yf != null)
+                {
+                    门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
+                    if (gh != null)
+                    {
+                        doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师代码1.Equals("999"));
+
+                        if (doctor.划价号 < 99999)
+                        {
+                            doctor.划价号 += 1;
+                        }
+                        else
+                        {
+                            doctor.划价号 = 1;
+                        }
+                        hisContext.医师代码.Update(doctor);
+                        hisContext.SaveChanges();
+
+                        billNum = "1268" + doctor.划价号.ToString().PadLeft(5, '0');
+
+                        order = new 划价临时库
+                        {
+                            日期 = DateTime.Now,
+                            发票流水号 = -1,
+                            代码 = yf.代码,
+                            货号 = "自费",
+                            名称 = yf.名称,
+                            规格 = yf.规格,
+                            单位 = yf.单位,
+                            单价 = yf.单价,
+                            数量 = 1,
+                            金额 = yf.单价,
+                            药品付数 = 1,
+                            材质分类 = yf.材质分类,
+                            收费科室 = "化验室",
+                            科室id = 0,
+                            物理分类 = "",
+                            特殊药品 = false,
+                            库存量 = 0,
+                            日结帐日期 = null,
+                            月结帐日期 = null,
+                            发药标志 = 0,
+                            发药日期 = null,
+                            操作员 = "健康山西",
+                            医保码 = "",
+                            医保比例 = 0.00M,
+                            医保金额 = 0.00M,
+                            医师 = "健康山西",
+                            划价号 = billNum,
+                            病人姓名 = gh.姓名,
+                            用法 = null,
+                            用量 = null,
+                            使用频率 = null,
+                            性别 = gh.性别,
+                            年龄 = gh.年龄.ToString() + gh.年龄单位,
+                            地址 = gh.通信地址,
+                            批号 = "",
+                            YfId = yf.Id,
+                            疾病诊断 = "",
+                            接口码1 = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "13", billNum),
+                            接口码2 = "",
+                            合疗分类 = "",
+                            政府采购价 = null,
+                            禁忌 = "",
+                            卡号 = gh.卡号,
+                            组别 = null,
+                            分组标识 = "",
+                            处方类别 = "",
+                            套餐名称 = "",
+                            农合卡号 = "",
+                            一付量 = 0.00M,
+                            CzyId = 368,
+                            DwId = 1,
+                            YsId = 268,
+                            CateId = "3",
+                            CateName = "检验",
+                            OrderCode = "",
+                            ParentOrderCode = "",
+                            PlatformCode = ""
+                        };
+
+                        hisContext.划价临时库.Add(order);
+                        await hisContext.SaveChangesAsync();
+
+                        setRequestOutput = new SetRequestOutput
+                        {
+                            Code = 1,
+                            Msg = "开单成功!",
+                            Orderid = order.接口码1
+                        };
+                    }
+                    else
+                    {
+                        门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
+                        if (ghls != null)
+                        {
+                            doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师代码1.Equals("999"));
+
+                            if (doctor.划价号 < 99999)
+                            {
+                                doctor.划价号 += 1;
+                            }
+                            else
+                            {
+                                doctor.划价号 = 1;
+                            }
+                            hisContext.医师代码.Update(doctor);
+                            hisContext.SaveChanges();
+
+                            billNum = "1268" + doctor.划价号.ToString().PadLeft(5, '0');
+
+                            order = new 划价临时库
+                            {
+                                日期 = DateTime.Now,
+                                发票流水号 = -1,
+                                代码 = yf.代码,
+                                货号 = "自费",
+                                名称 = yf.名称,
+                                规格 = yf.规格,
+                                单位 = yf.单位,
+                                单价 = yf.单价,
+                                数量 = 1,
+                                金额 = yf.单价,
+                                药品付数 = 1,
+                                材质分类 = yf.材质分类,
+                                收费科室 = "化验室",
+                                科室id = 0,
+                                物理分类 = "",
+                                特殊药品 = false,
+                                库存量 = 0,
+                                日结帐日期 = null,
+                                月结帐日期 = null,
+                                发药标志 = 0,
+                                发药日期 = null,
+                                操作员 = "健康山西",
+                                医保码 = "",
+                                医保比例 = 0.00M,
+                                医保金额 = 0.00M,
+                                医师 = "健康山西",
+                                划价号 = billNum,
+                                病人姓名 = ghls.姓名,
+                                用法 = null,
+                                用量 = null,
+                                使用频率 = null,
+                                性别 = ghls.性别,
+                                年龄 = ghls.年龄.ToString() + ghls.年龄单位,
+                                地址 = ghls.通信地址,
+                                批号 = "",
+                                YfId = yf.Id,
+                                疾病诊断 = "",
+                                接口码1 = ScanCodeTools.GetOrderString(apiOptions.PaymentId, "13", billNum),
+                                接口码2 = "",
+                                合疗分类 = "",
+                                政府采购价 = null,
+                                禁忌 = "",
+                                卡号 = ghls.卡号,
+                                组别 = null,
+                                分组标识 = "",
+                                处方类别 = "",
+                                套餐名称 = "",
+                                农合卡号 = "",
+                                一付量 = 0.00M,
+                                CzyId = 368,
+                                DwId = 1,
+                                YsId = 268,
+                                CateId = "3",
+                                CateName = "检验",
+                                OrderCode = "",
+                                ParentOrderCode = "",
+                                PlatformCode = ""
+                            };
+
+                            hisContext.划价临时库.Add(order);
+                            await hisContext.SaveChangesAsync();
+
+                            setRequestOutput = new SetRequestOutput
+                            {
+                                Code = 1,
+                                Msg = "开单成功!",
+                                Orderid = order.接口码1
+                            };
+                        }
+                        else
+                        {
+                            setRequestOutput = new SetRequestOutput
+                            {
+                                Code = 0,
+                                Msg = "开单失败，未查询到该病人信息!",
+                                Orderid = ""
+                            };
+                        }
+                    }
+                }
+                else
+                {
+                    setRequestOutput = new SetRequestOutput
+                    {
+                        Code = 0,
+                        Msg = "开单失败，未查询到该检验项目!",
+                        Orderid = ""
+                    };
+                }
+
+                return new ObjectResult(new
+                {
+                    head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                    body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(setRequestOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        #endregion
+
+        #region 获取诊疗ID
+        /// <summary>
+        /// 获取诊疗ID
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpPost("/api/identity/get")]
+        [ProducesResponseType(typeof(IdentityOutput), 200)]
+        [ProducesResponseType(typeof(void), 500)]
+        public async Task<IActionResult> IdentityGet([FromForm] OppointmentApiQuery query)
+        {
+            OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+            IdentityParam param = JsonConvert.DeserializeObject<IdentityParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            if (!VaildToken(header))
+            {
+                return new ObjectResult("Token验证失败，请检查身份验证信息!");
+            }
+
+            IdentityOutput identityOutput;
+            IdentityResult identityResult;
+            门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
+            if (gh != null)
+            {
+                gh.姓名 = param.PatientName;
+                gh.性别 = param.Sex;
+                gh.出生日期 = Convert.ToDateTime(param.Birthday);
+                gh.电话 = param.Tel;
+                gh.年龄 = Convert.ToInt16(param.Age);
+                gh.年龄单位 = param.Ageunit;
+                gh.通信地址 = param.Address;
+
+                ghContext.门诊挂号.Update(gh);
+                await ghContext.SaveChangesAsync();
+
+                identityResult = new IdentityResult
+                {
+                    PatientCode = gh.门诊号.ToString(),
+                    PatientName = gh.姓名,
+                    IdentityCard = gh.身份证,
+                    Birthday = gh.出生日期.ToString(),
+                    Age = gh.年龄.ToString(),
+                    Ageunit = gh.年龄单位,
+                    Sex = gh.性别,
+                    Address = gh.通信地址,
+                    Tel = gh.电话,
+                    ZlkCardNum = gh.卡号
+                };
+
+                identityOutput = new IdentityOutput
+                {
+                    Code = 1,
+                    Msg = "获取诊疗ID成功!",
+                    Result = identityResult
+                };
+            }
+            else
+            {
+                门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
+                if (ghls != null)
+                {
+                    ghls.姓名 = param.PatientName;
+                    ghls.性别 = param.Sex;
+                    ghls.出生日期 = Convert.ToDateTime(param.Birthday);
+                    ghls.电话 = param.Tel;
+                    ghls.年龄 = Convert.ToInt16(param.Age);
+                    ghls.年龄单位 = param.Ageunit;
+                    ghls.通信地址 = param.Address;
+
+                    ghContext.门诊挂号流水帐.Update(ghls);
+                    await ghContext.SaveChangesAsync();
+
+                    identityResult = new IdentityResult
+                    {
+                        PatientCode = ghls.门诊号.ToString(),
+                        PatientName = ghls.姓名,
+                        IdentityCard = ghls.身份证,
+                        Birthday = ghls.出生日期.ToString(),
+                        Age = ghls.年龄.ToString(),
+                        Ageunit = ghls.年龄单位,
+                        Sex = ghls.性别,
+                        Address = ghls.通信地址,
+                        Tel = ghls.电话,
+                        ZlkCardNum = ghls.卡号
+                    };
+
+                    identityOutput = new IdentityOutput
+                    {
+                        Code = 1,
+                        Msg = "获取诊疗ID成功!",
+                        Result = identityResult
+                    };
+                }
+                else
+                {
+                    gh = new 门诊挂号
+                    {
+                        姓名 = param.PatientName,
+                        年龄 = Convert.ToInt16(param.Age),
+                        性别 = param.Sex,
+                        通信地址 = param.Address,
+                        电话 = param.Tel,
+                        日期 = DateTime.Now,
+                        科室 = "化验室",
+                        挂号类别 = "普通挂号",
+                        操作员 = "健康山西",
+                        医师 = "健康山西",
+                        挂号费 = 0,
+                        工本费 = 0,
+                        金额 = 0,
+                        作废标志 = 0,
+                        卡号 = param.IdentityCard,
+                        初诊 = 1,
+                        复诊 = 0,
+                        急诊 = 0,
+                        交班 = false,
+                        退票号 = "0",
+                        就诊标志 = false,
+                        民族 = "",
+                        接诊医师id = 268,
+                        出生日期 = Convert.ToDateTime(param.Birthday),
+                        过敏史 = "",
+                        年龄单位 = param.Ageunit,
+                        身份证 = param.IdentityCard,
+                        总预存款 = 0,
+                        总费用 = 0,
+                        预存款支付 = 0,
+                        现金支付 = 0,
+                        PassWord = "",
+                        来源 = "健康山西",
+                        预存款余额 = 0,
+                        状态 = 0,
+                        退款 = 0,
+                        DwId = 1,
+                        CzyId = 368,
+                        社保卡 = param.IdentityCard
+                    };
+
+                    ghContext.门诊挂号.Add(gh);
+                    await ghContext.SaveChangesAsync();
+
+                    identityResult = new IdentityResult
+                    {
+                        PatientCode = gh.门诊号.ToString(),
+                        PatientName = gh.姓名,
+                        IdentityCard = gh.身份证,
+                        Birthday = gh.出生日期.ToString(),
+                        Age = gh.年龄.ToString(),
+                        Ageunit = gh.年龄单位,
+                        Sex = gh.性别,
+                        Address = gh.通信地址,
+                        Tel = gh.电话,
+                        ZlkCardNum = gh.卡号
+                    };
+
+                    identityOutput = new IdentityOutput
+                    {
+                        Code = 1,
+                        Msg = "获取诊疗ID成功!",
+                        Result = identityResult
+                    };
+                }
+            }
+
+            return new ObjectResult(new
+            {
+                head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+                body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(identityOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new DefaultContractResolver() })))
+            });
+        }
+        #endregion
+
+        #region 非订单支付接口
+        //[HttpPost("/api/pay/commonrate")]
+        //[ProducesResponseType(typeof(CommonrateOutput), 200)]
+        //[ProducesResponseType(typeof(void), 500)]
+        //public async Task<IActionResult> Commonrate([FromBody] OppointmentApiQuery query)
+        //{
+        //    OppointmentApiHeader header = JsonConvert.DeserializeObject<OppointmentApiHeader>(Encrypt.Base64Decode(query.Head));
+        //    CommonrateParam param = JsonConvert.DeserializeObject<CommonrateParam>(Encrypt.Base64Decode(Encrypt.UrlDecode(query.Body)), new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+        //    if (!VaildToken(header))
+        //    {
+        //        return new ObjectResult("Token验证失败，请检查身份验证信息!");
+        //    }
+        //    try
+        //    {
+        //        门诊收费 payment = new 门诊收费
+        //        {
+        //            日期 = DateTime.Now
+        //        };
+        //        await hisContext.门诊收费.AddAsync(payment);
+        //        await hisContext.SaveChangesAsync();
+
+
+        //        划价临时库 order = new 划价临时库
+        //        {
+        //            日期 = DateTime.Now
+        //        };
+        //        await hisContext.划价临时库.AddAsync(order);
+        //        await hisContext.SaveChangesAsync();
+
+        //        var commonrateOutput = new CommonrateOutput()
+        //        {
+        //            Code = 1,
+        //            Msg = "非订单支付成功!",
+        //            Cflowcode = payment.收费id.ToString()
+        //        };
+
+        //        return new ObjectResult(new
+        //        {
+        //            head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+        //            body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(commonrateOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+        //        });
+        //    }
+        //    catch (Exception)
+        //    {
+        //        var commonrateOutput = new CommonrateOutput()
+        //        {
+        //            Code = 0,
+        //            Msg = "接口调用发生错误,非订单支付失败!"
+        //        };
+        //        return new ObjectResult(new
+        //        {
+        //            head = Encrypt.Base64Encode(JsonConvert.SerializeObject(header, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })),
+        //            body = Encrypt.UrlEncode(Encrypt.Base64Encode(JsonConvert.SerializeObject(commonrateOutput, Formatting.Indented, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() })))
+        //        });
+        //    }
+        //}
         #endregion
 
         #endregion

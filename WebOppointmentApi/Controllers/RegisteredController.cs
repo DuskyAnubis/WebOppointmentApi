@@ -404,7 +404,7 @@ namespace WebOppointmentApi.Controllers
                 状态 = 0,
                 退款 = 0,
                 DwId = 1,
-                CzyId = 1
+                CzyId = 368
             };
 
             ghContext.门诊挂号.Add(gh);

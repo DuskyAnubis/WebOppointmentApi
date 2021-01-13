@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WebOppointmentApi.Common;
 
@@ -294,6 +295,7 @@ namespace WebOppointmentApi.Dtos
         public string Diagnoseid { get; set; }
         public string Windowmsg { get; set; }
         public string Windowname { get; set; }
+        public string Crequestcode { get; set; }
     }
     #endregion
 
@@ -381,6 +383,111 @@ namespace WebOppointmentApi.Dtos
         public int Code { get; set; }
         public string Msg { get; set; }
         public List<SearchTradeFlow> Results { get; set; }
+    }
+    #endregion
+
+    #region 非订单支付接口
+    public class CommonrateParam
+    {
+        public string Cpatientcode { get; set; }
+        public string Patientname { get; set; }
+        public string Fareitemid { get; set; }
+        public string Fareitemname { get; set; }
+        public double Farenum { get; set; }
+        public string Nmoney { get; set; }
+        public string Nzfmoney { get; set; }
+        public string Nzhmoney { get; set; }
+        public string Ntcmoney { get; set; }
+        public string Cateid { get; set; }
+        public string Senddeptid { get; set; }
+        public string Getdeptid { get; set; }
+        public string Doctorid { get; set; }
+        public string Userid { get; set; }
+        public string Ls_cpscode { get; set; }
+        public string Cinterpayfromtype { get; set; }
+        public string Outtradeno { get; set; }
+        public string Outorderid { get; set; }
+        public string Outtradeno_main { get; set; }
+        public string ISoftSystem { get; set; }
+        public string Hospitalcode { get; set; }
+    }
+
+    public class CommonrateOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Cflowcode { get; set; }
+    }
+
+    #endregion
+
+    #region 线上开单申请
+    public class SetRequestParam
+    {
+        public string Cpatientcode { get; set; }
+        public string Labgroup { get; set; }
+        public string Senddeptid { get; set; }
+        public string Getdeptid { get; set; }
+        public string Doctorid { get; set; }
+        public string Diagnoseid { get; set; }
+    }
+
+    public class SetRequestOutput
+    {
+        public int Code { get; set; }
+        public string Msg { get; set; }
+        public string Orderid { get; set; }
+    }
+    #endregion
+
+    #region 获取诊疗ID
+    public class IdentityParam
+    {
+        public string IdentityCard { get; set; }
+        public string PatientName { get; set; }
+        public string Sex { get; set; }
+        public string Birthday { get; set; }
+        public string Address { get; set; }
+        public string Tel { get; set; }
+        public string Age { get; set; }
+        public string Ageunit { get; set; }
+        public string Userid { get; set; }
+        public string Registertype { get; set; }
+        public string Guarderrelation { get; set; }
+    }
+
+    public class IdentityResult
+    {
+        [JsonProperty("PatientCode")]
+        public string PatientCode { get; set; }
+        [JsonProperty("PatientName")]
+        public string PatientName { get; set; }
+        [JsonProperty("identityCard")]
+        public string IdentityCard { get; set; }
+        [JsonProperty("Sex")]
+        public string Sex { get; set; }
+        [JsonProperty("Birthday")]
+        public string Birthday { get; set; }
+        [JsonProperty("Address")]
+        public string Address { get; set; }
+        [JsonProperty("tel")]
+        public string Tel { get; set; }
+        [JsonProperty("age")]
+        public string Age { get; set; }
+        [JsonProperty("ageunit")]
+        public string Ageunit { get; set; }
+        [JsonProperty("zlkCardNum")]
+        public string ZlkCardNum { get; set; }
+    }
+
+    public class IdentityOutput
+    {
+        [JsonProperty("code")]
+        public int Code { get; set; }
+        [JsonProperty("msg")]
+        public string Msg { get; set; }
+        [JsonProperty("result")]
+        public IdentityResult Result { get; set; }
     }
     #endregion
 

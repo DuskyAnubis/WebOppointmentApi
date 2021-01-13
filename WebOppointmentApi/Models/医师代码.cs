@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebOppointmentApi.Models
 {
-    public class 医师代码
+    public partial class 医师代码
     {
         public int Id { get; set; }
         public string 医师代码1 { get; set; }

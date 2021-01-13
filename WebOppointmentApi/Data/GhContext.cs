@@ -136,6 +136,10 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.预存款余额).HasColumnType("money");
 
                 entity.Property(e => e.预存款支付).HasColumnType("money");
+
+                entity.Property(e => e.社保卡)
+                   .HasMaxLength(50)
+                   .IsUnicode(false);
             });
 
             modelBuilder.Entity<门诊挂号流水帐>(entity =>
@@ -265,6 +269,10 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.Czy_Id)
                     .HasColumnName("Czy_Id")
                     .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.社保卡)
+                   .HasMaxLength(50)
+                   .IsUnicode(false);
             });
 
             modelBuilder.Entity<系统数据>(entity =>

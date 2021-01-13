@@ -49,5 +49,6 @@ namespace WebOppointmentApi.Models
         public decimal 退款 { get; set; }
         public int DwId { get; set; }
         public int CzyId { get; set; }
+        public string 社保卡 { get; set; }
     }
 }
