@@ -24,6 +24,8 @@ namespace WebOppointmentApi.Data
         public DbSet<InpatientPrepayment> InpatientPrepayments { get; set; }
         public DbSet<门诊就诊信息> 门诊就诊信息 { get; set; }
         public DbSet<Yf> Yf { get; set; }
+        public DbQuery<V_LisReport> V_LisReport { get; set; }
+        public DbQuery<V_LisReportDetail> V_LisReportDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1939,6 +1941,16 @@ namespace WebOppointmentApi.Data
                 entity.Property(e => e.锁定)
                     .IsRequired()
                     .HasDefaultValueSql("(0)");
+            });
+
+            modelBuilder.Query<V_LisReport>(v =>
+            {
+                v.ToView("V_LisReport");
+            });
+
+            modelBuilder.Query<V_LisReportDetail>(v =>
+            {
+                v.ToView("V_LisReportDetail");
             });
 
             modelBuilder.Entity<工作人员>().HasQueryFilter(m => m.Dw_Id == 1);
