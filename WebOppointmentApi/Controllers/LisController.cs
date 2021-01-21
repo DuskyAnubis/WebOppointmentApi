@@ -176,7 +176,7 @@ namespace WebOppointmentApi.Controllers
                 List<门诊挂号> ghs = await ghContext.门诊挂号.Where(g => g.身份证.Equals(param.Idcard) && g.姓名.Equals(param.Name)).ToListAsync();
                 foreach (门诊挂号 gh in ghs)
                 {
-                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                     foreach (var report in reports)
                     {
                         reportResult = new ReportResult
@@ -195,7 +195,7 @@ namespace WebOppointmentApi.Controllers
                 List<门诊挂号流水帐> ghls = await ghContext.门诊挂号流水帐.Where(g => g.身份证.Equals(param.Idcard) && g.姓名.Equals(param.Name)).ToListAsync();
                 foreach (门诊挂号流水帐 gh in ghls)
                 {
-                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                     foreach (var report in reports)
                     {
                         reportResult = new ReportResult
@@ -216,7 +216,7 @@ namespace WebOppointmentApi.Controllers
                 门诊挂号 gh = await ghContext.门诊挂号.FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
                 if (gh != null)
                 {
-                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                     foreach (var report in reports)
                     {
                         reportResult = new ReportResult
@@ -236,7 +236,7 @@ namespace WebOppointmentApi.Controllers
                     门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
                     if (ghls != null)
                     {
-                        var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                        var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                         foreach (var report in reports)
                         {
                             reportResult = new ReportResult
