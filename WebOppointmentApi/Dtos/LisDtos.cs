@@ -37,8 +37,11 @@ namespace WebOppointmentApi.Dtos
 
     public class PatientOutput
     {
+        [JsonProperty("code")]
         public int Code { get; set; }
+        [JsonProperty("msg")]
         public string Msg { get; set; }
+        [JsonProperty("results")]
         public List<PatientResult> Results { get; set; }
     }
     #endregion
@@ -74,8 +77,11 @@ namespace WebOppointmentApi.Dtos
 
     public class ReportOutput
     {
+        [JsonProperty("code")]
         public int Code { get; set; }
+        [JsonProperty("msg")]
         public string Msg { get; set; }
+        [JsonProperty("reportlist")]
         public List<ReportResult> Reportlist { get; set; }
     }
     #endregion

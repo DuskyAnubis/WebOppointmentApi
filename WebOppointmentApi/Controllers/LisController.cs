@@ -99,10 +99,10 @@ namespace WebOppointmentApi.Controllers
                 patientResult = new PatientResult
                 {
                     PatientCode = gh.门诊号.ToString(),
-                    PatientName = gh.姓名,
-                    IdentityCard = gh.身份证,
-                    Sex = gh.性别,
-                    Tel = gh.电话
+                    PatientName = gh.姓名.Trim(),
+                    IdentityCard = gh.身份证.Trim(),
+                    Sex = gh.性别.Trim(),
+                    Tel = gh.电话.Trim()
                 };
                 patientResults.Add(patientResult);
             }
@@ -113,10 +113,10 @@ namespace WebOppointmentApi.Controllers
                 patientResult = new PatientResult
                 {
                     PatientCode = ghls.门诊号.ToString(),
-                    PatientName = ghls.姓名,
-                    IdentityCard = ghls.身份证,
-                    Sex = ghls.性别,
-                    Tel = ghls.电话
+                    PatientName = ghls.姓名.Trim(),
+                    IdentityCard = ghls.身份证.Trim(),
+                    Sex = ghls.性别.Trim(),
+                    Tel = ghls.电话.Trim()
                 };
                 patientResults.Add(patientResult);
             }
@@ -176,7 +176,7 @@ namespace WebOppointmentApi.Controllers
                 List<门诊挂号> ghs = await ghContext.门诊挂号.Where(g => g.身份证.Equals(param.Idcard) && g.姓名.Equals(param.Name)).ToListAsync();
                 foreach (门诊挂号 gh in ghs)
                 {
-                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(param.Name)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                     foreach (var report in reports)
                     {
                         reportResult = new ReportResult
@@ -184,7 +184,7 @@ namespace WebOppointmentApi.Controllers
                             ApplyNo = report.ReqNo,
                             ReportTypeName = report.ReportName,
                             TestSample = report.Sampletype,
-                            Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy-MM-dd HH:mm:ss"),
+                            Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy/MM/dd HH:mm:ss"),
                             OrderNo = (reportResults.Count + 1).ToString(),
                             MainID = report.ReportNo
                         };
@@ -195,7 +195,7 @@ namespace WebOppointmentApi.Controllers
                 List<门诊挂号流水帐> ghls = await ghContext.门诊挂号流水帐.Where(g => g.身份证.Equals(param.Idcard) && g.姓名.Equals(param.Name)).ToListAsync();
                 foreach (门诊挂号流水帐 gh in ghls)
                 {
-                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(param.Name)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                     foreach (var report in reports)
                     {
                         reportResult = new ReportResult
@@ -203,7 +203,7 @@ namespace WebOppointmentApi.Controllers
                             ApplyNo = report.ReqNo,
                             ReportTypeName = report.ReportName,
                             TestSample = report.Sampletype,
-                            Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy-MM-dd HH:mm:ss"),
+                            Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy/MM/dd HH:mm:ss"),
                             OrderNo = (reportResults.Count + 1).ToString(),
                             MainID = report.ReportNo
                         };
@@ -216,7 +216,7 @@ namespace WebOppointmentApi.Controllers
                 门诊挂号 gh = await ghContext.门诊挂号.FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
                 if (gh != null)
                 {
-                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                    var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名.Trim())).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                     foreach (var report in reports)
                     {
                         reportResult = new ReportResult
@@ -224,7 +224,7 @@ namespace WebOppointmentApi.Controllers
                             ApplyNo = report.ReqNo,
                             ReportTypeName = report.ReportName,
                             TestSample = report.Sampletype,
-                            Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy-MM-dd HH:mm:ss"),
+                            Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy/MM/dd HH:mm:ss"),
                             OrderNo = (reportResults.Count + 1).ToString(),
                             MainID = report.ReportNo
                         };
@@ -236,7 +236,7 @@ namespace WebOppointmentApi.Controllers
                     门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
                     if (ghls != null)
                     {
-                        var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(gh.卡号) && v.PatientName.Equals(gh.姓名)).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
+                        var reports = await hisContext.V_LisReport.Where(v => v.PatientCode.Equals(ghls.卡号) && v.PatientName.Equals(ghls.姓名.Trim())).Where(v => string.IsNullOrEmpty(param.Startdate) || v.ReportDate >= Convert.ToDateTime(param.Startdate + " 00:00:00")).Where(v => string.IsNullOrEmpty(param.Enddate) || v.ReportDate <= Convert.ToDateTime(param.Enddate + " 23:59:59")).ToListAsync();
                         foreach (var report in reports)
                         {
                             reportResult = new ReportResult
@@ -244,7 +244,7 @@ namespace WebOppointmentApi.Controllers
                                 ApplyNo = report.ReqNo,
                                 ReportTypeName = report.ReportName,
                                 TestSample = report.Sampletype,
-                                Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy-MM-dd HH:mm:ss"),
+                                Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy/MM/dd HH:mm:ss"),
                                 OrderNo = (reportResults.Count + 1).ToString(),
                                 MainID = report.ReportNo
                             };
@@ -332,21 +332,21 @@ namespace WebOppointmentApi.Controllers
                     Mainid = report.ReportNo,
                     StandardSampleNo = report.ReqNo,
                     SectionOffice = "化验室",
-                    Jbsj = Convert.ToDateTime(report.Jssj).ToString("yyyy-MM-dd HH:mm:ss"),
+                    Jbsj = Convert.ToDateTime(report.Jssj).ToString("yyyy/MM/dd HH:mm:ss"),
                     Name = report.PatientName,
                     TestSample = report.Sampletype,
                     BedNo = "",
-                    Jysj = Convert.ToDateTime(report.Jysj).ToString("yyyy-MM-dd HH:mm:ss"),
+                    Jysj = Convert.ToDateTime(report.Jysj).ToString("yyyy/MM/dd HH:mm:ss"),
                     Sex = report.Sex,
                     SampleStatus = "正常",
                     Kdr = "",
-                    Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy-MM-dd HH:mm:ss"),
-                    Age = "",
+                    Cjgsj = Convert.ToDateTime(report.ReportDate).ToString("yyyy/MM/dd HH:mm:ss"),
+                    Age = report.Age.ToString(),
                     Jyr = report.Jyr,
                     Diagnose = "",
-                    Cbsj = Convert.ToDateTime(report.Cysj).ToString("yyyy-MM-dd HH:mm:ss"),
+                    Cbsj = Convert.ToDateTime(report.Cysj).ToString("yyyy/MM/dd HH:mm:ss"),
                     Hdr = report.Shr,
-                    Cbr = report.Cyr,
+                    Cbr = "",
                     ReportFormat = "检验报告标准样式",
                     ReportTypeName = report.ReportName,
                     MzZyNo = report.PatientCode,

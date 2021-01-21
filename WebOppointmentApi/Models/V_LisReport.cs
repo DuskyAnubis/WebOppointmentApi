@@ -9,6 +9,7 @@ namespace WebOppointmentApi.Models
     {
         public string PatientName { get; set; }
         public string Sex { get; set; }
+        public int Age { get; set; }
         public string PatientCode { get; set; }
         public string ReqNo { get; set; }
         public string ReportNo { get; set; }
