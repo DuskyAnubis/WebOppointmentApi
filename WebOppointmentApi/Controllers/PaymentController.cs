@@ -2105,7 +2105,7 @@ namespace WebOppointmentApi.Controllers
                 gh.出生日期 = Convert.ToDateTime(param.Birthday);
                 gh.电话 = param.Tel;
                 gh.年龄 = Convert.ToInt16(param.Age);
-                gh.年龄单位 = param.Ageunit;
+                gh.年龄单位 = "岁";
                 gh.通信地址 = param.Address;
 
                 ghContext.门诊挂号.Update(gh);
@@ -2118,7 +2118,7 @@ namespace WebOppointmentApi.Controllers
                     IdentityCard = gh.身份证,
                     Birthday = gh.出生日期.ToString(),
                     Age = gh.年龄.ToString(),
-                    Ageunit = gh.年龄单位,
+                    Ageunit = "岁",
                     Sex = gh.性别,
                     Address = gh.通信地址,
                     Tel = gh.电话,
@@ -2142,7 +2142,7 @@ namespace WebOppointmentApi.Controllers
                     ghls.出生日期 = Convert.ToDateTime(param.Birthday);
                     ghls.电话 = param.Tel;
                     ghls.年龄 = Convert.ToInt16(param.Age);
-                    ghls.年龄单位 = param.Ageunit;
+                    ghls.年龄单位 = "岁";
                     ghls.通信地址 = param.Address;
 
                     ghContext.门诊挂号流水帐.Update(ghls);
@@ -2198,7 +2198,7 @@ namespace WebOppointmentApi.Controllers
                         接诊医师id = 268,
                         出生日期 = Convert.ToDateTime(param.Birthday),
                         过敏史 = "",
-                        年龄单位 = param.Ageunit,
+                        年龄单位 = "岁",
                         身份证 = param.IdentityCard,
                         总预存款 = 0,
                         总费用 = 0,
