@@ -1126,7 +1126,7 @@ namespace WebOppointmentApi.Controllers
                         Diagnoseid = orders[0].卡号,
                         Windowmsg = "缴费成功!",
                         Windowname = "",
-                        Crequestcode = orders[0].接口码1
+                        Crequestcode = orders[0].卡号
                     };
 
                     return new ObjectResult(new
