@@ -1860,7 +1860,7 @@ namespace WebOppointmentApi.Controllers
                 Yf yf = await hisContext.Yf.FirstOrDefaultAsync(y => y.Id == Convert.ToInt32(param.Labgroup));
                 if (yf != null)
                 {
-                    门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
+                    门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode) && !string.IsNullOrEmpty(g.卡号));
                     if (gh != null)
                     {
                         doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师代码1.Equals("999"));
@@ -1951,7 +1951,7 @@ namespace WebOppointmentApi.Controllers
                     }
                     else
                     {
-                        门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode));
+                        门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.门诊号 == Convert.ToInt32(param.Cpatientcode) && !string.IsNullOrEmpty(g.卡号));
                         if (ghls != null)
                         {
                             doctor = await hisContext.医师代码.FirstOrDefaultAsync(d => d.医师代码1.Equals("999"));
@@ -2109,7 +2109,7 @@ namespace WebOppointmentApi.Controllers
             }
             else
             {
-                门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
+                门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard) && !string.IsNullOrEmpty(g.卡号));
                 if (gh != null)
                 {
                     gh.姓名 = param.PatientName;
@@ -2147,7 +2147,7 @@ namespace WebOppointmentApi.Controllers
                 }
                 else
                 {
-                    门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
+                    门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard) && !string.IsNullOrEmpty(g.卡号));
                     if (ghls != null)
                     {
                         ghls.姓名 = param.PatientName;
