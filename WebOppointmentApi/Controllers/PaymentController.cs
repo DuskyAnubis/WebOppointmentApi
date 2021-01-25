@@ -2120,6 +2120,7 @@ namespace WebOppointmentApi.Controllers
                     gh.年龄单位 = "岁";
                     gh.通信地址 = param.Address;
 
+
                     ghContext.门诊挂号.Update(gh);
                     await ghContext.SaveChangesAsync();
 
@@ -2203,7 +2204,8 @@ namespace WebOppointmentApi.Controllers
                             初诊 = 1,
                             复诊 = 0,
                             急诊 = 0,
-                            交班 = false,
+                            交班 = true,
+                            交班日期 = DateTime.Now,
                             退票号 = "0",
                             就诊标志 = false,
                             民族 = "",
