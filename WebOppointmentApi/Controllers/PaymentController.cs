@@ -1071,7 +1071,7 @@ namespace WebOppointmentApi.Controllers
                         统筹支付 = Convert.ToDecimal(0.00),
                         补助金 = Convert.ToDecimal(0.00),
                         现金支付 = Convert.ToDecimal(0.00),
-                        交班标志 = false,
+                        交班标志 = true,
                         结帐日期 = null,
                         门诊号 = "",
                         发票号 = "",
@@ -2097,124 +2097,30 @@ namespace WebOppointmentApi.Controllers
 
             IdentityOutput identityOutput;
             IdentityResult identityResult;
-            门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
-            if (gh != null)
+
+            if (string.IsNullOrEmpty(param.IdentityCard.Trim()) || string.IsNullOrEmpty(param.PatientName.Trim()))
             {
-                gh.姓名 = param.PatientName;
-                gh.性别 = param.Sex;
-                gh.出生日期 = Convert.ToDateTime(param.Birthday);
-                gh.电话 = param.Tel;
-                gh.年龄 = Convert.ToInt16(param.Age);
-                gh.年龄单位 = "岁";
-                gh.通信地址 = param.Address;
-
-                ghContext.门诊挂号.Update(gh);
-                await ghContext.SaveChangesAsync();
-
-                identityResult = new IdentityResult
-                {
-                    PatientCode = gh.门诊号.ToString(),
-                    PatientName = gh.姓名,
-                    IdentityCard = gh.身份证,
-                    Birthday = gh.出生日期.ToString(),
-                    Age = gh.年龄.ToString(),
-                    Ageunit = "岁",
-                    Sex = gh.性别,
-                    Address = gh.通信地址,
-                    Tel = gh.电话,
-                    ZlkCardNum = gh.卡号
-                };
-
                 identityOutput = new IdentityOutput
                 {
-                    Code = 1,
-                    Msg = "获取诊疗ID成功!",
-                    Result = identityResult
+                    Code = 0,
+                    Msg = "获取诊疗ID失败!病人姓名或身份证号不能为空",
+                    Result = null
                 };
             }
             else
             {
-                门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
-                if (ghls != null)
+                门诊挂号 gh = await ghContext.门诊挂号.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
+                if (gh != null)
                 {
-                    ghls.姓名 = param.PatientName;
-                    ghls.性别 = param.Sex;
-                    ghls.出生日期 = Convert.ToDateTime(param.Birthday);
-                    ghls.电话 = param.Tel;
-                    ghls.年龄 = Convert.ToInt16(param.Age);
-                    ghls.年龄单位 = "岁";
-                    ghls.通信地址 = param.Address;
+                    gh.姓名 = param.PatientName;
+                    gh.性别 = param.Sex;
+                    gh.出生日期 = Convert.ToDateTime(param.Birthday);
+                    gh.电话 = param.Tel;
+                    gh.年龄 = Convert.ToInt16(param.Age);
+                    gh.年龄单位 = "岁";
+                    gh.通信地址 = param.Address;
 
-                    ghContext.门诊挂号流水帐.Update(ghls);
-                    await ghContext.SaveChangesAsync();
-
-                    identityResult = new IdentityResult
-                    {
-                        PatientCode = ghls.门诊号.ToString(),
-                        PatientName = ghls.姓名,
-                        IdentityCard = ghls.身份证,
-                        Birthday = ghls.出生日期.ToString(),
-                        Age = ghls.年龄.ToString(),
-                        Ageunit = ghls.年龄单位,
-                        Sex = ghls.性别,
-                        Address = ghls.通信地址,
-                        Tel = ghls.电话,
-                        ZlkCardNum = ghls.卡号
-                    };
-
-                    identityOutput = new IdentityOutput
-                    {
-                        Code = 1,
-                        Msg = "获取诊疗ID成功!",
-                        Result = identityResult
-                    };
-                }
-                else
-                {
-                    gh = new 门诊挂号
-                    {
-                        姓名 = param.PatientName,
-                        年龄 = Convert.ToInt16(param.Age),
-                        性别 = param.Sex,
-                        通信地址 = param.Address,
-                        电话 = param.Tel,
-                        日期 = DateTime.Now,
-                        科室 = "化验室",
-                        挂号类别 = "普通挂号",
-                        操作员 = "健康山西",
-                        医师 = "健康山西",
-                        挂号费 = 0,
-                        工本费 = 0,
-                        金额 = 0,
-                        作废标志 = 0,
-                        卡号 = param.IdentityCard,
-                        初诊 = 1,
-                        复诊 = 0,
-                        急诊 = 0,
-                        交班 = false,
-                        退票号 = "0",
-                        就诊标志 = false,
-                        民族 = "",
-                        接诊医师id = 268,
-                        出生日期 = Convert.ToDateTime(param.Birthday),
-                        过敏史 = "",
-                        年龄单位 = "岁",
-                        身份证 = param.IdentityCard,
-                        总预存款 = 0,
-                        总费用 = 0,
-                        预存款支付 = 0,
-                        现金支付 = 0,
-                        PassWord = "",
-                        来源 = "健康山西",
-                        预存款余额 = 0,
-                        状态 = 0,
-                        退款 = 0,
-                        DwId = 1,
-                        CzyId = 368,
-                        社保卡 = param.IdentityCard
-                    };
-
-                    ghContext.门诊挂号.Add(gh);
+                    ghContext.门诊挂号.Update(gh);
                     await ghContext.SaveChangesAsync();
 
                     identityResult = new IdentityResult
@@ -2224,7 +2130,7 @@ namespace WebOppointmentApi.Controllers
                         IdentityCard = gh.身份证,
                         Birthday = gh.出生日期.ToString(),
                         Age = gh.年龄.ToString(),
-                        Ageunit = gh.年龄单位,
+                        Ageunit = "岁",
                         Sex = gh.性别,
                         Address = gh.通信地址,
                         Tel = gh.电话,
@@ -2237,6 +2143,113 @@ namespace WebOppointmentApi.Controllers
                         Msg = "获取诊疗ID成功!",
                         Result = identityResult
                     };
+                }
+                else
+                {
+                    门诊挂号流水帐 ghls = await ghContext.门诊挂号流水帐.OrderByDescending(g => g.门诊号).FirstOrDefaultAsync(g => g.身份证.Equals(param.IdentityCard));
+                    if (ghls != null)
+                    {
+                        ghls.姓名 = param.PatientName;
+                        ghls.性别 = param.Sex;
+                        ghls.出生日期 = Convert.ToDateTime(param.Birthday);
+                        ghls.电话 = param.Tel;
+                        ghls.年龄 = Convert.ToInt16(param.Age);
+                        ghls.年龄单位 = "岁";
+                        ghls.通信地址 = param.Address;
+
+                        ghContext.门诊挂号流水帐.Update(ghls);
+                        await ghContext.SaveChangesAsync();
+
+                        identityResult = new IdentityResult
+                        {
+                            PatientCode = ghls.门诊号.ToString(),
+                            PatientName = ghls.姓名,
+                            IdentityCard = ghls.身份证,
+                            Birthday = ghls.出生日期.ToString(),
+                            Age = ghls.年龄.ToString(),
+                            Ageunit = ghls.年龄单位,
+                            Sex = ghls.性别,
+                            Address = ghls.通信地址,
+                            Tel = ghls.电话,
+                            ZlkCardNum = ghls.卡号
+                        };
+
+                        identityOutput = new IdentityOutput
+                        {
+                            Code = 1,
+                            Msg = "获取诊疗ID成功!",
+                            Result = identityResult
+                        };
+                    }
+                    else
+                    {
+                        gh = new 门诊挂号
+                        {
+                            姓名 = param.PatientName,
+                            年龄 = Convert.ToInt16(param.Age),
+                            性别 = param.Sex,
+                            通信地址 = param.Address,
+                            电话 = param.Tel,
+                            日期 = DateTime.Now,
+                            科室 = "化验室",
+                            挂号类别 = "普通挂号",
+                            操作员 = "健康山西",
+                            医师 = "健康山西",
+                            挂号费 = 0,
+                            工本费 = 0,
+                            金额 = 0,
+                            作废标志 = 0,
+                            卡号 = param.IdentityCard,
+                            初诊 = 1,
+                            复诊 = 0,
+                            急诊 = 0,
+                            交班 = false,
+                            退票号 = "0",
+                            就诊标志 = false,
+                            民族 = "",
+                            接诊医师id = 268,
+                            出生日期 = Convert.ToDateTime(param.Birthday),
+                            过敏史 = "",
+                            年龄单位 = "岁",
+                            身份证 = param.IdentityCard,
+                            总预存款 = 0,
+                            总费用 = 0,
+                            预存款支付 = 0,
+                            现金支付 = 0,
+                            PassWord = "",
+                            来源 = "健康山西",
+                            预存款余额 = 0,
+                            状态 = 0,
+                            退款 = 0,
+                            DwId = 1,
+                            CzyId = 368,
+                            社保卡 = param.IdentityCard
+                        };
+
+                        ghContext.门诊挂号.Add(gh);
+                        await ghContext.SaveChangesAsync();
+
+                        identityResult = new IdentityResult
+                        {
+                            PatientCode = gh.门诊号.ToString(),
+                            PatientName = gh.姓名,
+                            IdentityCard = gh.身份证,
+                            Birthday = gh.出生日期.ToString(),
+                            Age = gh.年龄.ToString(),
+                            Ageunit = gh.年龄单位,
+                            Sex = gh.性别,
+                            Address = gh.通信地址,
+                            Tel = gh.电话,
+                            ZlkCardNum = gh.卡号
+                        };
+
+                        identityOutput = new IdentityOutput
+                        {
+                            Code = 1,
+                            Msg = "获取诊疗ID成功!",
+                            Result = identityResult
+                        };
+                    }
                 }
             }
 
