@@ -1619,6 +1619,8 @@ namespace WebOppointmentApi.Controllers
             var orderTemporaryCodeList = await hisContext.划价临时库.Where(o => o.PlatformCode != "" && o.OrderCode != "" && o.日期 >= begin && o.日期 <= end).Select(o => o.OrderCode).Distinct().ToListAsync();
             var orderSerialCodeList = await hisContext.划价流水帐.Where(o => o.PlatformCode != "" && o.OrderCode != "" && o.日期 >= begin && o.日期 <= end).Select(o => o.OrderCode).Distinct().ToListAsync();
             var inpatientPrepaymentList = await hisContext.InpatientPrepayments.Where(p => p.PlatformCode != "" && p.TradeTime >= begin && p.TradeTime <= end).ToListAsync();
+            var orderTemporaryOnlinePayList = await hisContext.划价临时库.Where(o => o.接口码1 != "" && o.发票流水号 != -1 && o.日期 >= begin && o.日期 <= end).Select(o => o.接口码1).Distinct().ToListAsync();
+            var orderSerialOnlinePayList = await hisContext.划价流水帐.Where(o => o.接口码1 != "" && o.发票流水号 != -1 && o.日期 >= begin && o.日期 <= end).Select(o => o.接口码1).Distinct().ToListAsync();
 
             if (orderTemporaryCodeList.Count == 0 && orderSerialCodeList.Count == 0 && inpatientPrepaymentList.Count == 0)
             {
@@ -1704,6 +1706,54 @@ namespace WebOppointmentApi.Controllers
                         Tongchoumoney = "0",
                         Accountmoney = "0",
                         Factmoney = item.Money.ToString("0.00"),
+                        Bdayend = "1",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
+                }
+                foreach (var item in orderTemporaryOnlinePayList)
+                {
+                    var order = await hisContext.划价临时库.FirstOrDefaultAsync(o => o.接口码1 == item);
+                    decimal totalPrice = await hisContext.划价临时库.Where(o => o.接口码1.Equals(item)).SumAsync(o => o.金额);
+                    var searchTradeFlow = new SearchTradeFlow
+                    {
+                        Cflowcode = order.发票流水号.ToString(),
+                        OrderCode = order.接口码1,
+                        Cateid = order.CateId,
+                        Tradetype = "1",
+                        Nmoney = totalPrice.ToString("0.00"),
+                        Tradedate = order.日期.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Ls_cpscode = "10",
+                        Cpatientname = order.病人姓名,
+                        Cpatientcode = order.卡号,
+                        Cidentitycard = "",
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = totalPrice.ToString("0.00"),
+                        Bdayend = "0",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
+                }
+                foreach (var item in orderSerialOnlinePayList)
+                {
+                    var order = await hisContext.划价流水帐.FirstOrDefaultAsync(o => o.接口码1 == item);
+                    decimal totalPrice = Convert.ToDecimal(await hisContext.划价流水帐.Where(o => o.接口码1.Equals(item)).SumAsync(o => o.金额));
+                    var searchTradeFlow = new SearchTradeFlow
+                    {
+                        Cflowcode = order.发票流水号.ToString(),
+                        OrderCode = order.接口码1,
+                        Cateid = order.CateId,
+                        Tradetype = "1",
+                        Nmoney = totalPrice.ToString("0.00"),
+                        Tradedate = Convert.ToDateTime(order.日期).ToString("yyyy-MM-dd HH:mm:ss"),
+                        Ls_cpscode = "10",
+                        Cpatientname = order.病人姓名,
+                        Cpatientcode = order.卡号,
+                        Cidentitycard = "",
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = totalPrice.ToString("0.00"),
                         Bdayend = "1",
                         Dayendtime = ""
                     };
@@ -1990,7 +2040,7 @@ namespace WebOppointmentApi.Controllers
                                 库存量 = 0,
                                 日结帐日期 = null,
                                 月结帐日期 = null,
-                                发药标志 = 0,
+                                发药标志 = 1,
                                 发药日期 = null,
                                 操作员 = "健康山西",
                                 医保码 = "",
