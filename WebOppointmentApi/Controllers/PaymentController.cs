@@ -1617,13 +1617,29 @@ namespace WebOppointmentApi.Controllers
             DateTime begin = Convert.ToDateTime(param.Trade_beg + " 00:00:00");
             DateTime end = Convert.ToDateTime(param.Trade_end + " 23:59:59");
 
-            var orderTemporaryCodeList =SqlCommon.SqlQuery(hisContext.Database.GetDbConnection() as SqlConnection, $"select 病人姓名,卡号,Min(划价号) as 划价号,发票流水号,OrderCode,SUM(金额) as 金额,Min(日期) as 日期,MIN(CateId) as CateId from 划价临时库 where 日期 between '{begin}' and '{end}' and OrderCode!='' and PlatformCode!='' group by OrderCode,病人姓名,卡号,发票流水号").Tables[0];
-            var orderSerialCodeList = SqlCommon.SqlQuery(hisContext.Database.GetDbConnection() as SqlConnection, $"select 病人姓名,卡号,Min(划价号) as 划价号,发票流水号,OrderCode,SUM(金额) as 金额,Min(日期) as 日期,MIN(CateId) as CateId from 划价流水帐 where 日期 between '{begin}' and '{end}' and OrderCode!='' and PlatformCode!='' group by OrderCode,病人姓名,卡号,发票流水号").Tables[0];
-            var inpatientPrepaymentList = await hisContext.InpatientPrepayments.Where(p => p.PlatformCode != "" && p.TradeTime >= begin && p.TradeTime <= end).ToListAsync();
-            var orderTemporaryOnlinePayList = SqlCommon.SqlQuery(hisContext.Database.GetDbConnection() as SqlConnection, $"select 病人姓名,卡号,发票流水号,接口码1 as OrderCode,SUM(金额) as 金额,Min(日期) as 日期,MIN(CateId) as CateId from 划价临时库 where 日期 between '{begin}' and '{end}' and 接口码1!='' and 发票流水号!=-1 group by 接口码1,病人姓名,卡号,发票流水号").Tables[0];
-            var orderSerialOnlinePayList = SqlCommon.SqlQuery(hisContext.Database.GetDbConnection() as SqlConnection, $"select 病人姓名,卡号,发票流水号,接口码1 as OrderCode,SUM(金额) as 金额,Min(日期) as 日期,MIN(CateId) as CateId from 划价流水帐 where 日期 between '{begin}' and '{end}' and 接口码1!='' and 发票流水号!=-1 group by 接口码1,病人姓名,卡号,发票流水号").Tables[0];
+            var orderTemporary = hisContext.划价临时库.Where(o => o.日期 >= begin && o.日期 <= end && o.OrderCode != "" && o.PlatformCode != "");
+            var orderTemporaryCodeList = (from db in orderTemporary
+                                          group db by new { db.OrderCode, db.病人姓名, db.卡号, db.发票流水号 } into g
+                                          select new { OrderCode = g.Key.OrderCode, Total = g.Sum(p => p.金额), CardNo = g.Key.卡号, PatientName = g.Key.病人姓名, TradeTime = g.Min(p => p.日期).ToString("yyyy-MM-dd HH:mm:ss"), InvoiceCode = g.Key.发票流水号, SerialCode = g.Min(p => p.划价号), CateId = g.Min(p => p.CateId) }).ToList();
 
-            if (orderTemporaryCodeList.Rows.Count == 0 && orderSerialCodeList.Rows.Count == 0 && inpatientPrepaymentList.Count == 0 && orderTemporaryOnlinePayList.Rows.Count == 0 && orderSerialOnlinePayList.Rows.Count == 0)
+            var orderSerial = hisContext.划价流水帐.Where(o => o.日期 >= begin && o.日期 <= end && o.OrderCode != "" && o.PlatformCode != "");
+            var orderSerialCodeList = (from db in orderSerial
+                                       group db by new { db.OrderCode, db.病人姓名, db.卡号, db.发票流水号 } into g
+                                       select new { OrderCode = g.Key.OrderCode, Total = g.Sum(p => p.金额), CardNo = g.Key.卡号, PatientName = g.Key.病人姓名, TradeTime = g.Min(p => p.日期).Value.ToString("yyyy-MM-dd HH:mm:ss"), InvoiceCode = g.Key.发票流水号, SerialCode = g.Min(p => p.划价号), CateId = g.Min(p => p.CateId) }).ToList();
+
+            var inpatientPrepaymentList = await hisContext.InpatientPrepayments.Where(p => p.PlatformCode != "" && p.TradeTime >= begin && p.TradeTime <= end).ToListAsync();
+
+            var orderTemporaryOnline = hisContext.划价临时库.Where(o => o.日期 >= begin && o.日期 <= end && o.接口码1 != "" && o.发票流水号 != -1);
+            var orderTemporaryOnlinePayList = (from db in orderTemporaryOnline
+                                               group db by new { db.接口码1, db.病人姓名, db.卡号, db.发票流水号 } into g
+                                               select new { OrderCode = g.Key.接口码1, Total = g.Sum(p => p.金额), CardNo = g.Key.卡号, PatientName = g.Key.病人姓名, TradeTime = g.Min(p => p.日期).ToString("yyyy-MM-dd HH:mm:ss"), InvoiceCode = g.Key.发票流水号, CateId = g.Min(p => p.CateId) }).ToList();
+
+            var orderSerialOnline = hisContext.划价流水帐.Where(o => o.日期 >= begin && o.日期 <= end && o.接口码1 != "" && o.发票流水号 != -1);
+            var orderSerialOnlinePayList = (from db in orderSerialOnline
+                                            group db by new { db.OrderCode, db.病人姓名, db.卡号, db.发票流水号 } into g
+                                            select new { OrderCode = g.Key.OrderCode, Total = g.Sum(p => p.金额), CardNo = g.Key.卡号, PatientName = g.Key.病人姓名, TradeTime = g.Min(p => p.日期).Value.ToString("yyyy-MM-dd HH:mm:ss"), InvoiceCode = g.Key.发票流水号, CateId = g.Min(p => p.CateId) }).ToList();
+
+            if (orderTemporaryCodeList.Count == 0 && orderSerialCodeList.Count == 0 && inpatientPrepaymentList.Count == 0 && orderTemporaryOnlinePayList.Count == 0 && orderSerialOnlinePayList.Count == 0)
             {
                 var searchTradeFlowOutput = new SearchTradeFlowOutput
                 {
@@ -1640,57 +1656,52 @@ namespace WebOppointmentApi.Controllers
             else
             {
                 List<SearchTradeFlow> tradeFlows = new List<SearchTradeFlow>();
-                if (orderTemporaryCodeList != null)
+                foreach (var item in orderTemporaryCodeList)
                 {
-                    for (int i = 0; i < orderTemporaryCodeList.Rows.Count; i++)
+                    var searchTradeFlow = new SearchTradeFlow
                     {
-                        var searchTradeFlow = new SearchTradeFlow
-                        {
-                            Cflowcode = orderTemporaryCodeList.Rows[i]["发票流水号"].ToString() + orderTemporaryCodeList.Rows[i]["划价号"].ToString(),
-                            OrderCode = orderTemporaryCodeList.Rows[i]["OrderCode"].ToString(),
-                            Cateid = orderTemporaryCodeList.Rows[i]["CateId"].ToString(),
-                            Tradetype = "1",
-                            Nmoney = orderTemporaryCodeList.Rows[i]["金额"].ToString(),
-                            Tradedate = Convert.ToDateTime(orderTemporaryCodeList.Rows[i]["日期"]).ToString("yyyy-MM-dd HH:mm:ss"),
-                            Ls_cpscode = "10",
-                            Cpatientname = orderTemporaryCodeList.Rows[i]["病人姓名"].ToString(),
-                            Cpatientcode = orderTemporaryCodeList.Rows[i]["卡号"].ToString(),
-                            Cidentitycard = "",
-                            Tongchoumoney = "0",
-                            Accountmoney = "0",
-                            Factmoney = orderTemporaryCodeList.Rows[i]["金额"].ToString(),
-                            Bdayend = "0",
-                            Dayendtime = ""
-                        };
-                        tradeFlows.Add(searchTradeFlow);
-                    }
+                        Cflowcode = item.InvoiceCode.ToString() + item.SerialCode,
+                        OrderCode = item.OrderCode,
+                        Cateid = item.CateId,
+                        Tradetype = "1",
+                        Nmoney = item.Total.ToString("0.00"),
+                        Tradedate = item.TradeTime,
+                        Ls_cpscode = "10",
+                        Cpatientname = item.PatientName,
+                        Cpatientcode = item.CardNo,
+                        Cidentitycard = "",
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = item.Total.ToString("0.00"),
+                        Bdayend = "0",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
                 }
 
-                if (orderSerialCodeList != null)
+                foreach (var item in orderSerialCodeList)
                 {
-                    for (int i = 0; i < orderSerialCodeList.Rows.Count; i++)
+                    var searchTradeFlow = new SearchTradeFlow
                     {
-                        var searchTradeFlow = new SearchTradeFlow
-                        {
-                            Cflowcode = orderSerialCodeList.Rows[i]["发票流水号"].ToString() + orderSerialCodeList.Rows[i]["划价号"].ToString(),
-                            OrderCode = orderSerialCodeList.Rows[i]["OrderCode"].ToString(),
-                            Cateid = orderSerialCodeList.Rows[i]["CateId"].ToString(),
-                            Tradetype = "1",
-                            Nmoney = orderSerialCodeList.Rows[i]["金额"].ToString(),
-                            Tradedate = Convert.ToDateTime(orderSerialCodeList.Rows[i]["日期"]).ToString("yyyy-MM-dd HH:mm:ss"),
-                            Ls_cpscode = "10",
-                            Cpatientname = orderSerialCodeList.Rows[i]["病人姓名"].ToString(),
-                            Cpatientcode = orderSerialCodeList.Rows[i]["卡号"].ToString(),
-                            Cidentitycard = "",
-                            Tongchoumoney = "0",
-                            Accountmoney = "0",
-                            Factmoney = orderSerialCodeList.Rows[i]["金额"].ToString(),
-                            Bdayend = "0",
-                            Dayendtime = ""
-                        };
-                        tradeFlows.Add(searchTradeFlow);
-                    }
+                        Cflowcode = item.InvoiceCode.ToString() + item.SerialCode,
+                        OrderCode = item.OrderCode,
+                        Cateid = item.CateId,
+                        Tradetype = "1",
+                        Nmoney = Convert.ToDecimal(item.Total).ToString("0.00"),
+                        Tradedate = item.TradeTime,
+                        Ls_cpscode = "10",
+                        Cpatientname = item.PatientName,
+                        Cpatientcode = item.CardNo,
+                        Cidentitycard = "",
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = Convert.ToDecimal(item.Total).ToString("0.00"),
+                        Bdayend = "0",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
                 }
+
                 foreach (var item in inpatientPrepaymentList)
                 {
                     Zy病案库 patient = await hisContext.Zy病案库.FirstOrDefaultAsync(p => p.病人编号 == item.PatientId);
@@ -1714,58 +1725,52 @@ namespace WebOppointmentApi.Controllers
                     };
                     tradeFlows.Add(searchTradeFlow);
                 }
-                if (orderTemporaryOnlinePayList != null)
+
+                foreach (var item in orderTemporaryOnlinePayList)
                 {
-                    for (int i = 0; i < orderTemporaryOnlinePayList.Rows.Count; i++)
+                    var searchTradeFlow = new SearchTradeFlow
                     {
-                        var searchTradeFlow = new SearchTradeFlow
-                        {
-                            Cflowcode = orderTemporaryOnlinePayList.Rows[i]["发票流水号"].ToString(),
-                            OrderCode = orderTemporaryOnlinePayList.Rows[i]["接口码1"].ToString(),
-                            Cateid = orderTemporaryOnlinePayList.Rows[i]["CateId"].ToString(),
-                            Tradetype = "1",
-                            Nmoney = orderTemporaryOnlinePayList.Rows[i]["金额"].ToString(),
-                            Tradedate = Convert.ToDateTime(orderTemporaryOnlinePayList.Rows[i]["日期"]).ToString("yyyy-MM-dd HH:mm:ss"),
-                            Ls_cpscode = "10",
-                            Cpatientname = orderTemporaryOnlinePayList.Rows[i]["病人姓名"].ToString(),
-                            Cpatientcode = orderTemporaryOnlinePayList.Rows[i]["卡号"].ToString(),
-                            Cidentitycard = "",
-                            Tongchoumoney = "0",
-                            Accountmoney = "0",
-                            Factmoney = orderTemporaryOnlinePayList.Rows[i]["金额"].ToString(),
-                            Bdayend = "0",
-                            Dayendtime = ""
-                        };
-                        tradeFlows.Add(searchTradeFlow);
-                    }
-                }
-                if (orderSerialOnlinePayList != null)
-                {
-                    for (int i = 0; i < orderSerialOnlinePayList.Rows.Count; i++)
-                    {
-                        var searchTradeFlow = new SearchTradeFlow
-                        {
-                            Cflowcode = orderSerialOnlinePayList.Rows[i]["发票流水号"].ToString(),
-                            OrderCode = orderSerialOnlinePayList.Rows[i]["接口码1"].ToString(),
-                            Cateid = orderSerialOnlinePayList.Rows[i]["CateId"].ToString(),
-                            Tradetype = "1",
-                            Nmoney = orderSerialOnlinePayList.Rows[i]["金额"].ToString(),
-                            Tradedate = Convert.ToDateTime(orderSerialOnlinePayList.Rows[i]["日期"]).ToString("yyyy-MM-dd HH:mm:ss"),
-                            Ls_cpscode = "10",
-                            Cpatientname = orderSerialOnlinePayList.Rows[i]["病人姓名"].ToString(),
-                            Cpatientcode = orderSerialOnlinePayList.Rows[i]["卡号"].ToString(),
-                            Cidentitycard = "",
-                            Tongchoumoney = "0",
-                            Accountmoney = "0",
-                            Factmoney = orderSerialOnlinePayList.Rows[i]["金额"].ToString(),
-                            Bdayend = "0",
-                            Dayendtime = ""
-                        };
-                        tradeFlows.Add(searchTradeFlow);
-                    }
+                        Cflowcode = item.InvoiceCode.ToString(),
+                        OrderCode = item.OrderCode,
+                        Cateid = item.CateId,
+                        Tradetype = "1",
+                        Nmoney = item.Total.ToString("0.00"),
+                        Tradedate = item.TradeTime,
+                        Ls_cpscode = "10",
+                        Cpatientname = item.PatientName,
+                        Cpatientcode = item.CardNo,
+                        Cidentitycard = "",
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = item.Total.ToString("0.00"),
+                        Bdayend = "0",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
                 }
 
-                hisContext.Database.GetDbConnection().Close();
+                foreach (var item in orderSerialOnlinePayList)
+                {
+                    var searchTradeFlow = new SearchTradeFlow
+                    {
+                        Cflowcode = item.InvoiceCode.ToString(),
+                        OrderCode = item.OrderCode,
+                        Cateid = item.CateId,
+                        Tradetype = "1",
+                        Nmoney = Convert.ToDecimal(item.Total).ToString("0.00"),
+                        Tradedate = item.TradeTime,
+                        Ls_cpscode = "10",
+                        Cpatientname = item.PatientName,
+                        Cpatientcode = item.CardNo,
+                        Cidentitycard = "",
+                        Tongchoumoney = "0",
+                        Accountmoney = "0",
+                        Factmoney = Convert.ToDecimal(item.Total).ToString("0.00"),
+                        Bdayend = "0",
+                        Dayendtime = ""
+                    };
+                    tradeFlows.Add(searchTradeFlow);
+                }
 
                 var searchTradeFlowOutput = new SearchTradeFlowOutput
                 {
